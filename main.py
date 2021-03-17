@@ -1,6 +1,5 @@
 # import modules
 import pygame
-import pygame.locals
 import random
 import sys
 import getopt
@@ -48,13 +47,13 @@ class Player(pygame.sprite.Sprite):
 		self.rect = self.surf.get_rect()
 
 	def update(self, presk):
-		if presk[K_w]:
+		if presk[pygame.key.K_w]:
 			self.rect.move_ip(0, -2)
-		if presk[K_s]:
+		if presk[pygame.key.K_s]:
 			self.rect.move_ip(0, 2)
-		if presk[K_a]:
+		if presk[pygame.key.K_a]:
 			self.rect.move_ip(-2, 0)
-		if presk[K_d]:
+		if presk[pygame.key.K_d]:
 			self.rect.move_ip(2, 0)
 
 		# Keep player on the screen
@@ -90,10 +89,10 @@ sprites.add(player)
 running = True
 while running:
 	for event in pygame.event.get():
-		if event.type == KEYDOWN:
-			if event.key == K_ESCAPE:
+		if event.type == pygame.key.KEYDOWN:
+			if event.key == pygame.key.K_ESCAPE:
 				running = False
-		elif event.type == QUIT:
+		elif event.type == pygame.event.QUIT:
 			running = False
 		elif event.type == ADDENEMY:
 			nEn = Enemy()
