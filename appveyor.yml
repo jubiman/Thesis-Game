@@ -1,5 +1,4 @@
 # appveyor.yml
----
 environment:
   matrix:
   - TOXENV: py27
