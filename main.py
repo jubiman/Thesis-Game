@@ -1,11 +1,11 @@
 # import modules
 import pygame
-from pygame.locals import *
+import pygame.locals
 import random
 import sys
 import getopt
-from os import system
-system('cls')
+# from os import system
+# system('cls')
 fps = 144
 
 # TODO: make this better lol
