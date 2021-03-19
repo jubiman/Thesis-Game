@@ -60,9 +60,9 @@ def get_name(index):
 
 
 class Asset:
-	def __init__(self, name, img, id=-1, loc=(-1, -1)):
+	def __init__(self, name, img, ident=-1, loc=(-1, -1)):
 		self.name = name
-		self.id = id
+		self.id = ident
 		self.loc = loc
 		self.image = img
 
