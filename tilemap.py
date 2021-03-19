@@ -7,7 +7,7 @@ class Map:
 		self.data = []
 		with open(fn, 'rt') as f:
 			for l in f:
-				self.data.append(l)
+				self.data.append(l.strip())
 		self.tWidth = len(self.data[0])
 		self.tHeight = len(self.data)
 		self.width = self.tWidth * TILESIZE
