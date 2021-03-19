@@ -6,6 +6,7 @@ from os import path
 import sys
 import getopt
 import tilemap
+import assets
 # from os import system
 # system('cls')
 
@@ -30,10 +31,15 @@ class Game:
 		self.clock = pygame.time.Clock()
 		pygame.key.set_repeat(1, 100)
 		self.load_data()
+		self.graphics = assets.populate_assets()
+		# TODO: for loop to populate assets
 
 	def load_data(self):
 		game_folder = path.dirname(__file__)
-		self.map = tilemap.Map(path.join(game_folder+'/saves/', 'map2.txt'))
+		assets_folder = path.join(game_folder, 'assets')
+		self.map = tilemap.Map(path.join(game_folder, 'saves/map4.txt'))
+		# self.player_img = pygame.image.load(path.join(assets_folder, 'visual/')).convert_alpha()
+		# self.player_img = pygame.transform.scale(assets.get_asset_from_name(self.graphics, 'player1').image, (64, 64))
 
 	def new(self):
 		# initialize all variables and do all the setup for a new game
