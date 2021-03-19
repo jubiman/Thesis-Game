@@ -1,6 +1,5 @@
 import pygame
 from pygame.locals import *
-import sys
 from settings import *
 from sprites import *
 from os import path
