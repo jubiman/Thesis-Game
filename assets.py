@@ -20,6 +20,7 @@ def get_asset_from_name(assets, name):
 
 
 # Populate induvidual assets in a tilesheet (currently hardcoded). Returns a list with Asset objects
+# Assets loads collumn per collumn (x -> y)
 def populate_assets():
 	# Define list with image chunks
 	assets = []
@@ -27,12 +28,12 @@ def populate_assets():
 	# colored_packed.png is 16x16, currently is hardcoded to this file
 	sheet = pygame.image.load(path.join(path.dirname(__file__), 'assets/visual/Tilesheet/colored_transparent_packed.png'))
 	# index = 0  # is used to know how many iterations we have done (i*22+j = index)
-	for i in range(48):
-		for j in range(22):
-			loc = (16*i, 16*j)
+	for x in range(48):
+		for y in range(22):
+			loc = (16*x, 16*y)
 			# assets.append(sheet.subsurface(pygame.Rect(loc, 16)))
 			# TODO: fix this fucking code lol
-			assets.append(Asset(get_name(i*22+j), sheet.subsurface(pygame.Rect(loc, (16, 16))), i*22+j, loc))
+			assets.append(Asset(get_name(x*22+y), sheet.subsurface(pygame.Rect(loc, (16, 16))), x*22+y, loc))
 			# index += 1
 	# Debugging:
 	for asset in assets:
@@ -46,13 +47,14 @@ def get_name(index):
 	# TODO: fully populate names (only 1056 lol)
 	switch = {
 		0: "empty",
-		1: "stone1",
-		2: "stone2",
-		3: "stone3",
-		4: "stone4",
-		5: "grass1",
-		6: "grass2",
-		7: "grass3",
+		1: "tree1",
+		23: "stone1",
+		45: "stone2",
+		67: "stone3",
+		89: "stone4",
+		111: "grass1",
+		133: "grass2",
+		155: "grass3",
 		394: "wall1",
 		550: "player1"
 	}
