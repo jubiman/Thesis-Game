@@ -8,13 +8,6 @@ import playerskill
 import math
 import item
 
-def screen2world(pos, scrolling):
-	return int((pos[0] - scrolling[0]) / 64), int((pos[1] - scrolling[1]) / 64)
-
-
-'''def mod(a, b):
-	return a[0] % b[0], a[1] % b[1]'''
-
 
 class Player(pygame.sprite.Sprite):
 	def __init__(self, game, x, y):
@@ -25,11 +18,9 @@ class Player(pygame.sprite.Sprite):
 
 		# Get the game's object so we can interact with the world
 		self.game = game
-		# self.image = pygame.Surface((TILESIZE, TILESIZE))
 
 		# Player image asset
 		self.image = pygame.transform.scale(assets.get_asset_from_name(game.graphics, 'player1').image, (64, 64))
-		# self.image.fill(YELLOW)
 		self.rect = self.image.get_rect()
 
 		# Create player position and velocity
@@ -44,9 +35,10 @@ class Player(pygame.sprite.Sprite):
 		# Initialize all upgradable skills for the player
 		self.playerskills = playerskill.init()
 
+		# Set equipped slot to the first slot
 		self.equipped_slot = self.inventory.slots[0]
 
-		#TODO: Set debug cooldown (might remove later)
+		# TODO: Set debug cooldown (might remove later)
 		self.debug_print_cooldown = 0
 
 	def check_levels(self):
@@ -93,12 +85,6 @@ class Player(pygame.sprite.Sprite):
 			for ps in self.playerskills:
 				print(ps.name, ps.level, ps.xp, ps.xp_needed)
 			print("-------------------------------------------------")
-
-	"""# Function to move the player
-	def move(self, dx=0, dy=0):
-		if not self.collide_with_walls(dx, dy):
-			self.x += dx
-			self.y += dy"""
 
 	def get_events(self):
 		for ev in pygame.event.get():
@@ -178,8 +164,6 @@ class Wall(pygame.sprite.Sprite):
 
 		# Game object so we can interact with the world
 		self.game = game
-		# self.image = pygame.Surface((TILESIZE, TILESIZE))
-		# self.image.fill(GREEN)
 
 		# Wall image asset
 		self.image = pygame.transform.scale(assets.get_asset_from_name(game.graphics, "wall1").image, (64, 64))
