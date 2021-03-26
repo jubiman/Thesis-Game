@@ -7,6 +7,7 @@ import baseskill
 import playerskill
 import math
 import item
+from random import randint
 
 
 class Player(pygame.sprite.Sprite):
@@ -85,6 +86,10 @@ class Player(pygame.sprite.Sprite):
 			for ps in self.playerskills:
 				print(ps.name, ps.level, ps.xp, ps.xp_needed)
 			print("-------------------------------------------------")
+		if keys[K_l] and self.debug_print_cooldown == 0:
+			print("Inventory:")
+			for it in self.inventory.inv:
+				print(it.item.name, it.quantity)
 
 	def get_events(self):
 		for ev in pygame.event.get():
@@ -106,10 +111,18 @@ class Player(pygame.sprite.Sprite):
 
 				# Check if the mouse and tree image collide
 				if tree.rect.collidepoint(rel_mouse):
-					if self.equipped_slot.get_item().name == 'axe':
+					if self.equipped_slot.get_item().name.lower() == 'axe':
 
 						# Chop down the tree
 						tree.kill()
+
+						# Add wood to inventory
+						# TODO: Add woodcutting skill multiplier
+						amount = randint(1, 5)
+						self.inventory.add_new_item(item.get_item_from_name(self.game.items, 'Wood'), amount)
+						# Display message for ammount of wood
+						print(f"You got {amount} wood!")
+
 						# TODO: Add wood to inventory
 						# Add exp to woodcutting
 						# TODO: Add multiplier/check tree type?

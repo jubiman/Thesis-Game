@@ -6,6 +6,11 @@ from os import path
 
 # Get assets from coordinates, returns the asset object or None if the asset was not found
 def get_asset_from_loc(assets, loc):
+	"""
+	:param list[Asset] assets: The list of assets to search through
+	:param tuple[int, int] loc: The location of the asset to find
+	:return: Returns Asset on success or None on failure
+	"""
 	for asset in assets:
 		if asset.loc == loc:
 			return asset
@@ -13,6 +18,11 @@ def get_asset_from_loc(assets, loc):
 
 
 def get_asset_from_name(assets, name):
+	"""
+	:param list[Asset] assets: The list of assets to search through
+	:param str name: The name of the asset to find
+	:return: Returns Asset on success or None on failure
+	"""
 	for asset in assets:
 		if asset.name == name:
 			return asset
@@ -22,6 +32,9 @@ def get_asset_from_name(assets, name):
 # Populate induvidual assets in a tilesheet (currently hardcoded). Returns a list with Asset objects
 # Assets loads collumn per collumn (x -> y)
 def populate_assets():
+	"""
+	:return: Returns a list of assets
+	"""
 	# Define list with image chunks
 	assets = []
 	# Open the tilesheet
@@ -43,6 +56,10 @@ def populate_assets():
 
 # Returns name of asset
 def get_name(index):
+	"""
+	:param int index: The index (ID) where to look for the name
+	:return: Returns name string at the index location on success or "unknown" on failure
+	"""
 	# A python switch case
 	# TODO: fully populate names (only 1056 lol)
 	switch = {
@@ -63,6 +80,12 @@ def get_name(index):
 
 class Asset:
 	def __init__(self, name, img, ident=-1, loc=(-1, -1)):
+		"""
+		:param str name: The name identifier of the asset
+		:param pygame.surface.Surface img: The image of the asset
+		:param int ident: The ID of the asset
+		:param tuple[int, int] loc: The location on the tilesheet
+		"""
 		self.name = name
 		self.id = ident
 		self.loc = loc
@@ -76,6 +99,10 @@ class Assets:
 		self.assets = populate_assets()
 
 	def get_from_loc(self, loc):
+		"""
+		:param tuple[int, int] loc: the location to get the asset from
+		:return: Returns Asset on success or none on failure
+		"""
 		for asset in self.assets:
 			if asset.loc == loc:
 				return asset
