@@ -71,7 +71,7 @@ def get_name_from_id(blist, iden):
 	:return: Returns Baseskill on success or None on failure
 	:rtype: str | None
 	"""
-	for bs in baseskills:
+	for bs in blist:
 		if bs.id == iden:
 			return bs.name
 	return None
