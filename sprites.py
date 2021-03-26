@@ -7,6 +7,7 @@ import baseskill
 import playerskill
 import math
 import item
+import levelbase
 from random import randint
 
 
@@ -20,46 +21,67 @@ class Player(pygame.sprite.Sprite):
 		# Get the game's object so we can interact with the world
 		self.game = game
 
+# Assets
 		# Player image asset
 		self.image = pygame.transform.scale(assets.get_asset_from_name(game.graphics, 'player1').image, (64, 64))
 		self.rect = self.image.get_rect()
 
+# World interaction
 		# Create player position and velocity
 		self.vel = pygame.math.Vector2(0, 0)
 		self.pos = pygame.math.Vector2(x, y) * TILESIZE
 
+# Inventory
 		# Create an empty inventory
 		self.inventory = inventory.Inventory()
+		# Set equipped slot to the first slot
+		self.equipped_slot = self.inventory.slots[0]
 
+# Skills
 		# Initialize all base skills at level 0
 		self.baseskills = baseskill.init()
 		# Initialize all upgradable skills for the player
 		self.playerskills = playerskill.init()
 
-		# Set equipped slot to the first slot
-		self.equipped_slot = self.inventory.slots[0]
+# Player base
+		# Set initial skill/level values
+		self.skillpoints = 0
+		self.level = levelbase.Levelbase(0, 0, 10)
+		self.xp_formula = "x = x + 10"  # TODO: Change XP system
+		self.hp = 20  # TODO: Possibly change this
+		self.armor = 0
 
 		# TODO: Set debug cooldown (might remove later)
 		self.debug_print_cooldown = 0
 
+# Methods
 	def check_levels(self):
+		# Check base skills
 		for bs in self.baseskills:
-			if bs.xp >= bs.xp_needed:
-				bs.xp = 0
+			if bs.level.xp >= bs.level.xp_needed:
+				bs.level.levelup()
+				"""bs.xp = 0
 				bs.level += 1
 				# TODO: just a placeholder, check basekill.py
-				bs.xp_needed += 10
+				bs.xp_needed += 10"""
 
 				# Display text to notify player of level up
 				# TODO: Make notification on-screen, not in console
-				print(f"You leveled up {bs.name} to level {bs.level}!")
-
+				print(f"You leveled up {bs.name} to level {bs.level.level}!")
+		# Check player skills
 		for ps in self.playerskills:
-			if ps.xp >= ps.xp_needed:
-				ps.xp = 0
+			if ps.level.xp >= ps.level.xp_needed:
+				ps.level.levelup()
+				"""ps.xp = 0
 				ps.level += 1
 				# TODO: just a placeholder, check playerskill.py
-				ps.xp_needed += 10
+				ps.xp_needed += 10"""
+				print(f"You leveled up {ps.name} to level {ps.level.level}!")
+		# Check player level
+		if self.level.xp >= self.level.xp_needed:
+			self.level.levelup()
+			self.skillpoints += 1 * self.level.level * 333 % 4  # TODO: make dynamic
+			print(f"Your player leveled up to level {self.level.level}!")
 
 	# Check player input (currently only movement keys)
 	def get_keys(self):
@@ -81,15 +103,19 @@ class Player(pygame.sprite.Sprite):
 			# TODO: Debug menu for skills
 			print("-------------------------------------------------")
 			for bs in self.baseskills:
-				print(bs.name, bs.level, bs.xp, bs.xp_needed)
+				print(bs.name, bs.level.level, bs.level.xp, bs.level.xp_needed)
 			print("-------------------------------------------------")
 			for ps in self.playerskills:
-				print(ps.name, ps.level, ps.xp, ps.xp_needed)
+				print(ps.name, ps.level.level, ps.level.xp_needed)
 			print("-------------------------------------------------")
+			print("Format: level | xp | sp | hp | armor")
+			print("Player", self.level.level, self.level.xp, self.skillpoints, self.hp, self.armor)
+			self.debug_print_cooldown = 1
 		if keys[K_l] and self.debug_print_cooldown == 0:
 			print("Inventory:")
 			for it in self.inventory.inv:
 				print(it.item.name, it.quantity)
+			self.debug_print_cooldown = 1
 
 	def get_events(self):
 		for ev in pygame.event.get():
@@ -126,8 +152,11 @@ class Player(pygame.sprite.Sprite):
 						# TODO: Add wood to inventory
 						# Add exp to woodcutting
 						# TODO: Add multiplier/check tree type?
-						baseskill.get_from_name(self.baseskills, "Woodcutting").xp += 10
+						baseskill.get_from_name(self.baseskills, "Woodcutting").level.xp += 10
+						# TODO: Pure debug text, remove later
 						print("You chopped down a tree and gained 10 Woodcutting xp!")
+						print("Your player gained 10 xp")
+						self.level.xp += 10
 						self.check_levels()
 					else:
 						print("You need an axe to break a tree")
@@ -144,7 +173,8 @@ class Player(pygame.sprite.Sprite):
 		self.get_mouse()
 
 		# TODO: Debug cooldown, might remove later
-		self.debug_print_cooldown += self.game.clock.get_time()
+		if self.debug_print_cooldown != 0:
+			self.debug_print_cooldown += self.game.clock.get_time()
 		if self.debug_print_cooldown > 400:
 			self.debug_print_cooldown = 0
 
