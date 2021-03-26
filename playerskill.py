@@ -14,6 +14,13 @@ playerskills = [
 
 class Playerskill:
 	def __init__(self, name, iden=-1, level=0, xp=0, xpn=10):
+		"""
+		:param str name: The name of the skill
+		:param int iden: The ID of the skill
+		:param int level: The level of the skill
+		:param int xp: The experience points of the skill
+		:param int xpn: The experience needed for levelup
+		"""
 		self.name = name
 		self.id = iden
 		self.level = level
@@ -24,8 +31,11 @@ class Playerskill:
 		self.xp_formula = "x = x + 10"
 
 
-# Returns a list of base skills
+# Returns a list of player skills
 def init():
+	"""
+	:return: Returns a list with all player skills
+	"""
 	tmp = []
 	for i in range(len(playerskills)):
 		# Create new Baseskill(name, id) object

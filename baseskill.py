@@ -13,6 +13,13 @@ baseskills = [
 
 class Baseskill:
 	def __init__(self, name, iden=-1, level=0, xp=0, xpn=10):
+		"""
+		:param str name: The name of the skill
+		:param int iden: The ID of the skill
+		:param int level: The level of the skill
+		:param int xp: The experience points of the skill
+		:param int xpn: The experience needed for levelup
+		"""
 		self.name = name
 		self.id = iden
 		self.level = level
@@ -25,6 +32,9 @@ class Baseskill:
 
 # Returns a list of base skills
 def init():
+	"""
+	:return: Returns a list with all player skills
+	"""
 	tmp = []
 	for i in range(len(baseskills)):
 		# Create new Baseskill(name, id) object
@@ -32,21 +42,38 @@ def init():
 	return tmp
 
 
-def get_from_name(plist, n):
-	for bs in plist:
+def get_from_name(blist, n):
+	"""
+	:param list[Baseskill] blist: The list of baseskills to search through
+	:param str n: The name of the Baseskill to find
+	:return: Returns Baseskill on success or None on failure
+	"""
+	for bs in blist:
 		if bs.name.lower() == n.lower():
 			return bs
 	return None
 
 
-def get_from_id(iden):
-	for bs in baseskills:
-		if bs[1] == iden:
+def get_from_id(blist, iden):
+	"""
+	:param list[Baseskill] blist: The list of baseskills to search through
+	:param int iden: The ID of the baseskill to find
+	:return: Returns Baseskill on success or None on failure
+	"""
+	for bs in blist:
+		if bs.id == iden:
 			return bs
 	return None
 
 
-def get_name_from_id(iden):
+def get_name_from_id(blist, iden):
+	"""
+	:param list[Baseskill] blist: The list of baseskills to search through
+	:param int iden: The ID of the baseskill to find
+	:return: Returns Baseskill on success or None on failure
+	:rtype: str | None
+	"""
 	for bs in baseskills:
-		if bs[1] == iden:
-			return bs[0]
+		if bs.id == iden:
+			return bs.name
+	return None
