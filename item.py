@@ -2,9 +2,10 @@ import pygame
 
 
 items = [
-	("empty", 0),
-	("axe", 1),
-	("sword", 2)
+	("Empty", 0),
+	("Axe", 1),
+	("Sword", 2),
+	("Wood", 3)
 ]
 
 
@@ -17,6 +18,9 @@ class Item:
 
 
 def populate_items():
+	"""
+	:return: Returns a list with all items
+	"""
 	tmp = []
 	for it in items:
 		tmp.append(Item(it[0], it[1]))
@@ -24,6 +28,11 @@ def populate_items():
 
 
 def get_item_from_name(itlist, n):
+	"""
+	:param list[Item] itlist: list of items to iterate over
+	:param str n: The name string
+	:return: Returns the Item object on success or None on failure
+	"""
 	for it in itlist:
 		if it.name.lower() == n.lower():
 			return it
