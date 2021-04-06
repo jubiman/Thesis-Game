@@ -1,34 +1,31 @@
 import pygame
 from pygame.locals import *
+from skillbase import *
 
 
+# (Name, ID, level, spn)
 playerskills = [
-	("Strenth", 0),
-	("Dexterity", 1),
-	("Physical Resistance", 2),
-	("Magic Resistance", 3),
-	("Agility", 4),
-	("Dodge", 5)
+	("Strenth", 0, 0, 1),
+	("Dexterity", 1, 0, 1),
+	("Physical Resistance", 2, 0,1 ),
+	("Magic Resistance", 3, 0, 1),
+	("Agility", 4, 0, 1),
+	("Dodge", 5, 0, 1)
 ]
 
 
-class Playerskill:
-	def __init__(self, name, iden=-1, level=0, xp=0, xpn=10):
+class Playerskill(Skillbase):
+	def __init__(self, name, iden, level, spn=10):
 		"""
 		:param str name: The name of the skill
 		:param int iden: The ID of the skill
 		:param int level: The level of the skill
-		:param int xp: The experience points of the skill
-		:param int xpn: The experience needed for levelup
+		:param int spn: The skillpoints needed for levelup
 		"""
-		self.name = name
-		self.id = iden
-		self.level = level
-		self.xp = xp
-		self.xp_needed = xpn
+		Skillbase.__init__(self, name, iden, level, 0, spn)
 		# Does nothing at the moment
-		# TODO: do something with a good formula to change needed xp per level per skill
-		self.xp_formula = "x = x + 10"
+		# TODO: do something with a good formula to change needed sp per level per skill
+		self.sp_formula = "x = x + 10"
 
 
 # Returns a list of player skills
@@ -39,5 +36,5 @@ def init():
 	tmp = []
 	for i in range(len(playerskills)):
 		# Create new Baseskill(name, id) object
-		tmp.append(Playerskill(playerskills[i][0], playerskills[i][1]))
+		tmp.append(Playerskill(playerskills[i][0], playerskills[i][1], playerskills[i][2], playerskills[i][3]))
 	return tmp

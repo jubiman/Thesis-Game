@@ -28,13 +28,12 @@ class Inventory:
 		"""
 		:param item.Item it: The item to add
 		:param int quant: The quantity to add
-		:return: Method of void type
 		"""
-
 		# Search for item in inventory
 		for it2 in self.inv:
 			if it.name.lower() == it2.item.name.lower():
-				pass
+				it2.quantity += quant
+				return
 		# Make new item
 		self.inv.append(InventoryItem(it, quant))
 
