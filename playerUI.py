@@ -2,7 +2,7 @@ import pygame
 from pygame.locals import *
 
 class HealthTable:
-    def __init__(self, max = 10):
+    def __init__(self, max = 100):
         self.max = [None] * max
 
     def __setitem__(self, key, value):
@@ -23,3 +23,4 @@ class HealthTable:
         except:
             return False
 
+#TODO: create functioning HealthBar on screen
