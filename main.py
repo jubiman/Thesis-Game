@@ -52,7 +52,7 @@ class Game:
 				if tile == '1':
 					Wall(self, col, row)
 				if tile == 'P':
-					self.player = Player(self, col, row)
+					self.player = Player(self, 20, 20, 0, col, row)
 				if tile == 'T':
 					Tree(self, col, row)
 		# Initialize camera map specific
