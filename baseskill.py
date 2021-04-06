@@ -1,5 +1,7 @@
 import pygame
 from pygame.locals import *
+from skillbase import *
+
 
 baseskills = [
 	("Woodcutting", 0),
@@ -11,7 +13,7 @@ baseskills = [
 ]
 
 
-class Baseskill:
+class Baseskill(Skillbase):
 	def __init__(self, name, iden=-1, level=0, xp=0, xpn=10):
 		"""
 		:param str name: The name of the skill
@@ -20,11 +22,7 @@ class Baseskill:
 		:param int xp: The experience points of the skill
 		:param int xpn: The experience needed for levelup
 		"""
-		self.name = name
-		self.id = iden
-		self.level = level
-		self.xp = xp
-		self.xp_needed = xpn
+		Skillbase.__init__(self, name, iden, level, xp, xpn)
 		# Does nothing at the moment
 		# TODO: do something with a good formula to change needed xp per level per skill
 		self.xp_formula = "x = x + 10"
@@ -73,7 +71,7 @@ def get_name_from_id(blist, iden):
 	:return: Returns Baseskill on success or None on failure
 	:rtype: str | None
 	"""
-	for bs in baseskills:
+	for bs in blist:
 		if bs.id == iden:
 			return bs.name
 	return None
