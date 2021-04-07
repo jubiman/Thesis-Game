@@ -3,20 +3,6 @@ from os import path
 
 
 # Static methods
-
-# Get assets from coordinates, returns the asset object or None if the asset was not found
-"""def get_asset_from_loc(assets, loc):
-	""" """
-	:param list[Asset] assets: The list of assets to search through
-	:param tuple[int, int] loc: The location of the asset to find
-	:return: Returns Asset on success or None on failure
-	""" """
-	for asset in assets:
-		if asset.loc == loc:
-			return asset
-	return None"""
-
-
 def get_asset_from_name(assets, name):
 	"""
 	:param list[Asset] assets: The list of assets to search through
@@ -85,12 +71,5 @@ class Asset:
 		:param pygame.surface.Surface img: The image of the asset
 
 		"""
-		"""
-		:param int ident: The ID of the asset
-		:param tuple[int, int] loc: The location on the tilesheet
-		"""
 		self.name = name
 		self.image = img
-		# self.id = ident
-		# self.loc = loc
-

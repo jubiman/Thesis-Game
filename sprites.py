@@ -35,7 +35,8 @@ class Player(LivingCreature):
 		# Create an empty inventory
 		self.inventory = inventory.Inventory()
 		# Set equipped slot to the first slot
-		self.equipped_slot = self.inventory.slots[0]
+		# self.equipped_slot = self.inventory.slots[0]
+		# TODO: This is now done in the inventory itself
 
 # Skills
 		# Initialize all base skills at level 0
@@ -111,8 +112,8 @@ class Player(LivingCreature):
 			self.debug_print_cooldown = 1
 		if keys[K_l] and self.debug_print_cooldown == 0:
 			print("Inventory:")
-			for it in self.inventory.inv:
-				print(it.item.name, it.quantity)
+			for it in self.inventory.inv.ls:
+				print(it.item.name, it.quantity, it.item.max_stack)
 			self.debug_print_cooldown = 1
 
 	def get_events(self):
@@ -133,9 +134,10 @@ class Player(LivingCreature):
 				rel_mouse = (math.floor((pygame.mouse.get_pos()[0] + self.game.player.pos[0]) - WIDTH/2),
 								math.floor((pygame.mouse.get_pos()[1] + self.game.player.pos[1]) - HEIGHT/2))
 
+				# print(rel_mouse, pygame.mouse.get_pos())
 				# Check if the mouse and tree image collide
 				if tree.rect.collidepoint(rel_mouse):
-					if self.equipped_slot.get_item().name.lower() == 'axe':
+					if self.inventory.hands[0].item.name.lower() == 'axe' or self.inventory.hands[1].item.name.lower() == 'axe':
 
 						# Chop down the tree
 						tree.kill()
@@ -182,25 +184,6 @@ class Player(LivingCreature):
 			self.debug_print_cooldown = 0
 
 	# Called from move(), checks if the direction we're going is obstructed
-	"""def collide_with_walls(self, d):
-		hits = pygame.sprite.spritecollide(self, self.game.walls, False, collide_collider_rect)
-		if d == 'x':
-			if hits:
-				if self.vel.x > 0:
-					self.pos.x = hits[0].rect.left - self.collision_rect.width / 2
-				if self.vel.x < 0:
-					self.pos.x = hits[0].rect.right + self.collision_rect.width / 2
-				self.vel.x = 0
-				self.rect.centerx = self.pos.x
-		if d == 'y':
-			if hits:
-				if self.vel.y > 0:
-					self.pos.y = hits[0].rect.top - self.collision_rect.height / 2
-				if self.vel.y < 0:
-					self.pos.y = hits[0].rect.bottom + self.collision_rect.height / 2
-				self.vel.y = 0
-				self.rect.centery = self.pos.y"""
-
 	def collide_with_walls(self):
 		# TODO: Make algorithm that checks only surrounding tiles + rewrite with world gen
 		# if pos/TILESIZE+64 ==
@@ -250,9 +233,7 @@ class Wall(pygame.sprite.Sprite):
 		self.game = game
 
 		# Wall image asset
-		# self.image = pygame.transform.scale(assets.get_asset_from_name(game.graphics, "wall1").image, (64, 64))
-		self.image = pygame.Surface((TILESIZE, TILESIZE))
-		self.image.fill(GREEN)
+		self.image = pygame.transform.scale(assets.get_asset_from_name(game.graphics, "wall1").image, (64, 64))
 		self.rect = self.image.get_rect()
 
 		# Set positions

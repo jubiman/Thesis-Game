@@ -15,8 +15,8 @@ class InventoryItem:
 class InventoryList:
 	def __init__(self, size, ls=None):
 		"""
-		:param size: Maximum size of the list
-		:param ls:
+		:param int size: Maximum size of the list
+		:param list[InventoryItem] ls: The inventory list
 		"""
 		if ls is None:
 			ls = []
@@ -46,7 +46,7 @@ class Inventory:
 	def __init__(self):
 		self.inv = InventoryList(27)  # Inventory only has 27 slots
 		# self.hands[0] is main hand, hands[1] is offhand
-		self.hands = [InventorySlot(Item('Axe', 1), 1, 1), None]
+		self.hands = [InventorySlot(Item('Axe', 1, 1), 1, 1), None]
 		# for i in range(9):
 		# self.slots.append(InventorySlot(item.Item('Axe', 1), 1, 1))
 		# self.slots.append(InventorySlot(item.Item('empty', 0), i+1))
@@ -60,7 +60,12 @@ class Inventory:
 		# Search for item in inventory
 		for it2 in self.inv.ls:
 			if it.name.lower() == it2.item.name.lower():
-				it2.quantity += quant
+				if it2.quantity + quant < it2.item.max_stack:
+					it2.quantity += quant
+				else:
+					# Not enought space in inventory
+					# TODO: Drop the rest of the item
+					it2.quantity = it2.item.max_stack
 				return
 		# Make new item
 		self.inv.ls.append(InventoryItem(it, quant))
