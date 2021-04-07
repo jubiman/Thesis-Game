@@ -1,4 +1,5 @@
 # TODO: add more items/materials
+# (name: str, id: int, max_stack: int)
 items = [
 	("Empty", 0, 1),
 
