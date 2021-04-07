@@ -236,3 +236,5 @@ class Tree(pygame.sprite.Sprite):
 
 		# Getting specific information from LivingCreature class
 		# super().__init__(game, hp, max_hp, armor)
+		# im soo angry right now
+
