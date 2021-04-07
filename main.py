@@ -7,6 +7,7 @@ import sys
 import getopt
 import tilemap
 import assets
+import threading
 # from os import system
 # system('cls')
 
@@ -42,11 +43,26 @@ class Game:
 		# self.player_img = pygame.image.load(path.join(assets_folder, 'visual/')).convert_alpha()
 		# self.player_img = pygame.transform.scale(assets.get_asset_from_name(self.graphics, 'player1').image, (64, 64))
 
+	def console(self):
+		while True:
+			inp = input()
+			s = inp.split()
+			if s[0] == "give":
+				try:
+					self.player.inventory.add_new_item(item.get_item_from_name(self.items, s[1]), int(s[2]))
+				except ValueError:
+					print("Could not convert int to string")
+				except:
+					pass
+
 	def new(self):
 		# initialize all variables and do all the setup for a new game
 		self.sprites = pygame.sprite.Group()
 		self.walls = pygame.sprite.Group()
 		self.trees = pygame.sprite.Group()
+		self.consoleThread = threading.Thread(target=self.console)
+		self.consoleThread.start()
+		print("Reading console input")
 		for row, tiles in enumerate(self.map.data):
 			for col, tile in enumerate(tiles):
 				if tile == '1':
@@ -55,10 +71,11 @@ class Game:
 					self.player = Player(self, 20, 20, 0, col, row)
 				if tile == 'T':
 					Tree(self, col, row)
+
 		# Initialize camera map specific
 		# TODO: might have to change the camera's settings
 		self.camera = tilemap.Camera(self.map.width, self.map.height)
-		self.items = item.populate_items()
+		self.items = item.populate_items(self.graphics)
 
 	def run(self):
 		# game loop - set self.playing = False to end the game
@@ -90,8 +107,6 @@ class Game:
 		self.draw_grid()
 		for sprite in self.sprites:
 			self.screen.blit(sprite.image, self.camera.apply(sprite))
-		pygame.draw.rect(self.screen, (255, 255, 255), self.camera.apply(self.player), 2)
-		pygame.draw.rect(self.screen, (255, 255, 255), self.player.collision_rect, 2)
 		pygame.display.flip()
 
 	def events(self):

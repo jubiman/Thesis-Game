@@ -1,3 +1,4 @@
+import assets
 # TODO: add more items/materials
 # (name: str, id: int, max_stack: int)
 items = [
@@ -38,24 +39,26 @@ items = [
 # TODO: Create new items, possibly with list
 class Item:
 	# TODO: add plural name?
-	def __init__(self, name, iden=-1, max_stack=1):
+	def __init__(self, name, img, iden=-1, max_stack=1):
 		"""
 		:param str name: The name of the item
 		:param int iden: The ID of the item
 		:param int max_stack: The maximum amount the player can hold of the item in one slot
 		"""
 		self.name = name
+		self.image = img
 		self.id = iden
 		self.max_stack = max_stack
 
 
-def populate_items():
+def populate_items(asset):
 	"""
+	:param list[Asset] asset: The list of assets to iterate from
 	:return: Returns a list with all items
 	"""
 	tmp = []
 	for it in items:
-		tmp.append(Item(it[0], it[1], it[2]))
+		tmp.append(Item(it[0], assets.get_asset_from_name(asset, 'axe').image, it[1], it[2]))
 	return tmp
 
 
