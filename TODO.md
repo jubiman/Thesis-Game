@@ -43,6 +43,9 @@ TODO:
         * Difficulties
         * Multiplayer?
     
+    - QoL:
+        * Add a saving and loading system
+    
 - Division of tasks:
     * Mel:
         * TODO:
