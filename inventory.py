@@ -1,41 +1,69 @@
-import pygame
-from pygame.locals import *
-import item
+from item import Item
 
 
 class InventoryItem:
 	def __init__(self, it, quant=0):
 		"""
-		:param item.Item it: The item object to reference to
+		:param Item it: The item object to reference to
 		:param int quant: The quantity of the item
 		"""
 		self.item = it
 		self.quantity = quant
 
 
+# TODO: Might change this class for some checks inside code
+class InventoryList:
+	def __init__(self, size, ls=None):
+		"""
+		:param size: Maximum size of the list
+		:param ls:
+		"""
+		if ls is None:
+			ls = []
+		self.max_size = size
+		self.ls = ls
+
+	def push(self, it):
+		"""
+		:param InventoryItem it: the item to add to the inventory
+		:return: None
+		"""
+		if len(self.ls) == self.max_size:
+			print("No space in inventory")
+			# TODO: Do stuff with no inventory space
+			return
+		self.ls.append(it)
+
+	def get(self):
+		return self.ls
+
+	def swap_item(self):
+		pass
+
+
 # TODO: Create working inventory with items
 class Inventory:
 	def __init__(self):
-		self.inv = []  # Quit item to test out breaking of trees
-		self.slots = []
+		self.inv = InventoryList(27)  # Inventory only has 27 slots
+		# self.hands[0] is main hand, hands[1] is offhand
+		self.hands = [InventorySlot(Item('Axe', 1), 1, 1), None]
 		# for i in range(9):
-		self.slots.append(InventorySlot(item.Item('Axe', 1), 1, 1))
+		# self.slots.append(InventorySlot(item.Item('Axe', 1), 1, 1))
 		# self.slots.append(InventorySlot(item.Item('empty', 0), i+1))
-		self.inv = self.slots
 
 	# Method to add items to inventory
 	def add_new_item(self, it, quant=0):
 		"""
-		:param item.Item it: The item to add
+		:param Item it: The item to add
 		:param int quant: The quantity to add
 		"""
 		# Search for item in inventory
-		for it2 in self.inv:
+		for it2 in self.inv.ls:
 			if it.name.lower() == it2.item.name.lower():
 				it2.quantity += quant
 				return
 		# Make new item
-		self.inv.append(InventoryItem(it, quant))
+		self.inv.ls.append(InventoryItem(it, quant))
 
 
 class InventorySlot(InventoryItem):
@@ -51,6 +79,6 @@ class InventorySlot(InventoryItem):
 	def get_item(self):
 		"""
 		:return: Returns it's item object
-		:rtype: item.Item
+		:rtype: Item
 		"""
 		return self.item

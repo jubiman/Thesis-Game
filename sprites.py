@@ -30,6 +30,9 @@ class Player(pygame.sprite.Sprite):
 		# Create player position and velocity
 		self.vel = pygame.math.Vector2(0, 0)
 		self.pos = pygame.math.Vector2(x, y) * TILESIZE
+		# Collision properties
+		self.collision_rect = pygame.Rect(0, 0, 35, 35)
+		self.collision_rect.center = self.rect.center
 
 # Inventory
 		# Create an empty inventory
@@ -132,8 +135,8 @@ class Player(pygame.sprite.Sprite):
 		mouse = pygame.mouse.get_pressed()
 		if mouse[0]:
 			for tree in self.game.trees:
-				rel_mouse = (math.floor((pygame.mouse.get_pos()[0] + self.game.player.pos[0]) - 8 * 64),
-								math.floor((pygame.mouse.get_pos()[1] + self.game.player.pos[1]) - 6 * 64))
+				rel_mouse = (math.floor((pygame.mouse.get_pos()[0] + self.game.player.pos[0]) - WIDTH/2),
+								math.floor((pygame.mouse.get_pos()[1] + self.game.player.pos[1]) - HEIGHT/2))
 
 				# Check if the mouse and tree image collide
 				if tree.rect.collidepoint(rel_mouse):
@@ -165,11 +168,16 @@ class Player(pygame.sprite.Sprite):
 	def update(self):
 		self.get_keys()
 		# Move the player
+		self.rect = self.image.get_rect()
+		self.rect.center = self.pos
+		self.collision_rect.centerx = self.pos.x
+		# self.collide_with_walls('x')
+		self.collision_rect.centery = self.pos.y
+		# self.collide_with_walls('y')
+		self.collide_with_walls()
 		self.pos += self.vel * self.game.dt
-		self.rect.x = self.pos.x
-		self.collide_with_walls('x')
-		self.rect.y = self.pos.y
-		self.collide_with_walls('y')
+		self.rect.center = self.collision_rect.center
+
 		self.get_mouse()
 
 		# TODO: Debug cooldown, might remove later
@@ -179,25 +187,63 @@ class Player(pygame.sprite.Sprite):
 			self.debug_print_cooldown = 0
 
 	# Called from move(), checks if the direction we're going is obstructed
-	def collide_with_walls(self, d):
+	"""def collide_with_walls(self, d):
+		hits = pygame.sprite.spritecollide(self, self.game.walls, False, collide_collider_rect)
 		if d == 'x':
-			hits = pygame.sprite.spritecollide(self, self.game.walls, False)
 			if hits:
 				if self.vel.x > 0:
-					self.pos.x = hits[0].rect.left - self.rect.width
+					self.pos.x = hits[0].rect.left - self.collision_rect.width / 2
 				if self.vel.x < 0:
-					self.pos.x = hits[0].rect.right
+					self.pos.x = hits[0].rect.right + self.collision_rect.width / 2
 				self.vel.x = 0
-				self.rect.x = self.pos.x
+				self.rect.centerx = self.pos.x
 		if d == 'y':
-			hits = pygame.sprite.spritecollide(self, self.game.walls, False)
 			if hits:
 				if self.vel.y > 0:
-					self.pos.y = hits[0].rect.top - self.rect.height
+					self.pos.y = hits[0].rect.top - self.collision_rect.height / 2
 				if self.vel.y < 0:
-					self.pos.y = hits[0].rect.bottom
+					self.pos.y = hits[0].rect.bottom + self.collision_rect.height / 2
 				self.vel.y = 0
-				self.rect.y = self.pos.y
+				self.rect.centery = self.pos.y"""
+
+	def collide_with_walls(self):
+		# TODO: Make algorithm that checks only surrounding tiles + rewrite with world gen
+		# if pos/TILESIZE+64 ==
+		for w in self.game.walls:
+			# Moving right
+			if w.rect.collidepoint(self.pos.x + self.collision_rect.width/2, self.pos.y) and self.vel.x > 0:
+				# Also moving down
+				if w.rect.collidepoint(self.pos.x, self.pos.y + self.collision_rect.height/2) and self.vel.y > 0:
+					self.vel = pygame.math.Vector2(0, 0)
+					return
+				# Also moving up
+				if w.rect.collidepoint(self.pos.x, self.pos.y - self.collision_rect.height/2) and self.vel.y < 0:
+					self.vel = pygame.math.Vector2(0, 0)
+					return
+				# Only moving right
+				self.vel = pygame.math.Vector2(0, 0)
+				return
+			# Moving left
+			if w.rect.collidepoint(self.pos.x - self.collision_rect.width/2, self.pos.y) and self.vel.x < 0:
+				# Also moving down
+				if w.rect.collidepoint(self.pos.x, self.pos.y + self.collision_rect.height/2) and self.vel.y > 0:
+					self.vel = pygame.math.Vector2(0, 0)
+					return
+				# Also moving up
+				if w.rect.collidepoint(self.pos.x, self.pos.y - self.collision_rect.height/2) and self.vel.y < 0:
+					self.vel = pygame.math.Vector2(0, 0)
+					return
+				# Only moving left
+				self.vel = pygame.math.Vector2(0, 0)
+				return
+			# Moving down
+			if w.rect.collidepoint(self.pos.x, self.pos.y + self.collision_rect.height/2) and self.vel.y > 0:
+				self.vel = pygame.math.Vector2(0, 0)
+				return
+			# Moving up
+			if w.rect.collidepoint(self.pos.x, self.pos.y - self.collision_rect.height/2) and self.vel.y < 0:
+				self.vel = pygame.math.Vector2(0, 0)
+				return
 
 
 class Wall(pygame.sprite.Sprite):
@@ -209,7 +255,9 @@ class Wall(pygame.sprite.Sprite):
 		self.game = game
 
 		# Wall image asset
-		self.image = pygame.transform.scale(assets.get_asset_from_name(game.graphics, "wall1").image, (64, 64))
+		# self.image = pygame.transform.scale(assets.get_asset_from_name(game.graphics, "wall1").image, (64, 64))
+		self.image = pygame.Surface((TILESIZE, TILESIZE))
+		self.image.fill(GREEN)
 		self.rect = self.image.get_rect()
 
 		# Set positions

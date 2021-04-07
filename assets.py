@@ -5,16 +5,16 @@ from os import path
 # Static methods
 
 # Get assets from coordinates, returns the asset object or None if the asset was not found
-def get_asset_from_loc(assets, loc):
-	"""
+"""def get_asset_from_loc(assets, loc):
+	""" """
 	:param list[Asset] assets: The list of assets to search through
 	:param tuple[int, int] loc: The location of the asset to find
 	:return: Returns Asset on success or None on failure
-	"""
+	""" """
 	for asset in assets:
 		if asset.loc == loc:
 			return asset
-	return None
+	return None"""
 
 
 def get_asset_from_name(assets, name):
@@ -33,6 +33,9 @@ def get_asset_from_name(assets, name):
 # Assets loads collumn per collumn (x -> y)
 def populate_assets():
 	"""
+	Populate induvidual assets in a tilesheet (currently hardcoded). Returns a list with Asset objects.\n
+	Assets loads collumn per collumn (x -> y).
+
 	:return: Returns a list of assets
 	"""
 	# Define list with image chunks
@@ -40,17 +43,14 @@ def populate_assets():
 	# Open the tilesheet
 	# colored_packed.png is 16x16, currently is hardcoded to this file
 	sheet = pygame.image.load(path.join(path.dirname(__file__), 'assets/visual/Tilesheet/colored_transparent_packed.png'))
-	# index = 0  # is used to know how many iterations we have done (i*22+j = index)
+	# index = 0  # is used to know how many iterations we have done (x*22+y = index)
 	for x in range(48):
 		for y in range(22):
-			loc = (16*x, 16*y)
-			# assets.append(sheet.subsurface(pygame.Rect(loc, 16)))
-			# TODO: fix this fucking code lol
-			assets.append(Asset(get_name(x*22+y), sheet.subsurface(pygame.Rect(loc, (16, 16))), x*22+y, loc))
-			# index += 1
+			# assets.append(Asset(get_name(x*22+y), sheet.subsurface(pygame.Rect((16*x, 16*y), (16, 16))), x*22+y, (16*x, 16*y)))
+			assets.append(Asset(get_name(x * 22 + y), sheet.subsurface(pygame.Rect((16 * x, 16 * y), (16, 16)))))
 	# Debugging:
 	for asset in assets:
-		print(f"Loaded asset: {asset.name}, {asset.id}, {asset.loc}")
+		print(f"Loaded asset: {asset.name}")
 	return assets
 
 
@@ -79,31 +79,18 @@ def get_name(index):
 
 
 class Asset:
-	def __init__(self, name, img, ident=-1, loc=(-1, -1)):
+	def __init__(self, name, img):
 		"""
 		:param str name: The name identifier of the asset
 		:param pygame.surface.Surface img: The image of the asset
+
+		"""
+		"""
 		:param int ident: The ID of the asset
 		:param tuple[int, int] loc: The location on the tilesheet
 		"""
 		self.name = name
-		self.id = ident
-		self.loc = loc
 		self.image = img
+		# self.id = ident
+		# self.loc = loc
 
-
-# TODO: Might remove this class as it seems useless
-class Assets:
-	def __init__(self):
-		# self.assets = populate_asset('assets/visual/Tilesheet/colored_transparent_packed.png')
-		self.assets = populate_assets()
-
-	def get_from_loc(self, loc):
-		"""
-		:param tuple[int, int] loc: the location to get the asset from
-		:return: Returns Asset on success or none on failure
-		"""
-		for asset in self.assets:
-			if asset.loc == loc:
-				return asset
-		return None

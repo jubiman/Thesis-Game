@@ -85,10 +85,13 @@ class Game:
 			pygame.draw.line(self.screen, LIGHTGREY, (0, y), (WIDTH, y))
 
 	def draw(self):
+		pygame.display.set_caption(TITLE + " - " + "{:.2f}".format(self.clock.get_fps()))
 		self.screen.fill(BGCOLOR)
 		self.draw_grid()
 		for sprite in self.sprites:
 			self.screen.blit(sprite.image, self.camera.apply(sprite))
+		pygame.draw.rect(self.screen, (255, 255, 255), self.camera.apply(self.player), 2)
+		pygame.draw.rect(self.screen, (255, 255, 255), self.player.collision_rect, 2)
 		pygame.display.flip()
 
 	def events(self):
