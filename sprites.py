@@ -274,4 +274,3 @@ class Enemy_standard(LivingCreature):
 
 	def update(self):
 		self.rect.center = self.pos
-
