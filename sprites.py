@@ -229,3 +229,10 @@ class Tree(pygame.sprite.Sprite):
 		self.y = y
 		self.rect.x = x * TILESIZE
 		self.rect.y = y * TILESIZE
+
+
+# class Enemy_standard(LivingCreature):
+	# def __init__(self, game, hp, max_hp, armor, x, y):
+
+		# Getting specific information from LivingCreature class
+		# super().__init__(game, hp, max_hp, armor)
