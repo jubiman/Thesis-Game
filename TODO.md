@@ -32,6 +32,9 @@ TODO:
         * Swords & bows & guns
         * Magic?
 
+    - Player:
+        * <i>Classes</i> or <b>dynamic</b>
+    
     - Resources:
         * Crafting
         * What resources?
@@ -39,3 +42,36 @@ TODO:
     - Base gameplay:
         * Difficulties
         * Multiplayer?
+    
+    - QoL:
+        * Add a saving and loading system
+    
+- Division of tasks:
+    * Mel:
+        * TODO:
+            - Entities
+        * DONE:
+            - Nothing
+    * Sybren:
+        * TODO:
+            - World generation
+            - Multi world system
+            - Base for dungeons
+        * DONE:
+            - Nothing
+    * Kevin:
+        * TODO:
+            - UI & poep
+        * DONE:
+            - Nothing
+    * Melle:
+        * TODO:
+            - Inventory
+            - Skills
+            - Player base
+        * DONE:
+            - Game base  
+
+- Timeline:
+    * Base
+    * QoL
