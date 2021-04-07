@@ -9,17 +9,14 @@ import math
 import item
 import levelbase
 from random import randint
+from livingcreature import LivingCreature
 
 
-class Player(pygame.sprite.Sprite):
-	def __init__(self, game, x, y):
-		self.groups = game.sprites
+class Player(LivingCreature):
+	def __init__(self, game, hp, max_hp, armor, x, y):
 
-		# Initialize Sprite base
-		pygame.sprite.Sprite.__init__(self, self.groups)
-
-		# Get the game's object so we can interact with the world
-		self.game = game
+		# Getting specific information from LivingCreature class
+		super().__init__(game, hp, max_hp, armor)
 
 # Assets
 		# Player image asset
@@ -51,8 +48,6 @@ class Player(pygame.sprite.Sprite):
 		self.skillpoints = 0
 		self.level = levelbase.Levelbase(0, 0, 10)
 		self.xp_formula = "x = x + 10"  # TODO: Change XP system
-		self.hp = 20  # TODO: Possibly change this
-		self.armor = 0
 
 		# TODO: Set debug cooldown (might remove later)
 		self.debug_print_cooldown = 0
@@ -149,7 +144,7 @@ class Player(pygame.sprite.Sprite):
 						# TODO: Add woodcutting skill multiplier
 						amount = randint(1, 5)
 						self.inventory.add_new_item(item.get_item_from_name(self.game.items, 'Wood'), amount)
-						# Display message for ammount of wood
+						# Display message for amount of wood
 						print(f"You got {amount} wood!")
 
 						# TODO: Add wood to inventory
