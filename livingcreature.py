@@ -9,11 +9,9 @@ class LivingCreature(pygame.sprite.Sprite):
 		self.game = game
 
 # LivingCreature Base
-		self.hp = hp  # TODO: Ability to change the HP of player
+		self.hp = hp
 		self.max_hp = max_hp
 		self.armor = armor
-
-		# TODO: max_hp
 
 		# Initialize Sprite base
 		pygame.sprite.Sprite.__init__(self, self.groups)
