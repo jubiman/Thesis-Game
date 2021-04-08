@@ -8,6 +8,7 @@ import getopt
 import tilemap
 import assets
 import threading
+import console
 # from os import system
 # system('cls')
 
@@ -36,6 +37,10 @@ class Game:
 		self.graphics = assets.populate_assets()
 		# TODO: for loop to populate assets
 
+		# Make console
+		self.console = console.Console(self)
+		self.consoleThread = threading.Thread(target=self.console.run, daemon=True)
+
 	def load_data(self):
 		game_folder = path.dirname(__file__)
 		assets_folder = path.join(game_folder, 'assets')
@@ -43,24 +48,12 @@ class Game:
 		# self.player_img = pygame.image.load(path.join(assets_folder, 'visual/')).convert_alpha()
 		# self.player_img = pygame.transform.scale(assets.get_asset_from_name(self.graphics, 'player1').image, (64, 64))
 
-	def console(self):
-		while True:
-			inp = input()
-			s = inp.split()
-			if s[0] == "give":
-				try:
-					self.player.inventory.add_new_item(item.get_item_from_name(self.items, s[1]), int(s[2]))
-				except ValueError:
-					print("Could not convert int to string")
-				except:
-					pass
-
 	def new(self):
 		# initialize all variables and do all the setup for a new game
 		self.sprites = pygame.sprite.Group()
 		self.walls = pygame.sprite.Group()
 		self.trees = pygame.sprite.Group()
-		self.consoleThread = threading.Thread(target=self.console)
+
 		self.consoleThread.start()
 		print("Reading console input")
 		for row, tiles in enumerate(self.map.data):
@@ -87,6 +80,7 @@ class Game:
 			self.draw()
 
 	def quit(self):
+		self.console.kill()
 		pygame.quit()
 		sys.exit()
 
