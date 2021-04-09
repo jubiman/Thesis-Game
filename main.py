@@ -89,16 +89,9 @@ class Game:
 		self.sprites.update()
 		self.camera.update(self.player)
 
-	def draw_grid(self):
-		for x in range(0, WIDTH, TILESIZE):
-			pygame.draw.line(self.screen, LIGHTGREY, (x, 0), (x, HEIGHT))
-		for y in range(0, HEIGHT, TILESIZE):
-			pygame.draw.line(self.screen, LIGHTGREY, (0, y), (WIDTH, y))
-
 	def draw(self):
 		pygame.display.set_caption(TITLE + " - " + "{:.2f}".format(self.clock.get_fps()))
 		self.screen.fill(BGCOLOR)
-		self.draw_grid()
 
 		px = self.player.pos.x / TILESIZE // 16
 		py = self.player.pos.y / TILESIZE // 16
@@ -120,7 +113,8 @@ class Game:
 		# for sprite in self.sprites:
 		#	self.screen.blit(sprite.image, self.camera.apply(sprite))
 
-		pygame.draw.rect(self.screen, (255, 255, 255), self.camera.apply(self.player), 2)
+		# Collision debug rects
+		# pygame.draw.rect(self.screen, (255, 255, 255), self.camera.apply(self.player), 2)
 		# pygame.draw.rect(self.screen, (255, 255, 255), self.player.collision_rect, 2)
 		pygame.display.flip()
 
