@@ -1,19 +1,20 @@
 import getopt
 import sys
+import threading
 from os import path
 
 import tilemap
+import assets
+import console
 from sprites import *
-# TODO: make this better lol
-# Check arguments
 from world.chunk import Chunk
 from world.material import Material
 from world.materials import Materials
 from world.world import World
 
-# from os import system
-# system('cls')
 
+# TODO: make this better lol
+# Check arguments
 try:
 	opts, args = getopt.getopt(sys.argv[1:], 'f', ["fps="])
 except getopt.GetoptError as err:
@@ -39,6 +40,10 @@ class Game:
 
 	# TODO: for loop to populate assets
 
+		# Make console
+		self.console = console.Console(self)
+		self.consoleThread = threading.Thread(target=self.console.run, daemon=True)
+
 	def load_data(self):
 		game_folder = path.dirname(__file__)
 		assets_folder = path.join(game_folder, 'assets')
@@ -55,12 +60,15 @@ class Game:
 		self.trees = pygame.sprite.Group()
 		self.world = World("test/world1")
 		self.world.load()
-		self.player = Player(self, 20, 20, 0, 0, 0)
+		self.player = Player(self, 20, 20, 0, 350, 0, 0)
 
 		# Initialize camera map specific
 		# TODO: might have to change the camera's settings
 		self.camera = tilemap.Camera(48, 16)
-		self.items = item.populate_items()
+		self.items = item.populate_items(self.graphics)
+
+		self.consoleThread.start()
+		print("Reading console input")
 
 	def run(self):
 		# game loop - set self.playing = False to end the game
@@ -72,6 +80,7 @@ class Game:
 			self.draw()
 
 	def quit(self):
+		self.console.kill()
 		pygame.quit()
 		sys.exit()
 
@@ -90,6 +99,7 @@ class Game:
 		pygame.display.set_caption(TITLE + " - " + "{:.2f}".format(self.clock.get_fps()))
 		self.screen.fill(BGCOLOR)
 		self.draw_grid()
+
 		px = self.player.pos.x / TILESIZE // 16
 		py = self.player.pos.y / TILESIZE // 16
 		# print(f"Player pos: {self.player.pos.x / TILESIZE:.2f}, {self.player.pos.y / TILESIZE:.2f}")
