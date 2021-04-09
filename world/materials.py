@@ -13,9 +13,9 @@ class Materials(Enum):
 	WALL = Material("Wall", "wall1", 3)
 
 	@staticmethod
-	def getMaterial(id: int):
+	def getMaterial(iden: int):
 		for mat in Materials:
-			if mat.value.id == id:
+			if mat.value.id == iden:
 				return mat.value
 		return None
 

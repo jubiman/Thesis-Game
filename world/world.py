@@ -40,8 +40,7 @@ class World:
 		if os.path.isfile(self.filepath + "/regions/" + f"{x},{y}.reg"):
 			# TODO: load chunk from file
 			return None
-		else:
-			return self.generator.generateChunk(x, y)
+		return self.generator.generateChunk(x, y)
 
 	def getBlockAt(self, x: int, y: int):
 		return self.getChunkAt(x // 16, y // 16).getBlock(x % 16, y % 16)

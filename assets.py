@@ -50,18 +50,44 @@ def get_name(index):
 	# A python switch case
 	# TODO: fully populate names (only 1056 lol)
 	switch = {
+		# Column 0
 		0: "empty",
 		1: "tree1",
-		23: "stone1",
-		45: "stone2",
-		67: "stone3",
-		89: "stone4",
-		111: "grass1",
-		133: "grass2",
-		155: "grass3",
+		# Column 1
+		22: "stone1",
+		# Column 2
+		44: "stone2",
+		# Column 3
+		66: "stone3",
+		67: "forest",
+		# Column 4
+		88: "stone4",
+		# Column 5
+		110: "grass1",
+		111: "cactus",
+		# Column 6
+		132: "grass2",
+		# Column 7
+		154: "grass3",
+		155: "cacti",
+		# Column 8
+		180: "river",
+		181: "water_full_tile",
+		# Column 9
+		202: "river_bend",
+		203: "river_bank",
+		# Column 18
 		394: "wall1",
+		# Column 24
+		528: "mage1",
+		529: "mage2",
+		530: "mage3",
+		# Column 25
 		550: "player1",
-		787: "number0"
+		551: "player2",
+		552: "player3",
+    		787: "number0",
+		931: "axe"
 	}
 	return switch.get(index, "unkown")
 

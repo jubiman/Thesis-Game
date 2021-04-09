@@ -1,7 +1,7 @@
 class Material:
-	def __init__(self, displayName, texturePath, id):
+	def __init__(self, displayName, texturePath, iden):
 		self.displayName = displayName
 		self.texturePath = texturePath
-		self.id = id
+		self.id = iden
 		self.image = None
 		self.rect = None
