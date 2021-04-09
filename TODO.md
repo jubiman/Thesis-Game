@@ -45,6 +45,7 @@ TODO:
     
     - QoL:
         * Add a saving and loading system
+        * Create error handler
     
 - Division of tasks:
     * Mel:
@@ -69,6 +70,8 @@ TODO:
             - Inventory
             - Skills
             - Player base
+            - Console
+            - Error handling
         * DONE:
             - Game base  
 

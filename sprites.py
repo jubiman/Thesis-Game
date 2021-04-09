@@ -13,10 +13,10 @@ from livingcreature import LivingCreature
 
 
 class Player(LivingCreature):
-	def __init__(self, game, hp, max_hp, armor, x, y):
+	def __init__(self, game, hp, max_hp, armor, speed, x, y):
 
 		# Getting specific information from LivingCreature class
-		super().__init__(game, hp, max_hp, armor)
+		super().__init__(game, hp, max_hp, armor, speed)
 
 # Assets
 		# Player image asset
@@ -47,7 +47,7 @@ class Player(LivingCreature):
 # Player base
 		# Set initial skill/level values
 		self.skillpoints = 0
-		self.level = levelbase.Levelbase(0, 0, 10)
+		self.lvl = levelbase.Levelbase(0, 0, 10)
 		self.xp_formula = "x = x + 10"  # TODO: Change XP system
 
 		# TODO: Set debug cooldown (might remove later)
@@ -57,43 +57,40 @@ class Player(LivingCreature):
 	def check_levels(self):
 		# Check base skills
 		for bs in self.baseskills:
-			if bs.level.xp >= bs.level.xp_needed:
-				bs.level.levelup()
-				"""bs.xp = 0
-				bs.level += 1
-				# TODO: just a placeholder, check basekill.py
-				bs.xp_needed += 10"""
-
+			if bs.lvl.xp >= bs.lvl.xp_needed:
+				bs.lvl.levelup()
 				# Display text to notify player of level up
 				# TODO: Make notification on-screen, not in console
-				print(f"You leveled up {bs.name} to level {bs.level.level}!")
+				print(f"You leveled up {bs.name} to level {bs.lvl.level}! You need {bs.lvl.xp_needed} xp for the next level")
+
 		# Check player skills
 		for ps in self.playerskills:
-			if ps.level.xp >= ps.level.xp_needed:
-				ps.level.levelup()
-				"""ps.xp = 0
-				ps.level += 1
-				# TODO: just a placeholder, check playerskill.py
-				ps.xp_needed += 10"""
-				print(f"You leveled up {ps.name} to level {ps.level.level}!")
+			if ps.lvl.xp >= ps.lvl.xp_needed:
+				ps.lvl.levelup()
+				# Display text to notify player of level up
+				# TODO: Make notification on-screen, not in console
+				print(f"You leveled up {ps.name} to level {ps.lvl.level}! You need {ps.lvl.xp_needed} xp for the next level")
+
 		# Check player level
-		if self.level.xp >= self.level.xp_needed:
-			self.level.levelup()
-			self.skillpoints += 1 * self.level.level * 333 % 4  # TODO: make dynamic
-			print(f"Your player leveled up to level {self.level.level}!")
+		if self.lvl.xp >= self.lvl.xp_needed:
+			self.lvl.levelup()
+			self.skillpoints += 1 * self.lvl.level * 333 % 4  # TODO: make dynamic
+			# Display text to notify player of level up
+			# TODO: Make notification on-screen, not in console
+			print(f"Your player leveled up to level {self.lvl.level}! You need {self.lvl.xp_needed} xp for the next level")
 
 	# Check player input (currently only movement keys)
 	def get_keys(self):
 		self.vel = pygame.math.Vector2(0, 0)
 		keys = pygame.key.get_pressed()
 		if keys[K_a]:
-			self.vel.x = -PLAYERSPEED
+			self.vel.x = -self.speed
 		if keys[K_d]:
-			self.vel.x = PLAYERSPEED
+			self.vel.x = self.speed
 		if keys[K_w]:
-			self.vel.y = -PLAYERSPEED
+			self.vel.y = -self.speed
 		if keys[K_s]:
-			self.vel.y = PLAYERSPEED
+			self.vel.y = self.speed
 		if self.vel.x != 0 and self.vel.y != 0:
 			self.vel *= 0.7071
 		if keys[K_i]:
@@ -102,13 +99,13 @@ class Player(LivingCreature):
 			# TODO: Debug menu for skills
 			print("-------------------------------------------------")
 			for bs in self.baseskills:
-				print(bs.name, bs.level.level, bs.level.xp, bs.level.xp_needed)
+				print(bs.name, bs.lvl.level, bs.lvl.xp, bs.lvl.xp_needed)
 			print("-------------------------------------------------")
 			for ps in self.playerskills:
-				print(ps.name, ps.level.level, ps.level.xp_needed)
+				print(ps.name, ps.lvl.level, ps.lvl.xp_needed)
 			print("-------------------------------------------------")
 			print("Format: level | xp | sp | hp | armor")
-			print("Player", self.level.level, self.level.xp, self.skillpoints, self.hp, self.armor)
+			print("Player", self.lvl.level, self.lvl.xp, self.skillpoints, self.hp, self.armor)
 			self.debug_print_cooldown = 1
 		if keys[K_l] and self.debug_print_cooldown == 0:
 			print("Inventory:")
@@ -152,11 +149,11 @@ class Player(LivingCreature):
 						# TODO: Add wood to inventory
 						# Add exp to woodcutting
 						# TODO: Add multiplier/check tree type?
-						baseskill.get_from_name(self.baseskills, "Woodcutting").level.xp += 10
+						baseskill.get_from_name(self.baseskills, "Woodcutting").lvl.xp += 10
 						# TODO: Pure debug text, remove later
 						print("You chopped down a tree and gained 10 Woodcutting xp!")
 						print("Your player gained 10 xp")
-						self.level.xp += 10
+						self.lvl.xp += 10
 						self.check_levels()
 					else:
 						print("You need an axe to break a tree")
@@ -258,3 +255,19 @@ class Tree(pygame.sprite.Sprite):
 		self.y = y
 		self.rect.x = x * TILESIZE
 		self.rect.y = y * TILESIZE
+
+
+class Enemy_standard(LivingCreature):
+	def __init__(self, game, hp, max_hp, armor, speed, x, y):
+
+		# Getting specific information from LivingCreature class
+		super().__init__(game, hp, max_hp, armor, speed)
+# Assets
+		self.image = pygame.transform.scale(assets.get_asset_from_name(game.graphics, 'mage3').image, (64, 64))
+		self.rect = self.image.get_rect()
+# Possition
+		self.pos = pygame.math.Vector2(x, y) * TILESIZE
+		self.rect.center = self.pos
+
+	def update(self):
+		self.rect.center = self.pos
