@@ -7,6 +7,8 @@ import sys
 import getopt
 import tilemap
 import assets
+import threading
+import console
 # from os import system
 # system('cls')
 
@@ -35,6 +37,10 @@ class Game:
 		self.graphics = assets.populate_assets()
 		# TODO: for loop to populate assets
 
+		# Make console
+		self.console = console.Console(self)
+		self.consoleThread = threading.Thread(target=self.console.run, daemon=True)
+
 	def load_data(self):
 		game_folder = path.dirname(__file__)
 		assets_folder = path.join(game_folder, 'assets')
@@ -47,6 +53,9 @@ class Game:
 		self.sprites = pygame.sprite.Group()
 		self.walls = pygame.sprite.Group()
 		self.trees = pygame.sprite.Group()
+
+		self.consoleThread.start()
+		print("Reading console input")
 		for row, tiles in enumerate(self.map.data):
 			for col, tile in enumerate(tiles):
 				if tile == '1':
@@ -56,10 +65,11 @@ class Game:
 				if tile == 'T':
 					Tree(self, col, row)
 		Enemy_standard(self, 20, 20, 0, 350, 4, 4)
+
 		# Initialize camera map specific
 		# TODO: might have to change the camera's settings
 		self.camera = tilemap.Camera(self.map.width, self.map.height)
-		self.items = item.populate_items()
+		self.items = item.populate_items(self.graphics)
 
 	def run(self):
 		# game loop - set self.playing = False to end the game
@@ -71,6 +81,7 @@ class Game:
 			self.draw()
 
 	def quit(self):
+		self.console.kill()
 		pygame.quit()
 		sys.exit()
 
@@ -91,8 +102,6 @@ class Game:
 		self.draw_grid()
 		for sprite in self.sprites:
 			self.screen.blit(sprite.image, self.camera.apply(sprite))
-		pygame.draw.rect(self.screen, (255, 255, 255), self.camera.apply(self.player), 2)
-		pygame.draw.rect(self.screen, (255, 255, 255), self.player.collision_rect, 2)
 		pygame.display.flip()
 
 	def events(self):

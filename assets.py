@@ -85,6 +85,8 @@ def get_name(index):
 		550: "player1",
 		551: "player2",
 		552: "player3"
+		931: "axe"
+
 	}
 	return switch.get(index, "unkown")
 
