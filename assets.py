@@ -84,7 +84,7 @@ def get_name(index):
 		# Column 25
 		550: "player1",
 		551: "player2",
-		552: "player3"
+		552: "player3",
 		931: "axe"
 
 	}
