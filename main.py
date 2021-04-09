@@ -1,17 +1,19 @@
-import pygame
-from pygame.locals import *
-from settings import *
-from sprites import *
-from os import path
-import sys
 import getopt
+import sys
+from os import path
+
 import tilemap
-import assets
+from sprites import *
+# TODO: make this better lol
+# Check arguments
+from world.chunk import Chunk
+from world.material import Material
+from world.materials import Materials
+from world.world import World
+
 # from os import system
 # system('cls')
 
-# TODO: make this better lol
-# Check arguments
 try:
 	opts, args = getopt.getopt(sys.argv[1:], 'f', ["fps="])
 except getopt.GetoptError as err:
@@ -31,33 +33,33 @@ class Game:
 		pygame.display.set_caption(TITLE)
 		self.clock = pygame.time.Clock()
 		pygame.key.set_repeat(1, 100)
-		self.load_data()
 		self.graphics = assets.populate_assets()
-		# TODO: for loop to populate assets
+		self.load_data()
+		self.world = None
+
+	# TODO: for loop to populate assets
 
 	def load_data(self):
 		game_folder = path.dirname(__file__)
 		assets_folder = path.join(game_folder, 'assets')
-		self.map = tilemap.Map(path.join(game_folder, 'saves/map3.txt'))
-		# self.player_img = pygame.image.load(path.join(assets_folder, 'visual/')).convert_alpha()
-		# self.player_img = pygame.transform.scale(assets.get_asset_from_name(self.graphics, 'player1').image, (64, 64))
+		Materials.load(self)
+
+	# self.map = tilemap.Map(path.join(game_folder, 'saves/map3.txt'))
+	# self.player_img = pygame.image.load(path.join(assets_folder, 'visual/')).convert_alpha()
+	# self.player_img = pygame.transform.scale(assets.get_asset_from_name(self.graphics, 'player1').image, (64, 64))
 
 	def new(self):
 		# initialize all variables and do all the setup for a new game
 		self.sprites = pygame.sprite.Group()
 		self.walls = pygame.sprite.Group()
 		self.trees = pygame.sprite.Group()
-		for row, tiles in enumerate(self.map.data):
-			for col, tile in enumerate(tiles):
-				if tile == '1':
-					Wall(self, col, row)
-				if tile == 'P':
-					self.player = Player(self, 20, 20, 0, col, row)
-				if tile == 'T':
-					Tree(self, col, row)
+		self.world = World("test/world1")
+		self.world.load()
+		self.player = Player(self, 20, 20, 0, 0, 0)
+
 		# Initialize camera map specific
 		# TODO: might have to change the camera's settings
-		self.camera = tilemap.Camera(self.map.width, self.map.height)
+		self.camera = tilemap.Camera(48, 16)
 		self.items = item.populate_items()
 
 	def run(self):
@@ -88,10 +90,28 @@ class Game:
 		pygame.display.set_caption(TITLE + " - " + "{:.2f}".format(self.clock.get_fps()))
 		self.screen.fill(BGCOLOR)
 		self.draw_grid()
-		for sprite in self.sprites:
-			self.screen.blit(sprite.image, self.camera.apply(sprite))
+		px = self.player.pos.x / TILESIZE // 16
+		py = self.player.pos.y / TILESIZE // 16
+		# print(f"Player pos: {self.player.pos.x / TILESIZE:.2f}, {self.player.pos.y / TILESIZE:.2f}")
+		# TODO: add setting for "render distance"
+		for cy in range(-2, 2):
+			for cx in range(-2, 2):
+				chunk: Chunk = self.world.getChunkAt(px + cx, py + cy)
+				# print(f"Rendering chunk: {px+cx},{py+cy}")
+				for y in range(16):
+					for x in range(16):
+						mat: Material = chunk.getBlock(x, y).material
+						if mat is not None and mat.image is not None:
+							self.screen.blit(mat.image, self.camera.applyraw(
+								mat.rect.move(((px + cx) * 16 + x) * TILESIZE, ((py + cy) * 16 + y) * TILESIZE)))
+
+		self.screen.blit(self.player.image, self.camera.apply(self.player))
+		# self.screen.blit(Materials.GRASS.value.image,self.camera.apply(self.player))
+		# for sprite in self.sprites:
+		#	self.screen.blit(sprite.image, self.camera.apply(sprite))
+
 		pygame.draw.rect(self.screen, (255, 255, 255), self.camera.apply(self.player), 2)
-		pygame.draw.rect(self.screen, (255, 255, 255), self.player.collision_rect, 2)
+		# pygame.draw.rect(self.screen, (255, 255, 255), self.player.collision_rect, 2)
 		pygame.display.flip()
 
 	def events(self):
@@ -145,9 +165,9 @@ class Game:
 			else:
 				pygame.draw.rect(self.screen, (100, 100, 100), bOptions)
 
-			self.screen.blit(tQuit, (bQuit.x+30, bQuit.y+5))
-			self.screen.blit(tPlay, (bPlay.x+30, bPlay.y+5))
-			self.screen.blit(tOptions, (bOptions.x, bOptions.y+5))
+			self.screen.blit(tQuit, (bQuit.x + 30, bQuit.y + 5))
+			self.screen.blit(tPlay, (bPlay.x + 30, bPlay.y + 5))
+			self.screen.blit(tOptions, (bOptions.x, bOptions.y + 5))
 			pygame.display.update()
 			self.clock.tick(60)
 

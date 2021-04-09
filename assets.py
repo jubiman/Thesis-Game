@@ -1,5 +1,6 @@
-import pygame
 from os import path
+
+import pygame
 
 
 # Static methods
@@ -59,7 +60,8 @@ def get_name(index):
 		133: "grass2",
 		155: "grass3",
 		394: "wall1",
-		550: "player1"
+		550: "player1",
+		787: "number0"
 	}
 	return switch.get(index, "unkown")
 

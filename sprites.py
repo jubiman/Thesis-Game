@@ -1,15 +1,19 @@
+import math
+from random import randint
+
 import pygame
 from pygame.locals import *
-from settings import *
+
 import assets
-import inventory
 import baseskill
-import playerskill
-import math
+import inventory
 import item
 import levelbase
-from random import randint
+import playerskill
 from livingcreature import LivingCreature
+from settings import *
+from world.block import Block
+from world.materials import Materials
 
 
 class Player(LivingCreature):
@@ -18,33 +22,34 @@ class Player(LivingCreature):
 		# Getting specific information from LivingCreature class
 		super().__init__(game, hp, max_hp, armor)
 
-# Assets
+		# Assets
 		# Player image asset
 		self.image = pygame.transform.scale(assets.get_asset_from_name(game.graphics, 'player1').image, (64, 64))
 		self.rect = self.image.get_rect()
 
-# World interaction
+		# World interaction
 		# Create player position and velocity
 		self.vel = pygame.math.Vector2(0, 0)
 		self.pos = pygame.math.Vector2(x, y) * TILESIZE
 		# Collision properties
 		self.collision_rect = pygame.Rect(0, 0, 35, 35)
+		# self.collision_rect = pygame.Rect(0, 0, 64, 64)
 		self.collision_rect.center = self.rect.center
 
-# Inventory
+		# Inventory
 		# Create an empty inventory
 		self.inventory = inventory.Inventory()
 		# Set equipped slot to the first slot
 		# self.equipped_slot = self.inventory.slots[0]
 		# TODO: This is now done in the inventory itself
 
-# Skills
+		# Skills
 		# Initialize all base skills at level 0
 		self.baseskills = baseskill.init()
 		# Initialize all upgradable skills for the player
 		self.playerskills = playerskill.init()
 
-# Player base
+		# Player base
 		# Set initial skill/level values
 		self.skillpoints = 0
 		self.level = levelbase.Levelbase(0, 0, 10)
@@ -53,7 +58,7 @@ class Player(LivingCreature):
 		# TODO: Set debug cooldown (might remove later)
 		self.debug_print_cooldown = 0
 
-# Methods
+	# Methods
 	def check_levels(self):
 		# Check base skills
 		for bs in self.baseskills:
@@ -131,13 +136,14 @@ class Player(LivingCreature):
 		mouse = pygame.mouse.get_pressed()
 		if mouse[0]:
 			for tree in self.game.trees:
-				rel_mouse = (math.floor((pygame.mouse.get_pos()[0] + self.game.player.pos[0]) - WIDTH/2),
-								math.floor((pygame.mouse.get_pos()[1] + self.game.player.pos[1]) - HEIGHT/2))
+				rel_mouse = (math.floor((pygame.mouse.get_pos()[0] + self.game.player.pos[0]) - WIDTH / 2),
+							 math.floor((pygame.mouse.get_pos()[1] + self.game.player.pos[1]) - HEIGHT / 2))
 
 				# print(rel_mouse, pygame.mouse.get_pos())
 				# Check if the mouse and tree image collide
 				if tree.rect.collidepoint(rel_mouse):
-					if self.inventory.hands[0].item.name.lower() == 'axe' or self.inventory.hands[1].item.name.lower() == 'axe':
+					if self.inventory.hands[0].item.name.lower() == 'axe' or self.inventory.hands[
+						1].item.name.lower() == 'axe':
 
 						# Chop down the tree
 						tree.kill()
@@ -187,41 +193,28 @@ class Player(LivingCreature):
 	def collide_with_walls(self):
 		# TODO: Make algorithm that checks only surrounding tiles + rewrite with world gen
 		# if pos/TILESIZE+64 ==
-		for w in self.game.walls:
-			# Moving right
-			if w.rect.collidepoint(self.pos.x + self.collision_rect.width/2, self.pos.y) and self.vel.x > 0:
-				# Also moving down
-				if w.rect.collidepoint(self.pos.x, self.pos.y + self.collision_rect.height/2) and self.vel.y > 0:
-					self.vel = pygame.math.Vector2(0, 0)
-					return
-				# Also moving up
-				if w.rect.collidepoint(self.pos.x, self.pos.y - self.collision_rect.height/2) and self.vel.y < 0:
-					self.vel = pygame.math.Vector2(0, 0)
-					return
-				# Only moving right
-				self.vel = pygame.math.Vector2(0, 0)
-				return
-			# Moving left
-			if w.rect.collidepoint(self.pos.x - self.collision_rect.width/2, self.pos.y) and self.vel.x < 0:
-				# Also moving down
-				if w.rect.collidepoint(self.pos.x, self.pos.y + self.collision_rect.height/2) and self.vel.y > 0:
-					self.vel = pygame.math.Vector2(0, 0)
-					return
-				# Also moving up
-				if w.rect.collidepoint(self.pos.x, self.pos.y - self.collision_rect.height/2) and self.vel.y < 0:
-					self.vel = pygame.math.Vector2(0, 0)
-					return
-				# Only moving left
-				self.vel = pygame.math.Vector2(0, 0)
-				return
-			# Moving down
-			if w.rect.collidepoint(self.pos.x, self.pos.y + self.collision_rect.height/2) and self.vel.y > 0:
-				self.vel = pygame.math.Vector2(0, 0)
-				return
-			# Moving up
-			if w.rect.collidepoint(self.pos.x, self.pos.y - self.collision_rect.height/2) and self.vel.y < 0:
-				self.vel = pygame.math.Vector2(0, 0)
-				return
+		movedColRect = self.collision_rect.move(self.vel.x * self.game.dt, self.vel.y * self.game.dt)
+		for dx in range(-3, 3):
+			for dy in range(-3, 3):
+				px = int(self.pos.x // TILESIZE)
+				py = int(self.pos.y // TILESIZE)
+				block: Block = self.game.world.getBlockAt(px + dx, py + dy)
+				if block.material.id == Materials.WALL.value.id:
+					rect: Rect = block.material.rect.move((px + dx) * TILESIZE, (py + dy) * TILESIZE)
+					if rect.colliderect(movedColRect):
+						print(f"COLLIDE {self.vel} {dx},{dy}")
+						if self.vel.x > 0 and dx > 0:
+							print("a")
+							self.vel.x = 0
+						if self.vel.x < 0 and dx < 0:
+							print("b")
+							self.vel.x = 0
+						if self.vel.y > 0 and dy > 0:
+							print("c")
+							self.vel.y = 0
+						if self.vel.y < 0 and dy < 0:
+							print("d")
+							self.vel.y = 0
 
 
 class Wall(pygame.sprite.Sprite):
