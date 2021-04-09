@@ -9,6 +9,5 @@ class Cache:
 	def getChunk(self, x: int, y: int):
 		if f"{x},{y}" in self.chunks:
 			return self.chunks[f"{x},{y}"]
-		else:
-			self.chunks[f"{x},{y}"] = self.world.loadChunk(x, y)
-			return self.chunks[f"{x},{y}"]
+		self.chunks[f"{x},{y}"] = self.world.loadChunk(x, y)
+		return self.chunks[f"{x},{y}"]
