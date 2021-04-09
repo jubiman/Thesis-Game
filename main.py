@@ -1,16 +1,17 @@
-import pygame
-from pygame.locals import *
-from settings import *
-from sprites import *
-from os import path
-import sys
 import getopt
+import sys
+import threading
+from os import path
+
 import tilemap
 import assets
-import threading
 import console
-# from os import system
-# system('cls')
+from sprites import *
+from world.chunk import Chunk
+from world.material import Material
+from world.materials import Materials
+from world.world import World
+
 
 # TODO: make this better lol
 # Check arguments
@@ -33,9 +34,11 @@ class Game:
 		pygame.display.set_caption(TITLE)
 		self.clock = pygame.time.Clock()
 		pygame.key.set_repeat(1, 100)
-		self.load_data()
 		self.graphics = assets.populate_assets()
-		# TODO: for loop to populate assets
+		self.load_data()
+		self.world = None
+
+	# TODO: for loop to populate assets
 
 		# Make console
 		self.console = console.Console(self)
@@ -44,32 +47,28 @@ class Game:
 	def load_data(self):
 		game_folder = path.dirname(__file__)
 		assets_folder = path.join(game_folder, 'assets')
-		self.map = tilemap.Map(path.join(game_folder, 'saves/map3.txt'))
-		# self.player_img = pygame.image.load(path.join(assets_folder, 'visual/')).convert_alpha()
-		# self.player_img = pygame.transform.scale(assets.get_asset_from_name(self.graphics, 'player1').image, (64, 64))
+		Materials.load(self)
+
+	# self.map = tilemap.Map(path.join(game_folder, 'saves/map3.txt'))
+	# self.player_img = pygame.image.load(path.join(assets_folder, 'visual/')).convert_alpha()
+	# self.player_img = pygame.transform.scale(assets.get_asset_from_name(self.graphics, 'player1').image, (64, 64))
 
 	def new(self):
 		# initialize all variables and do all the setup for a new game
 		self.sprites = pygame.sprite.Group()
 		self.walls = pygame.sprite.Group()
 		self.trees = pygame.sprite.Group()
-
-		self.consoleThread.start()
-		print("Reading console input")
-		for row, tiles in enumerate(self.map.data):
-			for col, tile in enumerate(tiles):
-				if tile == '1':
-					Wall(self, col, row)
-				if tile == 'P':
-					self.player = Player(self, 20, 20, 0, 350, col, row)
-				if tile == 'T':
-					Tree(self, col, row)
-		Enemy_standard(self, 20, 20, 0, 350, 4, 4)
+		self.world = World("test/world1")
+		self.world.load()
+		self.player = Player(self, 20, 20, 0, 350, 0, 0)
 
 		# Initialize camera map specific
 		# TODO: might have to change the camera's settings
-		self.camera = tilemap.Camera(self.map.width, self.map.height)
+		self.camera = tilemap.Camera(48, 16)
 		self.items = item.populate_items(self.graphics)
+
+		self.consoleThread.start()
+		print("Reading console input")
 
 	def run(self):
 		# game loop - set self.playing = False to end the game
@@ -90,18 +89,33 @@ class Game:
 		self.sprites.update()
 		self.camera.update(self.player)
 
-	def draw_grid(self):
-		for x in range(0, WIDTH, TILESIZE):
-			pygame.draw.line(self.screen, LIGHTGREY, (x, 0), (x, HEIGHT))
-		for y in range(0, HEIGHT, TILESIZE):
-			pygame.draw.line(self.screen, LIGHTGREY, (0, y), (WIDTH, y))
-
 	def draw(self):
 		pygame.display.set_caption(TITLE + " - " + "{:.2f}".format(self.clock.get_fps()))
 		self.screen.fill(BGCOLOR)
-		self.draw_grid()
-		for sprite in self.sprites:
-			self.screen.blit(sprite.image, self.camera.apply(sprite))
+
+		px = self.player.pos.x / TILESIZE // 16
+		py = self.player.pos.y / TILESIZE // 16
+		# print(f"Player pos: {self.player.pos.x / TILESIZE:.2f}, {self.player.pos.y / TILESIZE:.2f}")
+		# TODO: add setting for "render distance"
+		for cy in range(-2, 2):
+			for cx in range(-2, 2):
+				chunk: Chunk = self.world.getChunkAt(px + cx, py + cy)
+				# print(f"Rendering chunk: {px+cx},{py+cy}")
+				for y in range(16):
+					for x in range(16):
+						mat: Material = chunk.getBlock(x, y).material
+						if mat is not None and mat.image is not None:
+							self.screen.blit(mat.image, self.camera.applyraw(
+								mat.rect.move(((px + cx) * 16 + x) * TILESIZE, ((py + cy) * 16 + y) * TILESIZE)))
+
+		self.screen.blit(self.player.image, self.camera.apply(self.player))
+		# self.screen.blit(Materials.GRASS.value.image,self.camera.apply(self.player))
+		# for sprite in self.sprites:
+		#	self.screen.blit(sprite.image, self.camera.apply(sprite))
+
+		# Collision debug rects
+		# pygame.draw.rect(self.screen, (255, 255, 255), self.camera.apply(self.player), 2)
+		# pygame.draw.rect(self.screen, (255, 255, 255), self.player.collision_rect, 2)
 		pygame.display.flip()
 
 	def events(self):
@@ -155,9 +169,9 @@ class Game:
 			else:
 				pygame.draw.rect(self.screen, (100, 100, 100), bOptions)
 
-			self.screen.blit(tQuit, (bQuit.x+30, bQuit.y+5))
-			self.screen.blit(tPlay, (bPlay.x+30, bPlay.y+5))
-			self.screen.blit(tOptions, (bOptions.x, bOptions.y+5))
+			self.screen.blit(tQuit, (bQuit.x + 30, bQuit.y + 5))
+			self.screen.blit(tPlay, (bPlay.x + 30, bPlay.y + 5))
+			self.screen.blit(tOptions, (bOptions.x, bOptions.y + 5))
 			pygame.display.update()
 			self.clock.tick(60)
 
