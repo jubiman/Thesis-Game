@@ -19,6 +19,14 @@ class Console:
 				except Exception:
 					pass
 				continue
+			elif s[0] == "debug":
+				try:
+					if s[1] == "pos" or s[1] == "position":
+						print(self.game.player.pos)
+						continue
+				except IndexError:
+					print("Please add an argument to this comment")
+					continue
 			print(f"Could not find command {s[0]}. Please check for correct spelling")
 
 	def kill(self):
