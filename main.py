@@ -52,9 +52,10 @@ class Game:
 				if tile == '1':
 					Wall(self, col, row)
 				if tile == 'P':
-					self.player = Player(self, 20, 20, 0, col, row)
+					self.player = Player(self, 20, 20, 0, 350, col, row)
 				if tile == 'T':
 					Tree(self, col, row)
+		Enemy_standard(self, 20, 20, 0, 350, 4, 4)
 		# Initialize camera map specific
 		# TODO: might have to change the camera's settings
 		self.camera = tilemap.Camera(self.map.width, self.map.height)

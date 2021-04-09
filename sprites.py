@@ -13,10 +13,10 @@ from livingcreature import LivingCreature
 
 
 class Player(LivingCreature):
-	def __init__(self, game, hp, max_hp, armor, x, y):
+	def __init__(self, game, hp, max_hp, armor, speed, x, y):
 
 		# Getting specific information from LivingCreature class
-		super().__init__(game, hp, max_hp, armor)
+		super().__init__(game, hp, max_hp, armor, speed)
 
 # Assets
 		# Player image asset
@@ -87,13 +87,13 @@ class Player(LivingCreature):
 		self.vel = pygame.math.Vector2(0, 0)
 		keys = pygame.key.get_pressed()
 		if keys[K_a]:
-			self.vel.x = -PLAYERSPEED
+			self.vel.x = -self.speed
 		if keys[K_d]:
-			self.vel.x = PLAYERSPEED
+			self.vel.x = self.speed
 		if keys[K_w]:
-			self.vel.y = -PLAYERSPEED
+			self.vel.y = -self.speed
 		if keys[K_s]:
-			self.vel.y = PLAYERSPEED
+			self.vel.y = self.speed
 		if self.vel.x != 0 and self.vel.y != 0:
 			self.vel *= 0.7071
 		if keys[K_i]:
@@ -258,3 +258,19 @@ class Tree(pygame.sprite.Sprite):
 		self.y = y
 		self.rect.x = x * TILESIZE
 		self.rect.y = y * TILESIZE
+
+
+class Enemy_standard(LivingCreature):
+	def __init__(self, game, hp, max_hp, armor, speed, x, y):
+
+		# Getting specific information from LivingCreature class
+		super().__init__(game, hp, max_hp, armor, speed)
+# Assets
+		self.image = pygame.transform.scale(assets.get_asset_from_name(game.graphics, 'mage3').image, (64, 64))
+		self.rect = self.image.get_rect()
+# Possition
+		self.pos = pygame.math.Vector2(x, y) * TILESIZE
+		self.rect.center = self.pos
+
+	def update(self):
+		self.rect.center = self.pos
