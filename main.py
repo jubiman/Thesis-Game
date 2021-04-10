@@ -4,6 +4,7 @@ import threading
 from os import path
 
 import tilemap
+import numpy as np
 import assets
 import console
 from sprites import *
@@ -93,8 +94,14 @@ class Game:
 		pygame.display.set_caption(TITLE + " - " + "{:.2f}".format(self.clock.get_fps()))
 		self.screen.fill(BGCOLOR)
 
+		currenthealthB = pygame.Rect(WIDTH * 0.9, HEIGHT * 0.9, 140, 40)
+		pygame.draw.rect(self.screen, (0, 200, 0), currenthealthB)
+		currenthealthT = pygame.font.SysFont('Corbel', 30).render('100', True, (255, 255, 255))
+		self.screen.blit(currenthealthT, (currenthealthB.x + 40, currenthealthB.y + 5))
+
 		px = self.player.pos.x / TILESIZE // 16
 		py = self.player.pos.y / TILESIZE // 16
+
 		# print(f"Player pos: {self.player.pos.x / TILESIZE:.2f}, {self.player.pos.y / TILESIZE:.2f}")
 		# TODO: add setting for "render distance"
 		for cy in range(-2, 2):
