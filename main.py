@@ -94,9 +94,9 @@ class Game:
 		pygame.display.set_caption(TITLE + " - " + "{:.2f}".format(self.clock.get_fps()))
 		self.screen.fill(BGCOLOR)
 
-		currenthealthB = pygame.Rect(WIDTH * 0.9, HEIGHT * 0.9, 140, 40)
+		currenthealthB = pygame.Rect(WIDTH * 0.9, HEIGHT * 0.1, 140, 40)
 		pygame.draw.rect(self.screen, (0, 200, 0), currenthealthB)
-		currenthealthT = pygame.font.SysFont('Corbel', 30).render('100', True, (255, 255, 255))
+		currenthealthT = pygame.font.SysFont('Corbel', 40).render('100', True, (255, 255, 255))
 		self.screen.blit(currenthealthT, (currenthealthB.x + 40, currenthealthB.y + 5))
 
 		px = self.player.pos.x / TILESIZE // 16
