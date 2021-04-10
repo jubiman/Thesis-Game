@@ -94,6 +94,7 @@ class Game:
 		pygame.display.set_caption(TITLE + " - " + "{:.2f}".format(self.clock.get_fps()))
 		self.screen.fill(BGCOLOR)
 
+		#Healthbar van de speler
 		currenthealthB = pygame.Rect(50, 50, 180, 50)
 		pygame.draw.rect(self.screen, (0, 200, 0), currenthealthB)
 		currenthealthT = pygame.font.SysFont('Corbel', 40).render('100', True, (255, 255, 255))
