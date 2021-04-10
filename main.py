@@ -97,7 +97,7 @@ class Game:
 		currenthealthB = pygame.Rect(50, 50, 200, 60)
 		pygame.draw.rect(self.screen, (0, 200, 0), currenthealthB)
 		currenthealthT = pygame.font.SysFont('Corbel', 40).render('100', True, (255, 255, 255))
-		self.screen.blit(currenthealthT, (currenthealthB.x + 40, currenthealthB.y + 5))
+		self.screen.blit(currenthealthT, (currenthealthB.x + 70, currenthealthB.y + 6))
 
 		px = self.player.pos.x / TILESIZE // 16
 		py = self.player.pos.y / TILESIZE // 16
