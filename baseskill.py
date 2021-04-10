@@ -3,29 +3,28 @@ from pygame.locals import *
 from skillbase import *
 
 
+# (name: str, ID: int, level: int, xpn: int, xp_formula: str)
 baseskills = [
-	("Woodcutting", 0),
-	("Mining", 1),
-	("Fishing", 2),
-	("Farming", 3),
-	("Health", 4),
-	("Intelligence", 5)
+	("Woodcutting", 0, 0, 10, "self.xp_needed*2"),
+	("Mining", 1, 0, 10, "self.xp_needed+10"),
+	("Fishing", 2, 0, 10, "self.xp_needed+10"),
+	("Farming", 3, 0, 10, "self.xp_needed+10"),
+	("Health", 4, 0, 10, "self.xp_needed+10"),
+	("Intelligence", 5, 0, 10, "self.xp_needed+10")
 ]
 
 
 class Baseskill(Skillbase):
-	def __init__(self, name, iden=-1, level=0, xp=0, xpn=10):
+	def __init__(self, name, iden, level, xp, xpn, xpf):
 		"""
 		:param str name: The name of the skill
 		:param int iden: The ID of the skill
 		:param int level: The level of the skill
 		:param int xp: The experience points of the skill
 		:param int xpn: The experience needed for levelup
+		:param str xpf: The xp formula for level ups
 		"""
-		Skillbase.__init__(self, name, iden, level, xp, xpn)
-		# Does nothing at the moment
-		# TODO: do something with a good formula to change needed xp per level per skill
-		self.xp_formula = "x = x + 10"
+		super().__init__(name, iden, level, xp, xpn, xpf)
 
 
 # Returns a list of base skills
@@ -34,9 +33,9 @@ def init():
 	:return: Returns a list with all player skills
 	"""
 	tmp = []
-	for i in range(len(baseskills)):
+	for bs in baseskills:
 		# Create new Baseskill(name, id) object
-		tmp.append(Baseskill(baseskills[i][0], baseskills[i][1]))
+		tmp.append(Baseskill(bs[0], bs[1], bs[2], 0, bs[3], bs[4]))
 	return tmp
 
 

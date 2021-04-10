@@ -1,100 +1,101 @@
-import pygame
-from pygame.locals import *
-from settings import *
-import assets
-import inventory
-import baseskill
-import playerskill
 import math
-import item
-import levelbase
 from random import randint
 
+import pygame
+from pygame.locals import *
 
-class Player(pygame.sprite.Sprite):
-	def __init__(self, game, x, y):
-		self.groups = game.sprites
+import assets
+import baseskill
+import inventory
+import item
+import levelbase
+import playerskill
+from livingcreature import LivingCreature
+from settings import *
+from world.block import Block
+from world.materials import Materials
 
-		# Initialize Sprite base
-		pygame.sprite.Sprite.__init__(self, self.groups)
 
-		# Get the game's object so we can interact with the world
-		self.game = game
+class Player(LivingCreature):
+	def __init__(self, game, hp, max_hp, armor, speed, x, y):
 
-# Assets
+		# Getting specific information from LivingCreature class
+		super().__init__(game, hp, max_hp, armor, speed)
+
+		# Assets
 		# Player image asset
 		self.image = pygame.transform.scale(assets.get_asset_from_name(game.graphics, 'player1').image, (64, 64))
 		self.rect = self.image.get_rect()
 
-# World interaction
+		# World interaction
 		# Create player position and velocity
 		self.vel = pygame.math.Vector2(0, 0)
 		self.pos = pygame.math.Vector2(x, y) * TILESIZE
+		# Collision properties
+		self.collision_rect = pygame.Rect(0, 0, 35, 35)
+		# self.collision_rect = pygame.Rect(0, 0, 64, 64)
+		self.collision_rect.center = self.rect.center
 
-# Inventory
+		# Inventory
 		# Create an empty inventory
 		self.inventory = inventory.Inventory()
 		# Set equipped slot to the first slot
-		self.equipped_slot = self.inventory.slots[0]
+		# self.equipped_slot = self.inventory.slots[0]
+		# TODO: This is now done in the inventory itself
 
-# Skills
+		# Skills
 		# Initialize all base skills at level 0
 		self.baseskills = baseskill.init()
 		# Initialize all upgradable skills for the player
 		self.playerskills = playerskill.init()
 
-# Player base
+		# Player base
 		# Set initial skill/level values
 		self.skillpoints = 0
-		self.level = levelbase.Levelbase(0, 0, 10)
+		self.lvl = levelbase.Levelbase(0, 0, 10)
 		self.xp_formula = "x = x + 10"  # TODO: Change XP system
-		self.hp = 20  # TODO: Possibly change this
-		self.armor = 0
 
 		# TODO: Set debug cooldown (might remove later)
 		self.debug_print_cooldown = 0
 
-# Methods
+	# Methods
 	def check_levels(self):
 		# Check base skills
 		for bs in self.baseskills:
-			if bs.level.xp >= bs.level.xp_needed:
-				bs.level.levelup()
-				"""bs.xp = 0
-				bs.level += 1
-				# TODO: just a placeholder, check basekill.py
-				bs.xp_needed += 10"""
-
+			if bs.lvl.xp >= bs.lvl.xp_needed:
+				bs.lvl.levelup()
 				# Display text to notify player of level up
 				# TODO: Make notification on-screen, not in console
-				print(f"You leveled up {bs.name} to level {bs.level.level}!")
+				print(f"You leveled up {bs.name} to level {bs.lvl.level}! You need {bs.lvl.xp_needed} xp for the next level")
+
 		# Check player skills
 		for ps in self.playerskills:
-			if ps.level.xp >= ps.level.xp_needed:
-				ps.level.levelup()
-				"""ps.xp = 0
-				ps.level += 1
-				# TODO: just a placeholder, check playerskill.py
-				ps.xp_needed += 10"""
-				print(f"You leveled up {ps.name} to level {ps.level.level}!")
+			if ps.lvl.xp >= ps.lvl.xp_needed:
+				ps.lvl.levelup()
+				# Display text to notify player of level up
+				# TODO: Make notification on-screen, not in console
+				print(f"You leveled up {ps.name} to level {ps.lvl.level}! You need {ps.lvl.xp_needed} xp for the next level")
+
 		# Check player level
-		if self.level.xp >= self.level.xp_needed:
-			self.level.levelup()
-			self.skillpoints += 1 * self.level.level * 333 % 4  # TODO: make dynamic
-			print(f"Your player leveled up to level {self.level.level}!")
+		if self.lvl.xp >= self.lvl.xp_needed:
+			self.lvl.levelup()
+			self.skillpoints += 1 * self.lvl.level * 333 % 4  # TODO: make dynamic
+			# Display text to notify player of level up
+			# TODO: Make notification on-screen, not in console
+			print(f"Your player leveled up to level {self.lvl.level}! You need {self.lvl.xp_needed} xp for the next level")
 
 	# Check player input (currently only movement keys)
 	def get_keys(self):
 		self.vel = pygame.math.Vector2(0, 0)
 		keys = pygame.key.get_pressed()
 		if keys[K_a]:
-			self.vel.x = -PLAYERSPEED
+			self.vel.x = -self.speed
 		if keys[K_d]:
-			self.vel.x = PLAYERSPEED
+			self.vel.x = self.speed
 		if keys[K_w]:
-			self.vel.y = -PLAYERSPEED
+			self.vel.y = -self.speed
 		if keys[K_s]:
-			self.vel.y = PLAYERSPEED
+			self.vel.y = self.speed
 		if self.vel.x != 0 and self.vel.y != 0:
 			self.vel *= 0.7071
 		if keys[K_i]:
@@ -103,18 +104,18 @@ class Player(pygame.sprite.Sprite):
 			# TODO: Debug menu for skills
 			print("-------------------------------------------------")
 			for bs in self.baseskills:
-				print(bs.name, bs.level.level, bs.level.xp, bs.level.xp_needed)
+				print(bs.name, bs.lvl.level, bs.lvl.xp, bs.lvl.xp_needed)
 			print("-------------------------------------------------")
 			for ps in self.playerskills:
-				print(ps.name, ps.level.level, ps.level.xp_needed)
+				print(ps.name, ps.lvl.level, ps.lvl.xp_needed)
 			print("-------------------------------------------------")
 			print("Format: level | xp | sp | hp | armor")
-			print("Player", self.level.level, self.level.xp, self.skillpoints, self.hp, self.armor)
+			print("Player", self.lvl.level, self.lvl.xp, self.skillpoints, self.hp, self.armor)
 			self.debug_print_cooldown = 1
 		if keys[K_l] and self.debug_print_cooldown == 0:
 			print("Inventory:")
-			for it in self.inventory.inv:
-				print(it.item.name, it.quantity)
+			for it in self.inventory.inv.ls:
+				print(it.item.name, it.quantity, it.item.max_stack)
 			self.debug_print_cooldown = 1
 
 	def get_events(self):
@@ -132,12 +133,14 @@ class Player(pygame.sprite.Sprite):
 		mouse = pygame.mouse.get_pressed()
 		if mouse[0]:
 			for tree in self.game.trees:
-				rel_mouse = (math.floor((pygame.mouse.get_pos()[0] + self.game.player.pos[0]) - 8 * 64),
-								math.floor((pygame.mouse.get_pos()[1] + self.game.player.pos[1]) - 6 * 64))
+				rel_mouse = (math.floor((pygame.mouse.get_pos()[0] + self.game.player.pos[0]) - WIDTH / 2),
+							 math.floor((pygame.mouse.get_pos()[1] + self.game.player.pos[1]) - HEIGHT / 2))
 
+				# print(rel_mouse, pygame.mouse.get_pos())
 				# Check if the mouse and tree image collide
 				if tree.rect.collidepoint(rel_mouse):
-					if self.equipped_slot.get_item().name.lower() == 'axe':
+					if self.inventory.hands[0].item.name.lower() == 'axe' or self.inventory.hands[
+						1].item.name.lower() == 'axe':
 
 						# Chop down the tree
 						tree.kill()
@@ -146,17 +149,17 @@ class Player(pygame.sprite.Sprite):
 						# TODO: Add woodcutting skill multiplier
 						amount = randint(1, 5)
 						self.inventory.add_new_item(item.get_item_from_name(self.game.items, 'Wood'), amount)
-						# Display message for ammount of wood
+						# Display message for amount of wood
 						print(f"You got {amount} wood!")
 
 						# TODO: Add wood to inventory
 						# Add exp to woodcutting
 						# TODO: Add multiplier/check tree type?
-						baseskill.get_from_name(self.baseskills, "Woodcutting").level.xp += 10
+						baseskill.get_from_name(self.baseskills, "Woodcutting").lvl.xp += 10
 						# TODO: Pure debug text, remove later
 						print("You chopped down a tree and gained 10 Woodcutting xp!")
 						print("Your player gained 10 xp")
-						self.level.xp += 10
+						self.lvl.xp += 10
 						self.check_levels()
 					else:
 						print("You need an axe to break a tree")
@@ -165,11 +168,16 @@ class Player(pygame.sprite.Sprite):
 	def update(self):
 		self.get_keys()
 		# Move the player
+		self.rect = self.image.get_rect()
+		self.rect.center = self.pos
+		self.collision_rect.centerx = self.pos.x
+		# self.collide_with_walls('x')
+		self.collision_rect.centery = self.pos.y
+		# self.collide_with_walls('y')
+		self.collide_with_walls()
 		self.pos += self.vel * self.game.dt
-		self.rect.x = self.pos.x
-		self.collide_with_walls('x')
-		self.rect.y = self.pos.y
-		self.collide_with_walls('y')
+		self.rect.center = self.collision_rect.center
+
 		self.get_mouse()
 
 		# TODO: Debug cooldown, might remove later
@@ -179,25 +187,31 @@ class Player(pygame.sprite.Sprite):
 			self.debug_print_cooldown = 0
 
 	# Called from move(), checks if the direction we're going is obstructed
-	def collide_with_walls(self, d):
-		if d == 'x':
-			hits = pygame.sprite.spritecollide(self, self.game.walls, False)
-			if hits:
-				if self.vel.x > 0:
-					self.pos.x = hits[0].rect.left - self.rect.width
-				if self.vel.x < 0:
-					self.pos.x = hits[0].rect.right
-				self.vel.x = 0
-				self.rect.x = self.pos.x
-		if d == 'y':
-			hits = pygame.sprite.spritecollide(self, self.game.walls, False)
-			if hits:
-				if self.vel.y > 0:
-					self.pos.y = hits[0].rect.top - self.rect.height
-				if self.vel.y < 0:
-					self.pos.y = hits[0].rect.bottom
-				self.vel.y = 0
-				self.rect.y = self.pos.y
+	def collide_with_walls(self):
+		# TODO: Make algorithm that checks only surrounding tiles + rewrite with world gen
+		# if pos/TILESIZE+64 ==
+		movedColRect = self.collision_rect.move(self.vel.x * self.game.dt, self.vel.y * self.game.dt)
+		for dx in range(-3, 3):
+			for dy in range(-3, 3):
+				px = int(self.pos.x // TILESIZE)
+				py = int(self.pos.y // TILESIZE)
+				block: Block = self.game.world.getBlockAt(px + dx, py + dy)
+				if block.material.id == Materials.WALL.value.id:
+					rect: Rect = block.material.rect.move((px + dx) * TILESIZE, (py + dy) * TILESIZE)
+					if rect.colliderect(movedColRect):
+						print(f"COLLIDE {self.vel} {dx},{dy}")
+						if self.vel.x > 0 and dx > 0:
+							print("a")
+							self.vel.x = 0
+						if self.vel.x < 0 and dx < 0:
+							print("b")
+							self.vel.x = 0
+						if self.vel.y > 0 and dy > 0:
+							print("c")
+							self.vel.y = 0
+						if self.vel.y < 0 and dy < 0:
+							print("d")
+							self.vel.y = 0
 
 
 class Wall(pygame.sprite.Sprite):
@@ -234,3 +248,19 @@ class Tree(pygame.sprite.Sprite):
 		self.y = y
 		self.rect.x = x * TILESIZE
 		self.rect.y = y * TILESIZE
+
+
+class Enemy_standard(LivingCreature):
+	def __init__(self, game, hp, max_hp, armor, speed, x, y):
+
+		# Getting specific information from LivingCreature class
+		super().__init__(game, hp, max_hp, armor, speed)
+# Assets
+		self.image = pygame.transform.scale(assets.get_asset_from_name(game.graphics, 'mage3').image, (64, 64))
+		self.rect = self.image.get_rect()
+# Possition
+		self.pos = pygame.math.Vector2(x, y) * TILESIZE
+		self.rect.center = self.pos
+
+	def update(self):
+		self.rect.center = self.pos
