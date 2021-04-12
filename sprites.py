@@ -121,7 +121,7 @@ class Player(LivingCreature):
 	def get_events(self):
 		for ev in pygame.event.get():
 			print("1")
-			if ev.type == MOUSEBUTTONDOWN and pygame.mouse.get_pressed()[0]:
+			if ev.type == MOUSEBUTTONDOWN and pygame.mouse.get_pressed(3)[0]:
 				print("2")
 				for tree in self.game.trees:
 					if tree.collidepoint(pygame.mouse.get_pos()):
@@ -130,7 +130,7 @@ class Player(LivingCreature):
 
 	# Check mouse actions
 	def get_mouse(self):
-		mouse = pygame.mouse.get_pressed()
+		mouse = pygame.mouse.get_pressed(5)
 		if mouse[0]:
 			for tree in self.game.trees:
 				rel_mouse = (math.floor((pygame.mouse.get_pos()[0] + self.game.player.pos[0]) - WIDTH / 2),
