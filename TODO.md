@@ -6,7 +6,7 @@ TODO:
     * Add weapons and tools
 
 - Maps:
-    * Make world gen for better and bigger maps
+    * Improve world gen for better and bigger maps
     * Improve map saving and loading algorithm
     * Custom map names
 

@@ -1,6 +1,8 @@
 import item
 import sys
 
+import sprites
+
 
 class Console:
 	def __init__(self, game):
@@ -23,10 +25,24 @@ class Console:
 				try:
 					if s[1] == "pos" or s[1] == "position":
 						print(self.game.player.pos)
-						continue
+					elif s[1] == "bases":
+						print(sprites.Player.__bases__)
 				except IndexError:
 					print("Please add an argument to this comment")
+				finally:
 					continue
+			elif s[0] == "xp":
+				try:
+					if s[1] == "give" or s[1] == "add":
+						if len(s) == 3:
+							self.game.player.lvl.xp += int(s[2])
+				except ValueError:
+					print(f"Could not convert {s[2]} to an integer, please check your values and try again")
+				else:
+					self.game.player.check_levels()
+				finally:
+					continue
+
 			print(f"Could not find command {s[0]}. Please check for correct spelling")
 
 	def kill(self):
