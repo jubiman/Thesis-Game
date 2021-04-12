@@ -1,3 +1,5 @@
+import pygame.math
+
 import item
 import sys
 
@@ -29,6 +31,13 @@ class Console:
 						print(sprites.Player.__bases__)
 				except IndexError:
 					print("Please add an argument to this comment")
+				finally:
+					continue
+			elif s[0] == "setpos":
+				try:
+					self.game.player.pos = pygame.math.Vector2(float(s[1]), float(s[2]))
+				except Exception as ex:
+					print(ex)
 				finally:
 					continue
 			elif s[0] == "xp":

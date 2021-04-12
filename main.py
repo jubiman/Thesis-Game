@@ -185,7 +185,10 @@ class Game:
 # create the game object
 g = Game()
 g.show_start_screen()
+g.new()
 while True:
-	g.new()
-	g.run()
+	try:
+		g.run()
+	except pygame.error as err:
+		print(err)
 	g.show_go_screen()
