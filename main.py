@@ -115,16 +115,16 @@ class Game:
 		# for sprite in self.sprites:
 		#	self.screen.blit(sprite.image, self.camera.apply(sprite))
 
-		# Collision debug rects
-		# pygame.draw.rect(self.screen, (255, 255, 255), self.camera.apply(self.player), 2)
-		# pygame.draw.rect(self.screen, (255, 255, 255), self.player.collision_rect, 2)
-		pygame.display.flip()
-
 		# Healthbar van de speler
 		currenthealthB = pygame.Rect(50, 50, 180, 50)
 		pygame.draw.rect(self.screen, (0, 200, 0), currenthealthB)
 		currenthealthT = pygame.font.SysFont('Corbel', 40).render('100', True, (255, 255, 255))
 		self.screen.blit(currenthealthT, (currenthealthB.x + 60, currenthealthB.y))
+
+		# Collision debug rects
+		# pygame.draw.rect(self.screen, (255, 255, 255), self.camera.apply(self.player), 2)
+		# pygame.draw.rect(self.screen, (255, 255, 255), self.player.collision_rect, 2)
+		pygame.display.flip()
 
 	def events(self):
 		# catch all events here
