@@ -12,7 +12,6 @@ from world.material import Material
 from world.materials import Materials
 from world.world import World
 
-
 # TODO: make this better lol
 # Check arguments
 try:
