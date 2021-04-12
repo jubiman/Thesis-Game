@@ -12,7 +12,6 @@ from world.material import Material
 from world.materials import Materials
 from world.world import World
 
-
 # TODO: make this better lol
 # Check arguments
 try:
@@ -95,6 +94,7 @@ class Game:
 
 		px = self.player.pos.x / TILESIZE // 16
 		py = self.player.pos.y / TILESIZE // 16
+
 		# print(f"Player pos: {self.player.pos.x / TILESIZE:.2f}, {self.player.pos.y / TILESIZE:.2f}")
 		# TODO: add setting for "render distance"
 		for cy in range(-2, 2):
@@ -112,6 +112,12 @@ class Game:
 		# self.screen.blit(Materials.GRASS.value.image,self.camera.apply(self.player))
 		# for sprite in self.sprites:
 		#	self.screen.blit(sprite.image, self.camera.apply(sprite))
+
+		# Healthbar van de speler
+		currenthealthB = pygame.Rect(50, 50, 180, 50)
+		pygame.draw.rect(self.screen, (0, 200, 0), currenthealthB)
+		currenthealthT = pygame.font.SysFont('Corbel', 40).render('100', True, (255, 255, 255))
+		self.screen.blit(currenthealthT, (currenthealthB.x + 60, currenthealthB.y))
 
 		# Collision debug rects
 		# pygame.draw.rect(self.screen, (255, 255, 255), self.camera.apply(self.player), 2)
