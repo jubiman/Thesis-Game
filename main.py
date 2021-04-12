@@ -94,12 +94,6 @@ class Game:
 		pygame.display.set_caption(TITLE + " - " + "{:.2f}".format(self.clock.get_fps()))
 		self.screen.fill(BGCOLOR)
 
-		#Healthbar van de speler
-		currenthealthB = pygame.Rect(50, 50, 180, 50)
-		pygame.draw.rect(self.screen, (0, 200, 0), currenthealthB)
-		currenthealthT = pygame.font.SysFont('Corbel', 40).render('100', True, (255, 255, 255))
-		self.screen.blit(currenthealthT, (currenthealthB.x + 60, currenthealthB.y))
-
 		px = self.player.pos.x / TILESIZE // 16
 		py = self.player.pos.y / TILESIZE // 16
 
@@ -125,6 +119,12 @@ class Game:
 		# pygame.draw.rect(self.screen, (255, 255, 255), self.camera.apply(self.player), 2)
 		# pygame.draw.rect(self.screen, (255, 255, 255), self.player.collision_rect, 2)
 		pygame.display.flip()
+
+		# Healthbar van de speler
+		currenthealthB = pygame.Rect(50, 50, 180, 50)
+		pygame.draw.rect(self.screen, (0, 200, 0), currenthealthB)
+		currenthealthT = pygame.font.SysFont('Corbel', 40).render('100', True, (255, 255, 255))
+		self.screen.blit(currenthealthT, (currenthealthB.x + 60, currenthealthB.y))
 
 	def events(self):
 		# catch all events here
