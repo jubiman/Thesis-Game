@@ -4,7 +4,6 @@ import threading
 from os import path
 
 import tilemap
-import numpy as np
 import assets
 import console
 from sprites import *
