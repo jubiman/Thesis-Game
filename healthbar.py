@@ -8,7 +8,6 @@ class HealthBar:
 
     def resethealth(self):
         HealthBar.health = 100
-        self.drawhealthbar(self)
 
     def sethealthbar1(self, health):
         # with health-regen reset
