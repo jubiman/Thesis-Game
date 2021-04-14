@@ -14,6 +14,7 @@ from livingcreature import LivingCreature
 from settings import *
 from world.block import Block
 from world.materials import Materials
+import healthbar
 
 
 class Player(LivingCreature):
@@ -203,15 +204,19 @@ class Player(LivingCreature):
 						if self.vel.x > 0 and dx > 0:
 							print("a")
 							self.vel.x = 0
+							healthbar.HealthBar.sethealthbar(self, healthbar.HealthBar.gethealthbar() - 5)
 						if self.vel.x < 0 and dx < 0:
 							print("b")
 							self.vel.x = 0
+							healthbar.HealthBar.sethealthbar(self, healthbar.HealthBar.gethealthbar() - 5)
 						if self.vel.y > 0 and dy > 0:
 							print("c")
 							self.vel.y = 0
+							healthbar.HealthBar.sethealthbar(self, healthbar.HealthBar.gethealthbar() - 5)
 						if self.vel.y < 0 and dy < 0:
 							print("d")
 							self.vel.y = 0
+							healthbar.HealthBar.sethealthbar(self, healthbar.HealthBar.gethealthbar() - 5)
 
 
 class Wall(pygame.sprite.Sprite):

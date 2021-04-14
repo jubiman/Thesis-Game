@@ -11,6 +11,7 @@ from world.chunk import Chunk
 from world.material import Material
 from world.materials import Materials
 from world.world import World
+import healthbar
 
 # TODO: make this better lol
 # Check arguments
@@ -66,6 +67,9 @@ class Game:
 		self.camera = tilemap.Camera(48, 16)
 		self.items = item.populate_items(self.graphics)
 
+		# reset healthbar
+		healthbar.HealthBar.resethealth()
+
 		self.consoleThread.start()
 		print("Reading console input")
 
@@ -87,6 +91,7 @@ class Game:
 		# update portion of the game loop
 		self.sprites.update()
 		self.camera.update(self.player)
+		healthbar.HealthBar.regen(self)
 
 	def draw(self):
 		pygame.display.set_caption(TITLE + " - " + "{:.2f}".format(self.clock.get_fps()))
@@ -114,10 +119,7 @@ class Game:
 		#	self.screen.blit(sprite.image, self.camera.apply(sprite))
 
 		# Healthbar van de speler
-		currenthealthB = pygame.Rect(50, 50, 180, 50)
-		pygame.draw.rect(self.screen, (0, 200, 0), currenthealthB)
-		currenthealthT = pygame.font.SysFont('Corbel', 40).render('100', True, (255, 255, 255))
-		self.screen.blit(currenthealthT, (currenthealthB.x + 60, currenthealthB.y))
+		healthbar.HealthBar.drawhealthbar()
 
 		# Collision debug rects
 		# pygame.draw.rect(self.screen, (255, 255, 255), self.camera.apply(self.player), 2)
