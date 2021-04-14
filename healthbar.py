@@ -36,7 +36,7 @@ class HealthBar:
         self.screen.blit(currenthealthtext, (currenthealthbar + 60, currenthealthbar.y))
 
     def regen(self):
-        if self.countdown > 0:
-            self.countdown = self.countdown - 1
+        if HealthBar.countdown > 0:
+            HealthBar.countdown = HealthBar.countdown - 1
         else:
-            self.health = self.health + 5
+            HealthBar.health = HealthBar.health + 5
