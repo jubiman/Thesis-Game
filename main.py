@@ -68,7 +68,7 @@ class Game:
 		self.items = item.populate_items(self.graphics)
 
 		# reset healthbar
-		healthbar.HealthBar.resethealth()
+		healthbar.HealthBar.resethealth(self)
 
 		self.consoleThread.start()
 		print("Reading console input")
@@ -119,7 +119,7 @@ class Game:
 		#	self.screen.blit(sprite.image, self.camera.apply(sprite))
 
 		# Healthbar van de speler
-		healthbar.HealthBar.drawhealthbar()
+		healthbar.HealthBar.drawhealthbar(self)
 
 		# Collision debug rects
 		# pygame.draw.rect(self.screen, (255, 255, 255), self.camera.apply(self.player), 2)
