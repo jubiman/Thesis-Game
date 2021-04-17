@@ -72,6 +72,8 @@ TODO:
             - Player base
             - Console
             - Error handling
+            - Make spawner for random enemy spawn
+            - Make Items and skills of type Enum for init
         * DONE:
             - Game base  
 
