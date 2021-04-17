@@ -4,9 +4,10 @@ import threading
 from os import path
 
 import tilemap
+import assets
 import console
-from world import spawner
 from sprites import *
+from world import spawner
 from world.chunk import Chunk
 from world.material import Material
 from world.materials import Materials
@@ -65,6 +66,7 @@ class Game:
 		self.world.load()
 		self.player = Player(self, 20, 20, 0, 350, 0, 0)
 		self.spawner = Spawner(self, 4, 1)
+
 		# Initialize camera map specific
 		# TODO: might have to change the camera's settings
 		self.camera = tilemap.Camera(48, 16)
@@ -98,6 +100,7 @@ class Game:
 
 		px = self.player.pos.x / TILESIZE // 16
 		py = self.player.pos.y / TILESIZE // 16
+
 		# print(f"Player pos: {self.player.pos.x / TILESIZE:.2f}, {self.player.pos.y / TILESIZE:.2f}")
 		# TODO: add setting for "render distance"
 		for cy in range(-2, 2):
@@ -116,7 +119,17 @@ class Game:
 							ent.rect.move(((px + cx) * 16 + (ent.pos.x / TILESIZE)) * TILESIZE,
 											((py + cy) * 16 + (ent.pos.y / TILESIZE)) * TILESIZE)
 						))
+
 		self.screen.blit(self.player.image, self.camera.apply(self.player))
+
+		# Healthbar van de speler
+		currenthealthB = pygame.Rect(50, 50, 180, 50)
+		pygame.draw.rect(self.screen, (0, 200, 0), currenthealthB)
+		currenthealthT = pygame.font.SysFont('Corbel', 40).render('100', True, (255, 255, 255))
+		self.screen.blit(currenthealthT, (currenthealthB.x + 60, currenthealthB.y))
+
+		# Collision debug rects
+
 		# self.screen.blit(Materials.GRASS.value.image,self.camera.apply(self.player))
 		# for sprite in self.sprites:
 		#	self.screen.blit(sprite.image, self.camera.apply(sprite))
