@@ -5,7 +5,6 @@ import sys
 
 import sprites
 
-
 class Console:
 	def __init__(self, game):
 		self.game = game
@@ -20,9 +19,19 @@ class Console:
 					self.game.player.inventory.add_new_item(item.get_item_from_name(self.game.items, s[1]), int(s[2]))
 				except ValueError:
 					print("Could not convert int to string")
-				except Exception:
-					pass
-				continue
+				finally:
+					continue
+			elif s[0] == "spawn":
+				try:
+					# TODO: add all enemies with arguments
+					loc = pygame.math.Vector2(float(s[1]), float(s[2]))
+					self.game.world.entities.append(sprites.EnemyStandard(self.game, 10, 10, 2, 300, *loc))
+				except IndexError:
+					self.game.spawner.spawnEvent()
+				except ValueError:
+					print(f"Could not convert ({s[1]}, {s[2]}) to a position, please try again.")
+				finally:
+					continue
 			elif s[0] == "debug":
 				try:
 					if s[1] == "pos" or s[1] == "position":

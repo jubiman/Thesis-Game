@@ -4,14 +4,16 @@ import threading
 from os import path
 
 import tilemap
-import assets
 import console
+from world import spawner
 from sprites import *
 from world.chunk import Chunk
 from world.material import Material
 from world.materials import Materials
 from world.world import World
-
+from world.spawner import Spawner
+from world.entity import Entity
+from world.entities import Entities
 
 # TODO: make this better lol
 # Check arguments
@@ -48,6 +50,7 @@ class Game:
 		game_folder = path.dirname(__file__)
 		assets_folder = path.join(game_folder, 'assets')
 		Materials.load(self)
+		Entities.load(self)
 
 	# self.map = tilemap.Map(path.join(game_folder, 'saves/map3.txt'))
 	# self.player_img = pygame.image.load(path.join(assets_folder, 'visual/')).convert_alpha()
@@ -61,7 +64,7 @@ class Game:
 		self.world = World("test/world1")
 		self.world.load()
 		self.player = Player(self, 20, 20, 0, 350, 0, 0)
-
+		self.spawner = Spawner(self, 4, 1)
 		# Initialize camera map specific
 		# TODO: might have to change the camera's settings
 		self.camera = tilemap.Camera(48, 16)
@@ -107,7 +110,12 @@ class Game:
 						if mat is not None and mat.image is not None:
 							self.screen.blit(mat.image, self.camera.applyraw(
 								mat.rect.move(((px + cx) * 16 + x) * TILESIZE, ((py + cy) * 16 + y) * TILESIZE)))
-
+				for ent in self.world.entities:
+					if ent is not None and ent.image is not None:
+						self.screen.blit(ent.image, self.camera.applyraw(
+							ent.rect.move(((px + cx) * 16 + (ent.pos.x / TILESIZE)) * TILESIZE,
+											((py + cy) * 16 + (ent.pos.y / TILESIZE)) * TILESIZE)
+						))
 		self.screen.blit(self.player.image, self.camera.apply(self.player))
 		# self.screen.blit(Materials.GRASS.value.image,self.camera.apply(self.player))
 		# for sprite in self.sprites:

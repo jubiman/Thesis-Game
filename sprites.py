@@ -117,6 +117,8 @@ class Player(LivingCreature):
 			for it in self.inventory.inv.ls:
 				print(it.item.name, it.quantity, it.item.max_stack)
 			self.debug_print_cooldown = 1
+		if keys[K_o]:
+			print(f"world.entities: {self.game.world.entities}")
 
 	def get_events(self):
 		for ev in pygame.event.get():
@@ -250,7 +252,7 @@ class Tree(pygame.sprite.Sprite):
 		self.rect.y = y * TILESIZE
 
 
-class Enemy_standard(LivingCreature):
+class EnemyStandard(LivingCreature):
 	def __init__(self, game, hp, max_hp, armor, speed, x, y):
 
 		# Getting specific information from LivingCreature class
@@ -263,4 +265,8 @@ class Enemy_standard(LivingCreature):
 		self.rect.center = self.pos
 
 	def update(self):
+		# Move the player
+		if self.image is not None:
+			self.rect = self.image.get_rect()
 		self.rect.center = self.pos
+		# self.pos += self.vel * self.game.dt
