@@ -4,7 +4,7 @@ import random
 
 from world.cache import Cache
 from world.gen.generator import Generator
-from world.entity import Entity
+from world.enemy import Enemy
 
 
 class World:
@@ -18,7 +18,7 @@ class World:
 		self.seed = None
 		self.worldtype = None
 		self.cache = Cache(self)
-		self.entities: list[Entity] = []
+		self.entities: list[Enemy] = []
 
 	def load(self):
 		if not self.isloaded:

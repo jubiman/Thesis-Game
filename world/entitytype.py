@@ -1,4 +1,4 @@
-class Entity:
+class EntityType:
 	def __init__(self, displayName, texturePath, iden):
 		self.displayName = displayName
 		self.texturePath = texturePath

@@ -254,7 +254,8 @@ class Tree(pygame.sprite.Sprite):
 
 class EnemyStandard(LivingCreature):
 	def __init__(self, game, hp, max_hp, armor, speed, x, y):
-
+		# TODO: Remove pos and image from this class as it will be in enemy.py
+		# TODO: Add movement (pathfinding
 		# Getting specific information from LivingCreature class
 		super().__init__(game, hp, max_hp, armor, speed)
 # Assets

@@ -2,8 +2,10 @@ import pygame.math
 
 import item
 import sys
-
 import sprites
+
+from settings import *
+
 
 class Console:
 	def __init__(self, game):
@@ -24,8 +26,8 @@ class Console:
 			elif s[0] == "spawn":
 				try:
 					# TODO: add all enemies with arguments
-					loc = pygame.math.Vector2(float(s[1]), float(s[2]))
-					self.game.world.entities.append(sprites.EnemyStandard(self.game, 10, 10, 2, 300, *loc))
+					if self.game.spawner.spawnEventLoc(float(s[1]), float(s[2])):
+						print(f"Could not spawn an enemy at ({s[1]}, {s[2]})")
 				except IndexError:
 					self.game.spawner.spawnEvent()
 				except ValueError:
@@ -36,8 +38,12 @@ class Console:
 				try:
 					if s[1] == "pos" or s[1] == "position":
 						print(self.game.player.pos)
-					elif s[1] == "bases":
-						print(sprites.Player.__bases__)
+					elif s[1] == "chunk":
+						print(self.game.player.pos / TILESIZE // 16)
+					elif s[1] == "ent" or s[1] == "entity":
+						if s[2] == "pos" or s[2] == "position":
+							for ent in self.game.world.entities:
+								print(ent.pos)
 				except IndexError:
 					print("Please add an argument to this comment")
 				finally:
