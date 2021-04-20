@@ -48,8 +48,10 @@ class Console:
 			elif s[0] == "setpos":
 				try:
 					self.game.player.pos = pygame.math.Vector2(float(s[1]), float(s[2]))
-				except Exception as ex:
-					print(ex)
+				except ValueError:
+					print(f"Could not convert ({s[1]}. {s[2]}) to a valid position, please check your values and try again")
+				except IndexError:
+					print(f"Expected 2 arguments, got {len(s)-1}")
 				continue
 			elif s[0] == "xp":
 				try:
