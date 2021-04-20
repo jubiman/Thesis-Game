@@ -52,7 +52,7 @@ class Player(LivingCreature):
 		# Player base
 		# Set initial skill/level values
 		self.skillpoints = 0
-		self.lvl = levelbase.Levelbase(0, 0, 10)
+		self.lvl = levelbase.Levelbase(0, 0, 10, game=self.game)
 		self.xp_formula = "x = x + 10"  # TODO: Change XP system
 
 		# TODO: Set debug cooldown (might remove later)
@@ -117,6 +117,8 @@ class Player(LivingCreature):
 			for it in self.inventory.inv.ls:
 				print(it.item.name, it.quantity, it.item.max_stack)
 			self.debug_print_cooldown = 1
+		if keys[K_o]:
+			print(f"world.entities: {self.game.world.entities}")
 
 	def get_events(self):
 		for ev in pygame.event.get():
@@ -134,7 +136,7 @@ class Player(LivingCreature):
 		if mouse[0]:
 			for tree in self.game.trees:
 				rel_mouse = (math.floor((pygame.mouse.get_pos()[0] + self.game.player.pos[0]) - WIDTH / 2),
-							 math.floor((pygame.mouse.get_pos()[1] + self.game.player.pos[1]) - HEIGHT / 2))
+								math.floor((pygame.mouse.get_pos()[1] + self.game.player.pos[1]) - HEIGHT / 2))
 
 				# print(rel_mouse, pygame.mouse.get_pos())
 				# Check if the mouse and tree image collide
@@ -201,16 +203,16 @@ class Player(LivingCreature):
 					if rect.colliderect(movedColRect):
 						print(f"COLLIDE {self.vel} {dx},{dy}")
 						if self.vel.x > 0 and dx > 0:
-							print("a")
+							print("d")
 							self.vel.x = 0
 						if self.vel.x < 0 and dx < 0:
-							print("b")
+							print("a")
 							self.vel.x = 0
 						if self.vel.y > 0 and dy > 0:
-							print("c")
+							print("s")
 							self.vel.y = 0
 						if self.vel.y < 0 and dy < 0:
-							print("d")
+							print("w")
 							self.vel.y = 0
 
 
@@ -250,9 +252,10 @@ class Tree(pygame.sprite.Sprite):
 		self.rect.y = y * TILESIZE
 
 
-class Enemy_standard(LivingCreature):
+class EnemyStandard(LivingCreature):
 	def __init__(self, game, hp, max_hp, armor, speed, x, y):
-
+		# TODO: Remove pos and image from this class as it will be in enemy.py
+		# TODO: Add movement (pathfinding
 		# Getting specific information from LivingCreature class
 		super().__init__(game, hp, max_hp, armor, speed)
 # Assets
@@ -263,4 +266,8 @@ class Enemy_standard(LivingCreature):
 		self.rect.center = self.pos
 
 	def update(self):
+		# Move the player
+		if self.image is not None:
+			self.rect = self.image.get_rect()
 		self.rect.center = self.pos
+		# self.pos += self.vel * self.game.dt

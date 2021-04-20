@@ -7,10 +7,15 @@ import tilemap
 import assets
 import console
 from sprites import *
+from world import spawner
 from world.chunk import Chunk
 from world.material import Material
 from world.materials import Materials
 from world.world import World
+from world.spawner import Spawner
+from world.entitytype import EntityType
+from world.entitytypes import EntityTypes
+from world.enemy import Enemy
 
 # TODO: make this better lol
 # Check arguments
@@ -47,6 +52,7 @@ class Game:
 		game_folder = path.dirname(__file__)
 		assets_folder = path.join(game_folder, 'assets')
 		Materials.load(self)
+		EntityTypes.load(self)
 
 	# self.map = tilemap.Map(path.join(game_folder, 'saves/map3.txt'))
 	# self.player_img = pygame.image.load(path.join(assets_folder, 'visual/')).convert_alpha()
@@ -60,6 +66,7 @@ class Game:
 		self.world = World("test/world1")
 		self.world.load()
 		self.player = Player(self, 20, 20, 0, 350, 0, 0)
+		self.spawner = Spawner(self, 64, 1)
 
 		# Initialize camera map specific
 		# TODO: might have to change the camera's settings
@@ -108,16 +115,26 @@ class Game:
 							self.screen.blit(mat.image, self.camera.applyraw(
 								mat.rect.move(((px + cx) * 16 + x) * TILESIZE, ((py + cy) * 16 + y) * TILESIZE)))
 
+				for ent in self.world.entities:
+					if ent is not None and ent.entitytype.image is not None:
+						self.screen.blit(ent.entitytype.image, self.camera.applyraw(
+							ent.entitytype.rect.move((ent.chunk[0] * 16 + (ent.pos.x / TILESIZE)) * TILESIZE,
+											(ent.chunk[1] * 16 + (ent.pos.y / TILESIZE)) * TILESIZE)
+						))
+
 		self.screen.blit(self.player.image, self.camera.apply(self.player))
-		# self.screen.blit(Materials.GRASS.value.image,self.camera.apply(self.player))
-		# for sprite in self.sprites:
-		#	self.screen.blit(sprite.image, self.camera.apply(sprite))
 
 		# Healthbar van de speler
 		currenthealthB = pygame.Rect(50, 50, 180, 50)
 		pygame.draw.rect(self.screen, (0, 200, 0), currenthealthB)
 		currenthealthT = pygame.font.SysFont('Corbel', 40).render('100', True, (255, 255, 255))
 		self.screen.blit(currenthealthT, (currenthealthB.x + 60, currenthealthB.y))
+
+		# Collision debug rects
+
+		# self.screen.blit(Materials.GRASS.value.image,self.camera.apply(self.player))
+		# for sprite in self.sprites:
+		#	self.screen.blit(sprite.image, self.camera.apply(sprite))
 
 		# Collision debug rects
 		# pygame.draw.rect(self.screen, (255, 255, 255), self.camera.apply(self.player), 2)
@@ -191,7 +208,10 @@ class Game:
 # create the game object
 g = Game()
 g.show_start_screen()
+g.new()
 while True:
-	g.new()
-	g.run()
+	try:
+		g.run()
+	except pygame.error as err:
+		print(err)
 	g.show_go_screen()

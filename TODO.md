@@ -6,7 +6,7 @@ TODO:
     * Add weapons and tools
 
 - Maps:
-    * Make world gen for better and bigger maps
+    * Improve world gen for better and bigger maps
     * Improve map saving and loading algorithm
     * Custom map names
 
@@ -72,6 +72,8 @@ TODO:
             - Player base
             - Console
             - Error handling
+            - Make spawner for random enemy spawn
+            - Make Items and skills of type Enum for init
         * DONE:
             - Game base  
 
