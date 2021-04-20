@@ -21,8 +21,7 @@ class Console:
 					self.game.player.inventory.add_new_item(item.get_item_from_name(self.game.items, s[1]), int(s[2]))
 				except ValueError:
 					print("Could not convert int to string")
-				finally:
-					continue
+				continue
 			elif s[0] == "spawn":
 				try:
 					# TODO: add all enemies with arguments
@@ -32,8 +31,7 @@ class Console:
 					self.game.spawner.spawnEvent()
 				except ValueError:
 					print(f"Could not convert ({s[1]}, {s[2]}) to a position, please try again.")
-				finally:
-					continue
+				continue
 			elif s[0] == "debug":
 				try:
 					if s[1] == "pos" or s[1] == "position":
@@ -46,15 +44,13 @@ class Console:
 								print(ent.pos)
 				except IndexError:
 					print("Please add an argument to this comment")
-				finally:
-					continue
+				continue
 			elif s[0] == "setpos":
 				try:
 					self.game.player.pos = pygame.math.Vector2(float(s[1]), float(s[2]))
 				except Exception as ex:
 					print(ex)
-				finally:
-					continue
+				continue
 			elif s[0] == "xp":
 				try:
 					if s[1] == "give" or s[1] == "add":
@@ -64,8 +60,7 @@ class Console:
 					print(f"Could not convert {s[2]} to an integer, please check your values and try again")
 				else:
 					self.game.player.check_levels()
-				finally:
-					continue
+				continue
 
 			print(f"Could not find command {s[0]}. Please check for correct spelling")
 
