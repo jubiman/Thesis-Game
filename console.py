@@ -25,7 +25,7 @@ class Console:
 				except ValueError:
 					print("Could not convert int to string")
 				except IndexError:
-					print(f"Expected at least 1 argument, got {len(s)-1}")
+					print(f"Expected at least 1 argument, got {len(s)-1} instead")
 				continue
 			elif s[0] == "spawn":
 				try:
@@ -48,7 +48,7 @@ class Console:
 							for ent in self.game.world.entities:
 								print(ent.pos)
 				except IndexError:
-					print(f"Expected at least 1 argument, got {len(s)-1}")
+					print(f"Expected at least 1 argument, got {len(s)-1} instead")
 				continue
 			elif s[0] == "setpos":
 				try:
@@ -56,7 +56,7 @@ class Console:
 				except ValueError:
 					print(f"Could not convert ({s[1]}. {s[2]}) to a valid position, please check your values and try again")
 				except IndexError:
-					print(f"Expected 2 arguments, got {len(s)-1}")
+					print(f"Expected 2 arguments, got {len(s)-1} instead")
 				continue
 			elif s[0] == "xp":
 				try:
