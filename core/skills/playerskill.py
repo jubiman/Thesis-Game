@@ -1,6 +1,6 @@
 import pygame
 from pygame.locals import *
-from skillbase import *
+from core.skills.skillbase import *
 
 
 # (name: str, ID: int, level: int, spn: int, spf: str)
