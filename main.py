@@ -4,18 +4,14 @@ import threading
 from os import path
 
 import tilemap
-import assets
 import console
 from sprites import *
-from world import spawner
 from world.chunk import Chunk
 from world.material import Material
 from world.materials import Materials
 from world.world import World
 from world.spawner import Spawner
-from world.entitytype import EntityType
 from world.entitytypes import EntityTypes
-from world.enemy import Enemy
 
 # TODO: make this better lol
 # Check arguments
@@ -71,7 +67,7 @@ class Game:
 		# Initialize camera map specific
 		# TODO: might have to change the camera's settings
 		self.camera = tilemap.Camera(48, 16)
-		self.items = item.populate_items(self.graphics)
+		# self.items = item.populate_items(self.graphics)
 
 		self.consoleThread.start()
 		print("Reading console input")
