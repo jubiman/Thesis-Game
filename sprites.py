@@ -5,11 +5,10 @@ import pygame
 from pygame.locals import *
 
 import assets
-import baseskill
 import inventory
 from core.items import item
 import levelbase
-import playerskill
+from core.skills import playerskill, baseskill
 from livingcreature import LivingCreature
 from settings import *
 from world.block import Block
@@ -88,13 +87,14 @@ class Player(LivingCreature):
 	def get_keys(self):
 		self.vel = pygame.math.Vector2(0, 0)
 		keys = pygame.key.get_pressed()
-		if keys[K_a]:
+
+		if keys[ord(self.game.cpc['BINDS']['MOVELEFT'])]:
 			self.vel.x = -self.speed
-		if keys[K_d]:
+		if keys[ord(self.game.cpc['BINDS']['MOVERIGHT'])]:
 			self.vel.x = self.speed
-		if keys[K_w]:
+		if keys[ord(self.game.cpc['BINDS']['MOVEUP'])]:
 			self.vel.y = -self.speed
-		if keys[K_s]:
+		if keys[ord(self.game.cpc['BINDS']['MOVEDOWN'])]:
 			self.vel.y = self.speed
 		if self.vel.x != 0 and self.vel.y != 0:
 			self.vel *= 0.7071
