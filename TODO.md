@@ -55,11 +55,11 @@ TODO:
             - Nothing
     * Sybren:
         * TODO:
-            - World generation
+            - Improve world generation
             - Multi world system
             - Base for dungeons
         * DONE:
-            - Nothing
+            - Base for world generation
     * Kevin:
         * TODO:
             - UI & poep
@@ -70,12 +70,14 @@ TODO:
             - Inventory
             - Skills
             - Player base
-            - Console
+            - Add console commands
             - Error handling
-            - Make spawner for random enemy spawn
+            - Improve spawner for random enemy spawn
             - Make Items and skills of type Enum for init
         * DONE:
-            - Game base  
+            - Game base
+            - Make spawner for random enemy spawn
+            - Add console
 
 - Timeline:
     * Base
