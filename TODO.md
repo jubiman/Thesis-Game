@@ -74,6 +74,7 @@ TODO:
             - Error handling
             - Improve spawner for random enemy spawn
             - Make Items and skills of type Enum for init
+            - Improve config parser
         * DONE:
             - Game base
             - Make spawner for random enemy spawn
