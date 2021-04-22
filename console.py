@@ -1,8 +1,7 @@
 import pygame.math
 
-import item
+from core.items.items import Items
 import sys
-import sprites
 
 from settings import *
 
@@ -18,9 +17,15 @@ class Console:
 			s = inp.split()
 			if s[0] == "give":
 				try:
-					self.game.player.inventory.add_new_item(item.get_item_from_name(self.game.items, s[1]), int(s[2]))
+					it = Items.get_item_from_name(s[1])
+					if it is not None:
+						self.game.player.inventory.add_new_item(it, 1 if len(s) == 2 else int(s[2]))
+						continue
+					print(f"Could not add {s[1]} to inventory, please check your spelling and try again")
 				except ValueError:
 					print("Could not convert int to string")
+				except IndexError:
+					print(f"Expected at least 1 argument, got {len(s)-1} instead")
 				continue
 			elif s[0] == "spawn":
 				try:
@@ -43,7 +48,7 @@ class Console:
 							for ent in self.game.world.entities:
 								print(ent.pos)
 				except IndexError:
-					print("Please add an argument to this comment")
+					print(f"Expected at least 1 argument, got {len(s)-1} instead")
 				continue
 			elif s[0] == "setpos":
 				try:
@@ -51,7 +56,7 @@ class Console:
 				except ValueError:
 					print(f"Could not convert ({s[1]}. {s[2]}) to a valid position, please check your values and try again")
 				except IndexError:
-					print(f"Expected 2 arguments, got {len(s)-1}")
+					print(f"Expected 2 arguments, got {len(s)-1} instead")
 				continue
 			elif s[0] == "xp":
 				try:

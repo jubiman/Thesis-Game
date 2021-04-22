@@ -7,7 +7,7 @@ from pygame.locals import *
 import assets
 import baseskill
 import inventory
-import item
+from core.items import item
 import levelbase
 import playerskill
 from livingcreature import LivingCreature
@@ -98,8 +98,6 @@ class Player(LivingCreature):
 			self.vel.y = self.speed
 		if self.vel.x != 0 and self.vel.y != 0:
 			self.vel *= 0.7071
-		if keys[K_i]:
-			self.pos = (256, 192)
 		if keys[K_p] and self.debug_print_cooldown == 0:
 			# TODO: Debug menu for skills
 			print("-------------------------------------------------")
@@ -112,10 +110,10 @@ class Player(LivingCreature):
 			print("Format: level | xp | sp | hp | armor")
 			print("Player", self.lvl.level, self.lvl.xp, self.skillpoints, self.hp, self.armor)
 			self.debug_print_cooldown = 1
-		if keys[K_l] and self.debug_print_cooldown == 0:
+		if keys[K_i] and self.debug_print_cooldown == 0:
 			print("Inventory:")
 			for it in self.inventory.inv.ls:
-				print(it.item.name, it.quantity, it.item.max_stack)
+				print(it.item.displayName, it.quantity, it.item.max_stack)
 			self.debug_print_cooldown = 1
 		if keys[K_o]:
 			print(f"world.entities: {self.game.world.entities}")
