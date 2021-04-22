@@ -15,7 +15,7 @@ class Generator:
 		}
 
 	def getHeight(self, x: int, y: int):
-		return self.noise.noise2d(x, y)
+		return (self.noise.noise2d(x, y) + 1) / 2
 
 	def generateChunk(self, x: int, y: int):
 		print(f"generating chunk {x},{y}")
