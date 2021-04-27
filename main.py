@@ -4,9 +4,9 @@ import threading
 from os import path
 from configparser import ConfigParser
 
-import tilemap
+from core.controller import camera
 import console
-from sprites import *
+from core.prefabs.sprites import *
 from world.chunk import Chunk
 from world.material import Material
 from world.materials import Materials
@@ -77,7 +77,7 @@ class Game:
 
 		# Initialize camera map specific
 		# TODO: might have to change the camera's settings
-		self.camera = tilemap.Camera(48, 16)
+		self.camera = camera.Camera(48, 16)
 		# self.items = item.populate_items(self.graphics)
 
 		self.consoleThread.start()

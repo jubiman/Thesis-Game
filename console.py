@@ -17,7 +17,7 @@ class Console:
 			s = inp.split()
 			if s[0] == "give":
 				try:
-					it = Items.get_item_from_name(s[1])
+					it = Items.getItemFromName(s[1])
 					if it is not None:
 						self.game.player.inventory.add_new_item(it, 1 if len(s) == 2 else int(s[2]))
 						continue
@@ -61,10 +61,21 @@ class Console:
 			elif s[0] == "xp":
 				try:
 					if s[1] == "give" or s[1] == "add":
-						if len(s) == 3:
+						if len(s) < 4:
 							self.game.player.lvl.xp += int(s[2])
+						else:
+							try:
+								if s[2].lower() == "p" or s[2].lower() == "player":
+									self.game.player.lvl.xp += int(s[3])
+								# TODO: Add all induvidual skills (possibly without if chain)
+							except ValueError:
+								print(f"Could not convert {s[3]} to an integer, please check your values and try again")
+							except IndexError:
+								print(f"Expected 4 arguments, got {len(s)-1} instead")
 				except ValueError:
 					print(f"Could not convert {s[2]} to an integer, please check your values and try again")
+				except IndexError:
+					print(f"Expected at least 2 arguments, got {len(s) - 1} instead")
 				else:
 					self.game.player.check_levels()
 				continue
