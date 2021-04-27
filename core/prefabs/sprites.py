@@ -4,7 +4,7 @@ from random import randint
 import pygame
 from pygame.locals import *
 
-from core.assets import assets
+import assets
 from core.inventory import inventory
 from core.items import item
 from core.skills import baseskills, levelbase

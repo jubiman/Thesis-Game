@@ -1,7 +1,7 @@
 from enum import Enum
 import pygame
 
-from core.assets import assets
+import assets
 from core.skills.playerskill import Playerskill
 
 

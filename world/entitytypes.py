@@ -2,7 +2,7 @@ from enum import Enum
 
 import pygame
 
-from core.assets import assets
+import assets
 from world.entitytype import EntityType
 
 
