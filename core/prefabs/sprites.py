@@ -5,11 +5,11 @@ import pygame
 from pygame.locals import *
 
 import assets
-import inventory
+from core.inventory import inventory
 from core.items import item
-import levelbase
-from core.skills import playerskill, baseskill
-from livingcreature import LivingCreature
+from core.skills import baseskills, levelbase
+from core.skills import playerskills
+from core.prefabs.livingcreature import LivingCreature
 from settings import *
 from world.block import Block
 from world.materials import Materials
@@ -42,11 +42,12 @@ class Player(LivingCreature):
 		# self.equipped_slot = self.inventory.slots[0]
 		# TODO: This is now done in the inventory itself
 
-		# Skills
+		# TODO: Add new way (Enum)
+		# Skills (OLD WAY)
 		# Initialize all base skills at level 0
-		self.baseskills = baseskill.init()
+		# self.baseskills = baseskill.init()
 		# Initialize all upgradable skills for the player
-		self.playerskills = playerskill.init()
+		# self.playerskills = playerskill.init()
 
 		# Player base
 		# Set initial skill/level values
@@ -60,25 +61,25 @@ class Player(LivingCreature):
 	# Methods
 	def check_levels(self):
 		# Check base skills
-		for bs in self.baseskills:
-			if bs.lvl.xp >= bs.lvl.xp_needed:
-				bs.lvl.levelup()
+		for bs in baseskills.Baseskills:
+			if bs.value.lvl.xp >= bs.value.lvl.xp_needed:
+				bs.value.lvl.levelup(t="player")
 				# Display text to notify player of level up
 				# TODO: Make notification on-screen, not in console
-				print(f"You leveled up {bs.name} to level {bs.lvl.level}! You need {bs.lvl.xp_needed} xp for the next level")
+				print(f"You leveled up {bs.value.name} to level {bs.value.lvl.level}! You need {bs.value.lvl.xp_needed} xp for the next level")
 
 		# Check player skills
-		for ps in self.playerskills:
-			if ps.lvl.xp >= ps.lvl.xp_needed:
-				ps.lvl.levelup()
+		for ps in playerskills.Playerskills:
+			if ps.value.lvl.xp >= ps.value.lvl.xp_needed:
+				ps.value.lvl.levelup(t="player")
 				# Display text to notify player of level up
 				# TODO: Make notification on-screen, not in console
-				print(f"You leveled up {ps.name} to level {ps.lvl.level}! You need {ps.lvl.xp_needed} xp for the next level")
+				print(f"You leveled up {ps.value.name} to level {ps.value.lvl.level}! You need {ps.value.lvl.xp_needed} xp for the next level")
 
 		# Check player level
-		if self.lvl.xp >= self.lvl.xp_needed:
+		while self.lvl.xp >= self.lvl.xp_needed:
 			self.lvl.levelup()
-			self.skillpoints += 1 * self.lvl.level * 333 % 4  # TODO: make dynamic
+			self.skillpoints += self.lvl.level * 333 % 4  # TODO: make dynamic
 			# Display text to notify player of level up
 			# TODO: Make notification on-screen, not in console
 			print(f"Your player leveled up to level {self.lvl.level}! You need {self.lvl.xp_needed} xp for the next level")
@@ -101,11 +102,11 @@ class Player(LivingCreature):
 		if keys[K_p] and self.debug_print_cooldown == 0:
 			# TODO: Debug menu for skills
 			print("-------------------------------------------------")
-			for bs in self.baseskills:
-				print(bs.name, bs.lvl.level, bs.lvl.xp, bs.lvl.xp_needed)
+			for bs in baseskills.Baseskills:
+				print(bs.value.name, bs.value.lvl.level, bs.value.lvl.xp, bs.value.lvl.xp_needed)
 			print("-------------------------------------------------")
-			for ps in self.playerskills:
-				print(ps.name, ps.lvl.level, ps.lvl.xp_needed)
+			for ps in playerskills.Playerskills:
+				print(ps.value.name, ps.value.lvl.level, ps.value.lvl.xp_needed)
 			print("-------------------------------------------------")
 			print("Format: level | xp | sp | hp | armor")
 			print("Player", self.lvl.level, self.lvl.xp, self.skillpoints, self.hp, self.armor)

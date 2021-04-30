@@ -39,11 +39,11 @@ class Items(Enum):
 	GOLD_ORE = Item("Gold_Ore", "gold_ore", 105, 999)
 
 	@staticmethod
-	def getEntity(iden):
+	def getItem(iden):
 		"""
 		:param int iden: the identifier of the entity type
 		:return: Returns entity or None
-		:rtype: Entity
+		:rtype: Item
 		"""
 		for it in Items:
 			if it.value.id == iden:
@@ -59,10 +59,11 @@ class Items(Enum):
 				it.value.rect = it.value.image.get_rect()
 
 	@staticmethod
-	def get_item_from_name(n):
+	def getItemFromName(n):
 		"""
 		:param str n: The name string
 		:return: Returns the Item object on success or None on failure
+		:rtype: Item
 		"""
 		try:
 			return Items[n.upper()].value

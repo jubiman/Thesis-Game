@@ -1,11 +1,9 @@
 import math
-from sprites import EnemyStandard
-from random import randint, random
+from core.prefabs.sprites import EnemyStandard
+from random import randint
 from settings import TILESIZE
 from pygame.math import Vector2
-from world.entitytype import EntityType
 from world.entitytypes import EntityTypes
-from world.chunk import Chunk
 from world.enemy import Enemy
 
 

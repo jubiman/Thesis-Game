@@ -4,7 +4,6 @@ import pygame
 
 import assets
 from world.entitytype import EntityType
-from sprites import EnemyStandard
 
 
 class EntityTypes(Enum):

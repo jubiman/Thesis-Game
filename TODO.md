@@ -10,6 +10,9 @@ TODO:
     * Improve map saving and loading algorithm
     * Custom map names
 
+- Code:
+    * Correctly name folders and files in refactoring
+    * Make more sub folders
 
 - Gameplay:
     - Inventory:
