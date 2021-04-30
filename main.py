@@ -4,8 +4,9 @@ import threading
 from os import path
 from configparser import ConfigParser
 
-from core.controller import camera
+
 import console
+from core.controller.camera import Camera
 from core.prefabs.sprites import *
 from world.chunk import Chunk
 from world.material import Material
@@ -77,7 +78,7 @@ class Game:
 
 		# Initialize camera map specific
 		# TODO: might have to change the camera's settings
-		self.camera = camera.Camera(48, 16)
+		self.camera = Camera(48, 16)
 		# self.items = item.populate_items(self.graphics)
 
 		self.consoleThread.start()
