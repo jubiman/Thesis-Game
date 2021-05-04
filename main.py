@@ -2,16 +2,20 @@ import getopt
 import sys
 import threading
 from os import path
+from configparser import ConfigParser
 
-import tilemap
-import assets
+
 import console
-from sprites import *
+from core.controller.camera import Camera
+from core.prefabs.sprites import *
 from world.chunk import Chunk
 from world.material import Material
 from world.materials import Materials
 from world.world import World
-import healthbar
+from world.spawner import Spawner
+from world.entitytypes import EntityTypes
+from cfg.cfgparser import CfgParser
+
 
 # TODO: make this better lol
 # Check arguments
@@ -48,12 +52,21 @@ class Game:
 		game_folder = path.dirname(__file__)
 		assets_folder = path.join(game_folder, 'assets')
 		Materials.load(self)
+		EntityTypes.load(self)
+
+		# Initialize config
+		self.cpc = ConfigParser()  # ConfigParserControls
+		self.cpc.read(path.join(path.dirname(__file__), 'cfg/controls.ini'))
+		cfgp = CfgParser(self, path.join(game_folder, 'cfg/autoexec.cfg'))
+		cfgp.read()
 
 	# self.map = tilemap.Map(path.join(game_folder, 'saves/map3.txt'))
 	# self.player_img = pygame.image.load(path.join(assets_folder, 'visual/')).convert_alpha()
 	# self.player_img = pygame.transform.scale(assets.get_asset_from_name(self.graphics, 'player1').image, (64, 64))
 
 	def new(self):
+
+
 		# initialize all variables and do all the setup for a new game
 		self.sprites = pygame.sprite.Group()
 		self.walls = pygame.sprite.Group()
@@ -61,14 +74,12 @@ class Game:
 		self.world = World("test/world1")
 		self.world.load()
 		self.player = Player(self, 20, 20, 0, 350, 0, 0)
+		self.spawner = Spawner(self, 64, 1)
 
 		# Initialize camera map specific
 		# TODO: might have to change the camera's settings
-		self.camera = tilemap.Camera(48, 16)
-		self.items = item.populate_items(self.graphics)
-
-		# reset healthbar
-		healthbar.HealthBar.resethealth(self)
+		self.camera = Camera(48, 16)
+		# self.items = item.populate_items(self.graphics)
 
 		self.consoleThread.start()
 		print("Reading console input")
@@ -91,7 +102,6 @@ class Game:
 		# update portion of the game loop
 		self.sprites.update()
 		self.camera.update(self.player)
-		healthbar.HealthBar.regen(self)
 
 	def draw(self):
 		pygame.display.set_caption(TITLE + " - " + "{:.2f}".format(self.clock.get_fps()))
@@ -113,13 +123,26 @@ class Game:
 							self.screen.blit(mat.image, self.camera.applyraw(
 								mat.rect.move(((px + cx) * 16 + x) * TILESIZE, ((py + cy) * 16 + y) * TILESIZE)))
 
+				for ent in self.world.entities:
+					if ent is not None and ent.entitytype.image is not None:
+						self.screen.blit(ent.entitytype.image, self.camera.applyraw(
+							ent.entitytype.rect.move((ent.chunk[0] * 16 + (ent.pos.x / TILESIZE)) * TILESIZE,
+											(ent.chunk[1] * 16 + (ent.pos.y / TILESIZE)) * TILESIZE)
+						))
+
 		self.screen.blit(self.player.image, self.camera.apply(self.player))
+
+		# Healthbar van de speler
+		currenthealthB = pygame.Rect(50, 50, 180, 50)
+		pygame.draw.rect(self.screen, (0, 200, 0), currenthealthB)
+		currenthealthT = pygame.font.SysFont('Corbel', 40).render('100', True, (255, 255, 255))
+		self.screen.blit(currenthealthT, (currenthealthB.x + 60, currenthealthB.y))
+
+		# Collision debug rects
+
 		# self.screen.blit(Materials.GRASS.value.image,self.camera.apply(self.player))
 		# for sprite in self.sprites:
 		#	self.screen.blit(sprite.image, self.camera.apply(sprite))
-
-		# Healthbar van de speler
-		healthbar.HealthBar.drawhealthbar(self)
 
 		# Collision debug rects
 		# pygame.draw.rect(self.screen, (255, 255, 255), self.camera.apply(self.player), 2)
@@ -193,7 +216,10 @@ class Game:
 # create the game object
 g = Game()
 g.show_start_screen()
+g.new()
 while True:
-	g.new()
-	g.run()
+	try:
+		g.run()
+	except pygame.error as err:
+		print(err)
 	g.show_go_screen()
