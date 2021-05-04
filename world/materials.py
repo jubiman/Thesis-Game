@@ -10,7 +10,7 @@ class Materials(Enum):
 	AIR = Material("Air", "empty", 0)
 	GRASS = Material("Grass", "grass_0", 1)
 	TREE = Material("Tree", "tree_0", 2)
-	WALL = Material("Wall", "wall_0", 3)
+	WALL = Material("Wall", "wall_part_0_11111111", 3)
 
 	@staticmethod
 	def getMaterial(iden: int):
