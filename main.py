@@ -6,6 +6,7 @@ from configparser import ConfigParser
 
 
 import console
+import healthbar
 from core.controller.camera import Camera
 from core.prefabs.sprites import *
 from world.chunk import Chunk
