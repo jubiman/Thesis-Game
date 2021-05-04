@@ -29,7 +29,8 @@ def populate_assets():
 	assets = []
 	# Open the tilesheet
 	# colored_packed.png is 16x16, currently is hardcoded to this file
-	sheet = pygame.image.load(path.join(path.dirname(__file__), 'assets/visual/Tilesheet/colored_transparent_packed.png'))
+	sheet = pygame.image.load(
+		path.join(path.dirname(__file__), 'assets/visual/Tilesheet/colored_transparent_packed.png'))
 	# index = 0  # is used to know how many iterations we have done (x*22+y = index)
 	for x in range(48):
 		for y in range(22):
