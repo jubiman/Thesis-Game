@@ -3,8 +3,7 @@ from opensimplex import OpenSimplex
 from world.block import Block
 from world.chunk import Chunk
 from world.materials import Materials
-from world.enemy import Enemy
-from world.entitytypes import EntityTypes
+
 
 class Generator:
 
@@ -12,7 +11,7 @@ class Generator:
 		self.seed = seed
 		self.noise = OpenSimplex(seed=seed)
 		self.settings = {
-			"wallHeight": 0.5
+			"wallHeight": 0.75
 		}
 
 	def getHeight(self, x: int, y: int):

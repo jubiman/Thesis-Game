@@ -1,5 +1,6 @@
-from world.entitytype import EntityType
 from pygame.math import Vector2
+
+from world.entitytype import EntityType
 
 
 class Enemy:

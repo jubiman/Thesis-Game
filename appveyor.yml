@@ -1,18 +1,18 @@
 # appveyor.yml
 environment:
   matrix:
-  - TOXENV: py27
-  - TOXENV: py35
-  - TOXENV: py36
-  - TOXENV: py37
+    - TOXENV: py27
+    - TOXENV: py35
+    - TOXENV: py36
+    - TOXENV: py37
 
 build: off
 
 install:
-- pip install tox
+  - pip install tox
 
 test_script:
-- tox
+  - tox
 
 on_success:
   - ps: Invoke-RestMethod https://raw.githubusercontent.com/DiscordHooks/appveyor-discord-webhook/master/send.ps1 -o send.ps1

@@ -1,8 +1,8 @@
+import sys
+
 import pygame.math
 
 from core.items.items import Items
-import sys
-
 from settings import *
 
 
@@ -25,7 +25,7 @@ class Console:
 				except ValueError:
 					print("Could not convert int to string")
 				except IndexError:
-					print(f"Expected at least 1 argument, got {len(s)-1} instead")
+					print(f"Expected at least 1 argument, got {len(s) - 1} instead")
 				continue
 			elif s[0] == "spawn":
 				try:
@@ -48,15 +48,16 @@ class Console:
 							for ent in self.game.world.entities:
 								print(ent.pos)
 				except IndexError:
-					print(f"Expected at least 1 argument, got {len(s)-1} instead")
+					print(f"Expected at least 1 argument, got {len(s) - 1} instead")
 				continue
 			elif s[0] == "setpos":
 				try:
 					self.game.player.pos = pygame.math.Vector2(float(s[1]), float(s[2]))
 				except ValueError:
-					print(f"Could not convert ({s[1]}. {s[2]}) to a valid position, please check your values and try again")
+					print(
+						f"Could not convert ({s[1]}. {s[2]}) to a valid position, please check your values and try again")
 				except IndexError:
-					print(f"Expected 2 arguments, got {len(s)-1} instead")
+					print(f"Expected 2 arguments, got {len(s) - 1} instead")
 				continue
 			elif s[0] == "xp":
 				try:
@@ -67,11 +68,11 @@ class Console:
 							try:
 								if s[2].lower() == "p" or s[2].lower() == "player":
 									self.game.player.lvl.xp += int(s[3])
-								# TODO: Add all induvidual skills (possibly without if chain)
+							# TODO: Add all induvidual skills (possibly without if chain)
 							except ValueError:
 								print(f"Could not convert {s[3]} to an integer, please check your values and try again")
 							except IndexError:
-								print(f"Expected 4 arguments, got {len(s)-1} instead")
+								print(f"Expected 4 arguments, got {len(s) - 1} instead")
 				except ValueError:
 					print(f"Could not convert {s[2]} to an integer, please check your values and try again")
 				except IndexError:
