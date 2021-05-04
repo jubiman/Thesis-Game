@@ -1,4 +1,4 @@
-from levelbase import *
+from core.skills.levelbase import *
 
 
 class Skillbase:
