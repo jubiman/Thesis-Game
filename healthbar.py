@@ -1,8 +1,8 @@
 import pygame
 
 class HealthBar:
-    health: int = 100
-    countdown: int = 0
+    health = 100
+    countdown = 0
 
     def __init__(self):
         pass
