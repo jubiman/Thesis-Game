@@ -3,7 +3,7 @@ from enum import Enum
 import pygame
 
 import assets
-from world.material import Material
+from world.entity.material import Material
 
 
 class Materials(Enum):

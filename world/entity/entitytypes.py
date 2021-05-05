@@ -3,7 +3,7 @@ from enum import Enum
 import pygame
 
 import assets
-from world.entitytype import EntityType
+from world.entity.entitytype import EntityType
 
 
 class EntityTypes(Enum):
