@@ -4,8 +4,8 @@ import random
 
 from world.cache import Cache
 from world.entity.enemy import Enemy
-from world.gen.generator import Generator
 from world.gen.dungeongenerator import DungeonGenerator
+from world.gen.generator import Generator
 
 
 class World:
