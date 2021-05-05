@@ -5,6 +5,7 @@ class HealthBar:
     countdown: int = 0
 
     def __init__(self):
+        pass
 
     def resethealth(self):
         HealthBar.health = 100
