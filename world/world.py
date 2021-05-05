@@ -3,10 +3,8 @@ import os.path
 import random
 
 from world.cache import Cache
-from world.enemy import Enemy
-from world.gen.generator import Generator
-from world.gen.generator import Generator
 from world.entity.enemy import Enemy
+from world.gen.generator import Generator
 
 
 class World:

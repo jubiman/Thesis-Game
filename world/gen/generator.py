@@ -1,12 +1,10 @@
+import json
+
 from opensimplex import OpenSimplex
 
 from world.block import Block
 from world.chunk import Chunk
-from world.materials import Materials
-
 from world.material.materials import Materials
-
-import json
 
 
 class Generator:

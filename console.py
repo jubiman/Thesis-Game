@@ -1,14 +1,11 @@
 import sys
+from os import path
 
 import pygame.math
 
 from core.items.items import Items
-import sys
-
-from os import path
-from core.items.items import Items
-from world .world import World
 from settings import *
+from world.world import World
 
 
 class Console:
