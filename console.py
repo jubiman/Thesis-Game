@@ -79,6 +79,9 @@ class Console:
 				else:
 					self.game.player.check_levels()
 				continue
+			elif s[0] == "loadmap":
+				self.game.world.getChunkAt(0.0, 0.0)
+				continue
 
 			print(f"Could not find command {s[0]}. Please check for correct spelling")
 
