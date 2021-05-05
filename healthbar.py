@@ -1,5 +1,5 @@
 import pygame
-import console
+from main import Game
 
 class HealthBar:
     health: int = 100
@@ -16,14 +16,14 @@ class HealthBar:
         HealthBar.health = newhealth
         HealthBar.countdown = 5
         if HealthBar.health <= 0:
-            self.console.kill()
+            self.main.Game.console.kill()
             HealthBar.health = 100
 
     def sethealthbar2(self, newhealth):
         # without health-regen reset
         HealthBar.health = newhealth
         if HealthBar.health <= 0:
-            self.console.kill()
+            self.main.Game.console.kill()
             HealthBar.health = 100
 
     def gethealthbar(self):
