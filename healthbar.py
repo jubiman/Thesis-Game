@@ -3,8 +3,8 @@ import pygame
 
 class HealthBar:
     def __init__(self):
-        self.health = 100
-        self.countdown = 0
+        self.health: int = 100
+        self.countdown: int = 0
 
     def resethealth(self):
         HealthBar.health = 100
