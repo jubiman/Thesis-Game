@@ -1,21 +1,19 @@
 import getopt
 import sys
 import threading
-from os import path
 from configparser import ConfigParser
-
+from os import path, getcwd
 
 import console
+from cfg.cfgparser import CfgParser
 from core.controller.camera import Camera
 from core.prefabs.sprites import *
 from world.chunk import Chunk
-from world.material import Material
-from world.material.materials import Materials
-from world.world import World
-from world.spawner import Spawner
 from world.entity.entitytypes import EntityTypes
-from cfg.cfgparser import CfgParser
-
+from world.material.material import Material
+from world.material.materials import Materials
+from world.spawner import Spawner
+from world.world import World
 
 # TODO: make this better lol
 # Check arguments
@@ -41,7 +39,7 @@ class Game:
 		self.graphics = assets.populate_assets()
 		self.load_data()
 		self.world = None
-
+		self.gamedir = getcwd()
 		# Make console
 		self.console = console.Console(self)
 		self.consoleThread = threading.Thread(target=self.console.run, daemon=True)
@@ -53,7 +51,6 @@ class Game:
 		EntityTypes.load(self)
 
 		# Initialize config
-		self.cpc = ConfigParser()  # ConfigParserControls
 		self.cpc = ConfigParser()  # ConfigParserControls
 		self.cpc.read(path.join(path.dirname(__file__), 'cfg/controls.ini'))
 		cfgp = CfgParser(self, path.join(game_folder, 'cfg/autoexec.cfg'))
@@ -95,6 +92,7 @@ class Game:
 		# update portion of the game loop
 		self.sprites.update()
 		self.camera.update(self.player)
+		self.world.tick()
 
 	def draw(self):
 		pygame.display.set_caption(TITLE + " - " + "{:.2f}".format(self.clock.get_fps()))
@@ -120,7 +118,7 @@ class Game:
 					if ent is not None and ent.entitytype.image is not None:
 						self.screen.blit(ent.entitytype.image, self.camera.applyraw(
 							ent.entitytype.rect.move((ent.chunk[0] * 16 + (ent.pos.x / TILESIZE)) * TILESIZE,
-											(ent.chunk[1] * 16 + (ent.pos.y / TILESIZE)) * TILESIZE)
+													 (ent.chunk[1] * 16 + (ent.pos.y / TILESIZE)) * TILESIZE)
 						))
 
 		self.screen.blit(self.player.image, self.camera.apply(self.player))

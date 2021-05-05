@@ -17,7 +17,7 @@ class CfgParser:
 					try:
 						self.game.cpc['BINDS'][s[1].strip('"')] = s[2].strip('"')
 					except IndexError:
-						print(f"Expected 2 arguments, got {len(s)-1} instead.")
+						print(f"Expected 2 arguments, got {len(s) - 1} instead.")
 					except KeyError:
 						try:
 							self.game.cpc.add_section('BINDS')

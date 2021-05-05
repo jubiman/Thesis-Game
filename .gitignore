@@ -133,4 +133,8 @@ dmypy.json
 # Pyre type checker
 .pyre/
 
+# Kevin's pc being weird so gitignoring it
 .idea
+
+# Don't wanna upload all our save files
+saves/**
