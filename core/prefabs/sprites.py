@@ -12,7 +12,7 @@ from core.skills import playerskills
 from core.prefabs.livingcreature import LivingCreature
 from settings import *
 from world.block import Block
-from world.entity.materials import Materials
+from world.material.materials import Materials
 
 
 class Player(LivingCreature):
