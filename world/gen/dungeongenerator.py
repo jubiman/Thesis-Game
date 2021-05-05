@@ -28,4 +28,3 @@ class DungeonGenerator:
 			for dy in range(16):
 				chunk.setBlock(dx, dy, Block(Materials[cfg[str(dx)][dy].upper()].value))
 		return chunk
-
