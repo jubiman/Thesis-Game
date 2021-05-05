@@ -10,7 +10,7 @@ from world.material.materials import Materials
 
 # TODO: load random dungeon from room files
 class DungeonGenerator:
-	def __init__(self, p: str, seed: str):
+	def __init__(self, p: str, seed: int):
 		self.seed = seed
 		self.rooms = {
 			"room0": path.join(p, "world/dungeon/prefabs/room0.json"),
