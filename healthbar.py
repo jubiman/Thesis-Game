@@ -2,9 +2,9 @@ import pygame
 
 
 class HealthBar:
-    def __init__(self, health, countdown):
-        self.health = health
-        self.countdown = countdown
+    def __init__(self):
+        self.health = 100
+        self.countdown = 0
 
     def resethealth(self):
         HealthBar.__init__(self).health = 100
