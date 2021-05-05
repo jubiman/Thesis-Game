@@ -208,19 +208,19 @@ class Player(LivingCreature):
 						if self.vel.x > 0 and dx > 0:
 							print("d")
 							self.vel.x = 0
-							self.healthbar.sethealthbar1(self, healthbar.gethealthbar(self) - 5)
+							self.healthbar.sethealthbar1(self, self.healthbar.gethealthbar(self) - 5)
 						if self.vel.x < 0 and dx < 0:
 							print("a")
 							self.vel.x = 0
-							self.healthbar.sethealthbar1(self, healthbar.gethealthbar(self) - 5)
+							self.healthbar.sethealthbar1(self, self.healthbar.gethealthbar(self) - 5)
 						if self.vel.y > 0 and dy > 0:
 							print("s")
 							self.vel.y = 0
-							self.healthbar.sethealthbar1(self, healthbar.gethealthbar(self) - 5)
+							self.healthbar.sethealthbar1(self, self.healthbar.gethealthbar(self) - 5)
 						if self.vel.y < 0 and dy < 0:
 							print("w")
 							self.vel.y = 0
-							self.healthbar.sethealthbar1(self, healthbar.gethealthbar(self) - 5)
+							self.healthbar.sethealthbar1(self, self.healthbar.gethealthbar(self) - 5)
 
 
 class Wall(pygame.sprite.Sprite):
