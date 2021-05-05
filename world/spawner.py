@@ -3,8 +3,8 @@ from core.prefabs.sprites import EnemyStandard
 from random import randint
 from settings import TILESIZE
 from pygame.math import Vector2
-from world.entitytypes import EntityTypes
-from world.enemy import Enemy
+from world.entity.entitytypes import EntityTypes
+from world.entity.enemy import Enemy
 
 
 class Spawner:

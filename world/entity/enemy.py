@@ -1,4 +1,4 @@
-from world.entitytype import EntityType
+from world.entity.entitytype import EntityType
 from pygame.math import Vector2
 
 

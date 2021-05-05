@@ -12,7 +12,7 @@ from core.skills import playerskills
 from core.prefabs.livingcreature import LivingCreature
 from settings import *
 from world.block import Block
-from world.materials import Materials
+from world.entity.materials import Materials
 
 
 class Player(LivingCreature):
@@ -200,55 +200,19 @@ class Player(LivingCreature):
 				if block.material.id == Materials.WALL.value.id:
 					rect: Rect = block.material.rect.move((px + dx) * TILESIZE, (py + dy) * TILESIZE)
 					if rect.colliderect(movedColRect):
-						print(f"COLLIDE {self.vel} {dx},{dy}")
+						# print(f"COLLIDE {self.vel} {dx},{dy}")
 						if self.vel.x > 0 and dx > 0:
-							print("d")
+							# print("d")
 							self.vel.x = 0
 						if self.vel.x < 0 and dx < 0:
-							print("a")
+							# print("a")
 							self.vel.x = 0
 						if self.vel.y > 0 and dy > 0:
-							print("s")
+							# print("s")
 							self.vel.y = 0
 						if self.vel.y < 0 and dy < 0:
-							print("w")
+							# print("w")
 							self.vel.y = 0
-
-
-class Wall(pygame.sprite.Sprite):
-	def __init__(self, game, x, y):
-		self.groups = game.sprites, game.walls
-		pygame.sprite.Sprite.__init__(self, self.groups)
-
-		# Game object so we can interact with the world
-		self.game = game
-
-		# Wall image asset
-		self.image = pygame.transform.scale(assets.get_asset_from_name(game.graphics, "wall1").image, (64, 64))
-		self.rect = self.image.get_rect()
-
-		# Set positions
-		self.x = x
-		self.y = y
-		self.rect.x = x * TILESIZE
-		self.rect.y = y * TILESIZE
-
-
-class Tree(pygame.sprite.Sprite):
-	def __init__(self, game, x, y):
-		self.groups = game.sprites, game.trees
-		pygame.sprite.Sprite.__init__(self, self.groups)
-
-		# Game object so we can interact with the world
-		self.game = game
-		self.image = pygame.transform.scale(assets.get_asset_from_name(game.graphics, "tree1").image, (64, 64))
-		self.rect = self.image.get_rect()
-
-		# Set positions
-		self.x = x
-		self.y = y
-		self.rect.x = x * TILESIZE
-		self.rect.y = y * TILESIZE
 
 
 class EnemyStandard(LivingCreature):
