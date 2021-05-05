@@ -30,6 +30,4 @@ class Cache:
 
 	# Deprecated
 	def setChunk(self, x: int, y: int):
-		x = int(x)
-		y = int(y)
 		self.chunks[x, y] = self.world.specialLoadChunk(x, y)
