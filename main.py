@@ -1,9 +1,8 @@
 import getopt
 import sys
 import threading
-
-from os import path, getcwd
 from configparser import ConfigParser
+from os import path, getcwd
 
 import console
 from cfg.cfgparser import CfgParser
@@ -93,6 +92,7 @@ class Game:
 		# update portion of the game loop
 		self.sprites.update()
 		self.camera.update(self.player)
+		self.world.tick()
 
 	def draw(self):
 		pygame.display.set_caption(TITLE + " - " + "{:.2f}".format(self.clock.get_fps()))
