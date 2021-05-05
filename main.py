@@ -4,18 +4,16 @@ import threading
 from os import path, getcwd
 from configparser import ConfigParser
 
-
 import console
+from cfg.cfgparser import CfgParser
 from core.controller.camera import Camera
 from core.prefabs.sprites import *
 from world.chunk import Chunk
+from world.entity.entitytypes import EntityTypes
 from world.material.material import Material
 from world.material.materials import Materials
-from world.world import World
 from world.spawner import Spawner
-from world.entity.entitytypes import EntityTypes
-from cfg.cfgparser import CfgParser
-
+from world.world import World
 
 # TODO: make this better lol
 # Check arguments
@@ -119,7 +117,7 @@ class Game:
 					if ent is not None and ent.entitytype.image is not None:
 						self.screen.blit(ent.entitytype.image, self.camera.applyraw(
 							ent.entitytype.rect.move((ent.chunk[0] * 16 + (ent.pos.x / TILESIZE)) * TILESIZE,
-											(ent.chunk[1] * 16 + (ent.pos.y / TILESIZE)) * TILESIZE)
+													 (ent.chunk[1] * 16 + (ent.pos.y / TILESIZE)) * TILESIZE)
 						))
 
 		self.screen.blit(self.player.image, self.camera.apply(self.player))
