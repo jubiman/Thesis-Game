@@ -1,8 +1,9 @@
 import getopt
 import sys
 import threading
+
+from os import path, getcwd
 from configparser import ConfigParser
-from os import path
 
 import console
 from cfg.cfgparser import CfgParser
@@ -39,7 +40,7 @@ class Game:
 		self.graphics = assets.populate_assets()
 		self.load_data()
 		self.world = None
-
+		self.gamedir = getcwd()
 		# Make console
 		self.console = console.Console(self)
 		self.consoleThread = threading.Thread(target=self.console.run, daemon=True)
