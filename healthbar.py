@@ -8,20 +8,20 @@ class HealthBar:
         pass
 
     def resethealth(self):
-        HealthBar.health = 100
+        HealthBar.health.__setattr__(self, HealthBar.health, 100)
 
     def sethealthbar1(self, newhealth):
         # with health-regen reset
-        HealthBar.health = newhealth
-        HealthBar.countdown = 5
+        HealthBar.health.__setattr__(self, HealthBar.health, newhealth)
+        HealthBar.countdown.__setattr__(self, HealthBar.countdown, 5)
         if HealthBar.health <= 0:
-            HealthBar.health = 100
+            HealthBar.health.__setattr__(self, HealthBar.health, 100)
 
     def sethealthbar2(self, newhealth):
         # without health-regen reset
-        HealthBar.health = newhealth
+        HealthBar.health.__setattr__(self, HealthBar.health, newhealth)
         if HealthBar.health <= 0:
-            HealthBar.health = 100
+            HealthBar.health.__setattr__(self, HealthBar.health, 100)
 
     def gethealthbar(self):
         return HealthBar.health
@@ -36,6 +36,11 @@ class HealthBar:
 
     def regen(self):
         if HealthBar.countdown > 0:
-            HealthBar.countdown = HealthBar.countdown - 1
+            HealthBar.countdown.__setattr__(self, HealthBar.countdown, HealthBar.countdown - 1)
         else:
-            HealthBar.health = HealthBar.health + 5
+            if HealthBar.health >= 100:
+                pass
+            elif HealthBar.health <= 95:
+                HealthBar.sethealthbar2(self, HealthBar.health + 5)
+            else:
+                HealthBar.sethealthbar2(self, 100)
