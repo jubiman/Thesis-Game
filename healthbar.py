@@ -7,25 +7,25 @@ class HealthBar:
         self.countdown = 0
 
     def resethealth(self):
-        HealthBar.__init__(self).health = 100
+        HealthBar.health = 100
 
     def sethealthbar1(self, health):
         # with health-regen reset
-        HealthBar.__init__(self).health = health
-        HealthBar.__init__(self).countdown = 5
-        if HealthBar.__init__(self).health <= 0:
+        HealthBar.health = health
+        HealthBar.countdown = 5
+        if HealthBar.health <= 0:
             self.console.kill()
-            HealthBar.__init__(self).health = 100
+            HealthBar.health = 100
 
     def sethealthbar2(self, health):
         # without health-regen reset
-        HealthBar.__init__(self).health = health
-        if HealthBar.__init__(self).health <= 0:
+        HealthBar.health = health
+        if HealthBar.health <= 0:
             self.console.kill()
-            HealthBar.__init__(self).health = 100
+            HealthBar.health = 100
 
     def gethealthbar(self):
-        return HealthBar.__init__(self).health
+        return HealthBar.health
 
     def drawhealthbar(self):
         backgroundhealthbar = pygame.Rect(50, 50, 180, 50)
@@ -36,7 +36,7 @@ class HealthBar:
         self.screen.blit(currenthealthtext, (currenthealthbar + 60, currenthealthbar.y))
 
     def regen(self):
-        if HealthBar.__init__(self).countdown > 0:
-            HealthBar.__init__(self).countdown = HealthBar.__init__(self).countdown - 1
+        if HealthBar.countdown > 0:
+            HealthBar.countdown = HealthBar.countdown - 1
         else:
-            HealthBar.__init__(self).health = HealthBar.__init__(self).health + 5
+            HealthBar.health = HealthBar.health + 5
