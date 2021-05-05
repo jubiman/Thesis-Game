@@ -62,9 +62,9 @@ TODO:
             - Improve world generation
             - Multi world system
             - Base for dungeons
-            - Saving and loading system for world
         * DONE:
             - Base for world generation
+            - Saving and loading system for world
     * Kevin:
         * TODO:
             - UI & poep
@@ -72,18 +72,20 @@ TODO:
             - Nothing
     * Melle:
         * TODO:
-            - Inventory
-            - Skills
-            - Player base
+            - Improve inventory
+            - Improve skills
             - Add console commands
             - Error handling
             - Improve spawner for random enemy spawn
-            - Make Items and skills of type Enum for init
             - Improve config parser
         * DONE:
             - Game base
             - Make spawner for random enemy spawn
+            - Make Items and skills of type Enum for init
             - Add console
+            - Player base
+            - Inventory
+            - Skills
 <br></br>
 - Timeline:
     * Base

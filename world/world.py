@@ -67,7 +67,7 @@ class World:
 		del self.cache.chunks[x, y]
 
 	def save(self, x: int, y: int):
-		cfile = os.path.join(self.filepath, "chunks", f"{x},{y}.json")
+		cfile = os.path.join(self.filepath, "chunks", f"{int(x)},{int(y)}.json")
 		if not os.path.isdir(os.path.join(self.filepath, "chunks")):
 			os.mkdir(os.path.join(self.filepath, "chunks"))
 		c = self.cache.chunks[x, y]
