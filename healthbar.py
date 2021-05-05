@@ -2,24 +2,26 @@ import pygame
 
 
 class HealthBar:
+    health: int = 100
+    countdown: int = 0
+
     def __init__(self):
-        self.health: int = 100
-        self.countdown: int = 0
+        pass
 
     def resethealth(self):
         HealthBar.health = 100
 
-    def sethealthbar1(self, health):
+    def sethealthbar1(self, newhealth):
         # with health-regen reset
-        HealthBar.health = health
+        HealthBar.health = newhealth
         HealthBar.countdown = 5
         if HealthBar.health <= 0:
             self.console.kill()
             HealthBar.health = 100
 
-    def sethealthbar2(self, health):
+    def sethealthbar2(self, newhealth):
         # without health-regen reset
-        HealthBar.health = health
+        HealthBar.health = newhealth
         if HealthBar.health <= 0:
             self.console.kill()
             HealthBar.health = 100
