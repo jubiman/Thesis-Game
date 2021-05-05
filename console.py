@@ -1,8 +1,9 @@
 import pygame.math
-
-from core.items.items import Items
 import sys
 
+from os import path
+from core.items.items import Items
+from world .world import World
 from settings import *
 
 
@@ -78,6 +79,10 @@ class Console:
 					print(f"Expected at least 2 arguments, got {len(s) - 1} instead")
 				else:
 					self.game.player.check_levels()
+				continue
+			elif s[0] == "loadmap":
+				self.game.world = World(path.join(path.dirname(__file__), "saves/world1"))
+				self.game.world.load()
 				continue
 
 			print(f"Could not find command {s[0]}. Please check for correct spelling")

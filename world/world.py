@@ -4,7 +4,7 @@ import random
 
 from world.cache import Cache
 from world.gen.generator import Generator
-from world.enemy import Enemy
+from world.entity.enemy import Enemy
 
 
 class World:
@@ -27,7 +27,7 @@ class World:
 			if not os.path.isfile(self.configfile):
 				# Create config if it smh doesn't exist
 				self.config = {
-					"name": self.filepath.split("/")[len(self.filepath.split("/")) - 1],
+					"name": self.filepath.split("/")[-1],
 					"seed": random.randint(0, 2 ** 31 - 1),
 					"worldtype": "default"
 				}
@@ -43,6 +43,9 @@ class World:
 			# TODO: load chunk from file
 			return None
 		return self.generator.generateChunk(x, y)
+
+	def specialLoadChunk(self, x, y):
+		return self.generator.specialGen(x, y)
 
 	def getBlockAt(self, x: int, y: int):
 		return self.getChunkAt(x // 16, y // 16).getBlock(x % 16, y % 16)

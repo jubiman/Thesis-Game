@@ -11,3 +11,7 @@ class Cache:
 			return self.chunks[f"{x},{y}"]
 		self.chunks[f"{x},{y}"] = self.world.loadChunk(x, y)
 		return self.chunks[f"{x},{y}"]
+
+	# Deprecated
+	def setChunk(self, x: int, y: int):
+		self.chunks[f"{x},{y}"] = self.world.specialLoadChunk(x, y)
