@@ -53,10 +53,10 @@ class World:
 			data = json.loads(open(os.path.join(self.filepath, "chunks", f"{x},{y}.json"), "r").read())
 			blocks_json_list = data["b"]
 			blocks_list: list[list[Block]] = []
-			for x in range(16):
+			for cx in range(16):
 				blocks_list.append([])
-				for y in range(16):
-					blocks_list[x].append(Block(Materials.getMaterial(blocks_json_list[x * 16 + y])))
+				for cy in range(16):
+					blocks_list[cx].append(Block(Materials.getMaterial(blocks_json_list[cx * 16 + cy])))
 			chunk = Chunk(blocks_list)
 			return chunk
 		return self.generator.generateChunk(x, y)
