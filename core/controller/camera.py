@@ -18,4 +18,5 @@ class Camera(pygame.Rect):
 		return rect.move(self.camera.topleft)
 
 	def update(self, target):
-		self.camera = pygame.Rect(-target.rect.x + int(WIDTH / 2), -target.rect.y + int(HEIGHT / 2), self.width, self.height)
+		self.camera = pygame.Rect(-target.rect.x + int(WIDTH / 2), -target.rect.y + int(HEIGHT / 2), self.width,
+								  self.height)
