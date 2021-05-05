@@ -47,9 +47,10 @@ class Inventory:
 		self.inv = InventoryList(27)  # Inventory only has 27 slots
 		# self.hands[0] is main hand, hands[1] is offhand
 		self.hands = [InventorySlot(Item('Axe', 'axe', 1, 1), 1, 1), None]
-		# for i in range(9):
-		# self.slots.append(InventorySlot(item.Item('Axe', 1), 1, 1))
-		# self.slots.append(InventorySlot(item.Item('empty', 0), i+1))
+
+	# for i in range(9):
+	# self.slots.append(InventorySlot(item.Item('Axe', 1), 1, 1))
+	# self.slots.append(InventorySlot(item.Item('empty', 0), i+1))
 
 	# Method to add items to inventory
 	def add_new_item(self, it, quant=0):

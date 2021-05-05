@@ -1,4 +1,5 @@
 TODO:
+
 - Base:
     * Improve basic gameplay
 
@@ -37,7 +38,7 @@ TODO:
 
     - Player:
         * <i>Classes</i> or <b>dynamic</b>
-    
+
     - Resources:
         * Crafting
         * What resources?
@@ -45,11 +46,11 @@ TODO:
     - Base gameplay:
         * Difficulties
         * Multiplayer?
-    
+
     - QoL:
         * Add a saving and loading system
         * Create error handler
-    
+
 - Division of tasks:
     * Mel:
         * TODO:

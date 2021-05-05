@@ -3,8 +3,9 @@ import os.path
 import random
 
 from world.cache import Cache
+from world.entity.enemy import Enemy
+from world.gen.dungeongenerator import DungeonGenerator
 from world.gen.generator import Generator
-from world.enemy import Enemy
 
 
 class World:
@@ -27,22 +28,26 @@ class World:
 			if not os.path.isfile(self.configfile):
 				# Create config if it smh doesn't exist
 				self.config = {
-					"name": self.filepath.split("/")[len(self.filepath.split("/")) - 1],
+					"name": self.filepath.split("/")[-1],
 					"seed": random.randint(0, 2 ** 31 - 1),
 					"worldtype": "default"
 				}
 			else:
-				self.config = json.loads(open("config.json", "r").read())
+				self.config = json.loads(open(self.configfile, "r").read())
 			self.name = self.config["name"]
 			self.seed = self.config["seed"]
 			self.worldtype = self.config["worldtype"]
-			self.generator = Generator(self.seed)
+			self.generator = Generator(self.seed) if self.worldtype == "default" else DungeonGenerator(
+				self.filepath[0:self.filepath.rfind("\\")], self.seed)
 
 	def loadChunk(self, x: int, y: int):
 		if os.path.isfile(self.filepath + "/regions/" + f"{x},{y}.reg"):
 			# TODO: load chunk from file
 			return None
 		return self.generator.generateChunk(x, y)
+
+	def specialLoadChunk(self, x, y):
+		return self.generator.specialGen(x, y)
 
 	def getBlockAt(self, x: int, y: int):
 		return self.getChunkAt(x // 16, y // 16).getBlock(x % 16, y % 16)
