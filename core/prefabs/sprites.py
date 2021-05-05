@@ -60,7 +60,7 @@ class Player(LivingCreature):
 		self.debug_print_cooldown = 0
 
 		# Healthbar
-		self.healthbar = healthbar.HealthBar(self)
+		self.healthbar = healthbar.HealthBar
 
 	# Methods
 	def check_levels(self):
