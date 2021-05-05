@@ -1,5 +1,5 @@
 import pygame
-
+import console
 
 class HealthBar:
     health: int = 100
