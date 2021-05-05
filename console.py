@@ -83,8 +83,17 @@ class Console:
 					self.game.player.check_levels()
 				continue
 			elif s[0] == "loadmap":
-				self.game.world = World(path.join(path.dirname(__file__), "saves/world1"))
-				self.game.world.load()
+				try:
+					p = path.join(self.game.gamedir, f"world/dungeon/dungeons/{s[1]}")
+					print(p)
+					if not path.isdir(p):
+						raise FileNotFoundError
+					self.game.world = World(p)
+					self.game.world.load()
+				except IndexError:
+					print(f"Expected at least 1 argument, got {len(s) - 1} instead")
+				except FileNotFoundError:
+					print(f"Could not open map: {s[1]}")
 				continue
 
 			print(f"Could not find command {s[0]}. Please check for correct spelling")

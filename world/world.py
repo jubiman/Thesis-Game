@@ -5,6 +5,7 @@ import random
 from world.cache import Cache
 from world.entity.enemy import Enemy
 from world.gen.generator import Generator
+from world.gen.dungeongenerator import DungeonGenerator
 
 
 class World:
@@ -32,11 +33,12 @@ class World:
 					"worldtype": "default"
 				}
 			else:
-				self.config = json.loads(open("config.json", "r").read())
+				self.config = json.loads(open(self.configfile, "r").read())
 			self.name = self.config["name"]
 			self.seed = self.config["seed"]
 			self.worldtype = self.config["worldtype"]
-			self.generator = Generator(self.seed)
+			self.generator = Generator(self.seed) if self.worldtype == "default" else DungeonGenerator(
+				self.filepath[0:self.filepath.rfind("\\")], self.seed)
 
 	def loadChunk(self, x: int, y: int):
 		if os.path.isfile(self.filepath + "/regions/" + f"{x},{y}.reg"):
