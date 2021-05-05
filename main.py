@@ -10,7 +10,7 @@ from core.controller.camera import Camera
 from core.prefabs.sprites import *
 from world.chunk import Chunk
 from world.material import Material
-from world.entity.materials import Materials
+from world.material.materials import Materials
 from world.world import World
 from world.spawner import Spawner
 from world.entity.entitytypes import EntityTypes
