@@ -1,10 +1,10 @@
+import json
+
 from opensimplex import OpenSimplex
 
 from world.block import Block
 from world.chunk import Chunk
 from world.material.materials import Materials
-
-import json
 
 
 class Generator:
@@ -12,7 +12,7 @@ class Generator:
 		self.seed = seed
 		self.noise = OpenSimplex(seed=seed)
 		self.settings = {
-			"wallHeight": 0.5
+			"wallHeight": 0.75
 		}
 
 	def getHeight(self, x: int, y: int):
