@@ -9,7 +9,7 @@ import console
 from core.controller.camera import Camera
 from core.prefabs.sprites import *
 from world.chunk import Chunk
-from world.material import Material
+from world.material.material import Material
 from world.material.materials import Materials
 from world.world import World
 from world.spawner import Spawner
@@ -41,7 +41,7 @@ class Game:
 		self.graphics = assets.populate_assets()
 		self.load_data()
 		self.world = None
-
+		self.gamedir = __file__
 		# Make console
 		self.console = console.Console(self)
 		self.consoleThread = threading.Thread(target=self.console.run, daemon=True)
