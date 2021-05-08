@@ -6,17 +6,18 @@ from os import path
 from world.block import Block
 from world.chunk import Chunk
 from world.material.materials import Materials
+from settings import GAMEDIR
 
 
 # TODO: load random dungeon from room files
 class DungeonGenerator:
-	def __init__(self, p: str, seed: int):
+	def __init__(self, seed: int):
 		self.seed = seed
 		self.rooms = {
-			"room0": path.join(p, "world/dungeon/prefabs/room0.json"),
-			"room1": path.join(p, "world/dungeon/prefabs/room1.json"),
-			"room2": path.join(p, "world/dungeon/prefabs/room2.json"),
-			"room3": path.join(p, "world/dungeon/prefabs/room3.json")
+			"room0": path.join(GAMEDIR, "assets/dungeon/prefabs/room0.json"),
+			"room1": path.join(GAMEDIR, "assets/dungeon/prefabs/room1.json"),
+			"room2": path.join(GAMEDIR, "assets/dungeon/prefabs/room2.json"),
+			"room3": path.join(GAMEDIR, "assets/dungeon/prefabs/room3.json")
 		}
 
 	def generateChunk(self, x: int, y: int):

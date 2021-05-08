@@ -1,20 +1,20 @@
 {
   "0": [
     "wall",
-    "wall",
-    "wall",
-    "wall",
-    "wall",
-    "wall",
-    "wall",
-    "wall",
-    "wall",
-    "wall",
-    "wall",
-    "wall",
-    "wall",
-    "wall",
-    "wall",
+    "grass",
+    "grass",
+    "grass",
+    "grass",
+    "grass",
+    "grass",
+    "grass",
+    "grass",
+    "grass",
+    "grass",
+    "grass",
+    "grass",
+    "grass",
+    "grass",
     "wall"
   ],
   "1": [
@@ -108,7 +108,6 @@
     "wall"
   ],
   "6": [
-    "wall",
     "grass",
     "grass",
     "grass",
@@ -123,10 +122,10 @@
     "grass",
     "grass",
     "grass",
-    "wall"
+    "grass",
+    "grass"
   ],
   "7": [
-    "wall",
     "grass",
     "grass",
     "grass",
@@ -141,7 +140,8 @@
     "grass",
     "grass",
     "grass",
-    "wall"
+    "grass",
+    "grass"
   ],
   "8": [
     "wall",
@@ -271,20 +271,20 @@
   ],
   "15": [
     "wall",
-    "wall",
-    "wall",
-    "wall",
-    "wall",
-    "wall",
-    "wall",
-    "wall",
-    "wall",
-    "wall",
-    "wall",
-    "wall",
-    "wall",
-    "wall",
-    "wall",
+    "grass",
+    "grass",
+    "grass",
+    "grass",
+    "grass",
+    "grass",
+    "grass",
+    "grass",
+    "grass",
+    "grass",
+    "grass",
+    "grass",
+    "grass",
+    "grass",
     "wall"
   ]
 }
