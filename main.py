@@ -2,7 +2,7 @@ import getopt
 import sys
 import threading
 from configparser import ConfigParser
-from os import path, getcwd
+from os import path
 
 import console
 from cfg.cfgparser import CfgParser
@@ -39,7 +39,6 @@ class Game:
 		self.graphics = assets.populate_assets()
 		self.load_data()
 		self.world = None
-		self.gamedir = getcwd()
 		# Make console
 		self.console = console.Console(self)
 		self.consoleThread = threading.Thread(target=self.console.run, daemon=True)
@@ -61,7 +60,7 @@ class Game:
 		self.sprites = pygame.sprite.Group()
 		self.walls = pygame.sprite.Group()
 		self.trees = pygame.sprite.Group()
-		self.world = World(path.join(path.dirname(__file__), "saves/world1"))
+		self.world = World(path.join(path.dirname(__file__), "saves/world1"), self)
 		self.world.load()
 		self.player = Player(self, 20, 20, 0, 350, 0, 0)
 		self.spawner = Spawner(self, 64, 1)
