@@ -1,3 +1,4 @@
+import shutil
 import sys
 from os import path
 
@@ -84,16 +85,28 @@ class Console:
 				continue
 			elif s[0] == "loadmap":
 				try:
-					p = path.join(self.game.gamedir, f"world/dungeon/dungeons/{s[1]}")
-					print(p)
+					p = path.join(GAMEDIR, f"saves/{s[1]}")
 					if not path.isdir(p):
-						raise FileNotFoundError
-					self.game.world = World(p)
+						raise NotADirectoryError
+					self.game.world = World(p, self.game)
 					self.game.world.load()
 				except IndexError:
 					print(f"Expected at least 1 argument, got {len(s) - 1} instead")
-				except FileNotFoundError:
-					print(f"Could not open map: {s[1]}")
+				except NotADirectoryError:
+					try:
+						p = path.join(GAMEDIR, f"world/dungeon/dungeons/{s[1].rsplit('/')[-1]}")
+						if not path.isdir(p):
+							raise NotADirectoryError
+						try:
+							print(f"Copying {p} to {path.join(GAMEDIR, f'saves/{self.game.world.name}/{s[1]}')}")
+							p = shutil.copytree(p, path.join(GAMEDIR, f"saves/{self.game.world.name}/{s[1]}"))
+						except FileExistsError:
+							p = path.join(GAMEDIR, f"saves/{self.game.world.name}/{s[1]}")
+						print(f"p: {p}")
+						self.game.world = World(p, self.game)
+						self.game.world.load()
+					except NotADirectoryError:
+						print(f"Could not open map: {s[1]}")
 				continue
 
 			print(f"Could not find command {s[0]}. Please check for correct spelling")
