@@ -15,6 +15,7 @@ from world.gen.generator import Generator
 from world.material.materials import Materials
 from settings import GAMEDIR
 
+
 class World:
 	def __init__(self, path, game):
 		self.filepath = path
@@ -63,7 +64,7 @@ class World:
 			self.worldtype = self.config["worldtype"]
 
 			# Select generator type
-			self.generator = Generator(self.seed) if self.worldtype == "default" else DungeonGenerator(self.seed)
+			self.generator = Generator(self.seed) if self.worldtype == "default" else DungeonGenerator(self.seed, self.game)
 
 			# Do dungeon stuff if world is a dungeon
 			if self.worldtype == "dungeon":
@@ -83,7 +84,6 @@ class World:
 	def loadChunk(self, x: int, y: int):
 		print(f"Loading {x}, {y}")
 		if os.path.isfile(os.path.join(self.filepath, "chunks", f"{x},{y}.json")):
-			print(os.path.join(self.filepath, "chunks", f"{x},{y}.json"))
 			data = json.loads(open(os.path.join(self.filepath, "chunks", f"{x},{y}.json"), "r").read())
 			blocks_json_list = data["b"]
 			blocks_list: list[list[Block]] = []

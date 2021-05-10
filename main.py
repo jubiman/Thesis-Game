@@ -5,6 +5,7 @@ from configparser import ConfigParser
 from os import path
 
 import console
+from settings import *
 from cfg.cfgparser import CfgParser
 from core.controller.camera import Camera
 from core.prefabs.sprites import *
@@ -41,7 +42,7 @@ class Game:
 		self.world = None
 		# Make console
 		self.console = console.Console(self)
-		self.consoleThread = threading.Thread(target=self.console.run, daemon=True)
+		self.consoleThread = threading.Thread(name="console", target=self.console.run, daemon=True)
 
 	def load_data(self):
 		game_folder = path.dirname(__file__)
@@ -115,9 +116,10 @@ class Game:
 
 				for ent in self.world.entities:
 					if ent is not None and ent.entitytype.image is not None:
+						# logging.debug(f"ent: {ent.pos}, {ent.chunk}")
 						self.screen.blit(ent.entitytype.image, self.camera.applyraw(
 							ent.entitytype.rect.move((ent.chunk[0] * 16 + (ent.pos.x / TILESIZE)) * TILESIZE,
-													 (ent.chunk[1] * 16 + (ent.pos.y / TILESIZE)) * TILESIZE)
+														(ent.chunk[1] * 16 + (ent.pos.y / TILESIZE)) * TILESIZE)
 						))
 
 		self.screen.blit(self.player.image, self.camera.apply(self.player))
@@ -125,7 +127,7 @@ class Game:
 		# Healthbar van de speler
 		currenthealthB = pygame.Rect(50, 50, 180, 50)
 		pygame.draw.rect(self.screen, (0, 200, 0), currenthealthB)
-		currenthealthT = pygame.font.SysFont('Corbel', 40).render('100', True, (255, 255, 255))
+		currenthealthT = pygame.font.SysFont('Corbel', 40).render(f"{self.player.hp}", True, (255, 255, 255))
 		self.screen.blit(currenthealthT, (currenthealthB.x + 60, currenthealthB.y))
 
 		# Collision debug rects
