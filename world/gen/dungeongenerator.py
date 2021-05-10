@@ -27,9 +27,6 @@ class DungeonGenerator:
 		# chunk: Chunk = Chunk([[Block(Materials.GRASS.value) for x in range(16)] for y in range(16)])
 		rnd = randint(0, 3)
 		cfg = json.loads(open(self.rooms[f"room{rnd}"], "r").read())
-		"""for dx in range(16):
-			for dy in range(16):
-				chunk.setBlock(dx, dy, Block(Materials[cfg[str(dx)][dy].upper()].value))"""
 		blocks_json_list = cfg["b"]
 		blocks_list: list[list[Block]] = []
 		for cx in range(16):
