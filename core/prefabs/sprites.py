@@ -13,7 +13,6 @@ from core.prefabs.livingcreature import LivingCreature
 from settings import *
 from world.block import Block
 from world.materials import Materials
-import healthbar
 
 
 class Player(LivingCreature):
@@ -59,8 +58,6 @@ class Player(LivingCreature):
 		# TODO: Set debug cooldown (might remove later)
 		self.debug_print_cooldown = 0
 
-		# Healthbar
-		self.healthbar = healthbar.HealthBar
 
 	# Methods
 	def check_levels(self):
