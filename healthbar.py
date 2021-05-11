@@ -32,7 +32,7 @@ class HealthBar:
         pygame.draw.rect(self.screen, (0, 0, 0), backgroundhealthbar)
         currenthealthbar = pygame.Rect(50, 50, HealthBar.gethealthbar(self) / 100 * 180, 50)
         pygame.draw.rect(self.screen, (0, 200, 0), currenthealthbar)
-        currenthealthtext = pygame.font.SysFont('Corbel', 40).render(HealthBar.gethealthbar(self), True, (255, 255, 255))
+        currenthealthtext = pygame.font.SysFont('Corbel', 40).render(str(HealthBar.gethealthbar(self)), True, (255, 255, 255))
         self.screen.blit(currenthealthtext, (currenthealthbar + 60, currenthealthbar.y))
 
     def regen(self):
