@@ -1,5 +1,6 @@
 import pygame
 
+
 class HealthBar:
     health = 100
     countdown = 0
@@ -8,20 +9,20 @@ class HealthBar:
         pass
 
     def resethealth(self):
-        HealthBar.health.__setattr__(str(HealthBar.health), 100)
+        HealthBar.health = 100
 
     def sethealthbar1(self, newhealth):
         # with health-regen reset
-        HealthBar.health.__setattr__(str(HealthBar.health), newhealth)
-        HealthBar.countdown.__setattr__(str(HealthBar.health), 5)
+        HealthBar.health = newhealth
+        HealthBar.countdown = 5
         if HealthBar.health <= 0:
-            HealthBar.health.__setattr__(str(HealthBar.health), 100)
+            HealthBar.health = 100
 
     def sethealthbar2(self, newhealth):
         # without health-regen reset
-        HealthBar.health.__setattr__(str(HealthBar.health), newhealth)
+        HealthBar.health = newhealth
         if HealthBar.health <= 0:
-            HealthBar.health.__setattr__(str(HealthBar.health), 100)
+            HealthBar.health = 100
 
     def gethealthbar(self):
         return HealthBar.health
@@ -36,7 +37,7 @@ class HealthBar:
 
     def regen(self):
         if HealthBar.countdown > 0:
-            HealthBar.countdown.__setattr__(str(HealthBar.countdown), HealthBar.countdown - 1)
+            HealthBar.countdown = HealthBar.countdown - 1
         else:
             if HealthBar.health >= 100:
                 pass
