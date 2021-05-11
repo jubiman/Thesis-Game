@@ -42,6 +42,7 @@ class Game:
 		self.graphics = assets.populate_assets()
 		self.load_data()
 		self.world = None
+		self.healthbar = Healthbar(self)
 
 	# TODO: for loop to populate assets
 
@@ -134,7 +135,7 @@ class Game:
 		self.screen.blit(self.player.image, self.camera.apply(self.player))
 
 		# Healthbar van de speler
-		healthbar.HealthBar.drawhealthbar(self)
+		self.healthbar.drawhealthbar(self)
 
 		# Collision debug rects
 
