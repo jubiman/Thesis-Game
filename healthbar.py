@@ -2,46 +2,43 @@ import pygame
 
 
 class HealthBar:
-    health = 100
-    countdown = 0
-
-    def __init__(self):
-        pass
+    def __init__(self, game):
+        self.countdown = 0
+        self.game = game
 
     def resethealth(self):
-        HealthBar.health = 100
+        self.game.player.hp = 100
 
-    def sethealthbar1(self, newhealth):
+    def setHealthbarRegen(self, newhealth):
         # with health-regen reset
-        HealthBar.health = newhealth
-        HealthBar.countdown = 5
-        if HealthBar.health <= 0:
-            HealthBar.health = 100
+        self.game.player.hp = newhealth
+        self.countdown = 5
+        if self.game.player.hp <= 0:
+            # TODO: DIE
+            self.game.player.hp = 100
 
-    def sethealthbar2(self, newhealth):
+    def setHealthbar(self, newhealth):
         # without health-regen reset
-        HealthBar.health = newhealth
-        if HealthBar.health <= 0:
-            HealthBar.health = 100
-
-    def gethealthbar(self):
-        return HealthBar.health
+        self.game.player.hp = newhealth
+        if self.game.player.hp <= 0:
+            # TODO: DIE
+            self.game.player.hp = 100
 
     def drawhealthbar(self):
         backgroundhealthbar = pygame.Rect(50, 50, 180, 50)
         pygame.draw.rect(self.screen, (0, 0, 0), backgroundhealthbar)
         currenthealthbar = pygame.Rect(50, 50, HealthBar.gethealthbar(self) / 100 * 180, 50)
         pygame.draw.rect(self.screen, (0, 200, 0), currenthealthbar)
-        currenthealthtext = pygame.font.SysFont('Corbel', 40).render(str(HealthBar.gethealthbar(self)), True, (255, 255, 255))
+        currenthealthtext = pygame.font.SysFont('Corbel', 40).render(str(self.game.player.hp), True, (255, 255, 255))
         self.screen.blit(currenthealthtext, (currenthealthbar.x + 60, currenthealthbar.y))
 
     def regen(self):
-        if HealthBar.countdown > 0:
-            HealthBar.countdown = HealthBar.countdown - 1
+        if self.countdown > 0:
+            self.countdown = self.countdown - 1
         else:
-            if HealthBar.health >= 100:
+            if self.game.player.hp >= 100:
                 pass
-            elif HealthBar.health <= 95:
-                HealthBar.sethealthbar2(self, HealthBar.health + 5)
+            elif self.game.player.hp <= 95:
+                self.setHealthbarRegen(self, self.game.player.hp + 5)
             else:
-                HealthBar.sethealthbar2(self, 100)
+                self.setHealthbarRegen(self, 100)
