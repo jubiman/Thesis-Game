@@ -6,7 +6,7 @@ from configparser import ConfigParser
 
 
 import console
-import healthbar
+from healthbar import HealthBar
 from core.controller.camera import Camera
 from core.prefabs.sprites import *
 from world.chunk import Chunk
@@ -134,10 +134,7 @@ class Game:
 		self.screen.blit(self.player.image, self.camera.apply(self.player))
 
 		# Healthbar van de speler
-		currenthealthB = pygame.Rect(50, 50, 180, 50)
-		pygame.draw.rect(self.screen, (0, 200, 0), currenthealthB)
-		currenthealthT = pygame.font.SysFont('Corbel', 40).render('100', True, (255, 255, 255))
-		self.screen.blit(currenthealthT, (currenthealthB.x + 60, currenthealthB.y))
+		healthbar.HealthBar.drawhealthbar(self)
 
 		# Collision debug rects
 
