@@ -6,9 +6,10 @@ from configparser import ConfigParser
 
 
 import console
-from healthbar import HealthBar
 from core.controller.camera import Camera
 from core.prefabs.sprites import *
+# from core.UI.healthbar import Healthbar
+from core.UI.ui import UI
 from world.chunk import Chunk
 from world.material import Material
 from world.materials import Materials
@@ -42,7 +43,7 @@ class Game:
 		self.graphics = assets.populate_assets()
 		self.load_data()
 		self.world = None
-		self.healthbar = Healthbar(self)
+		# self.healthbar = Healthbar(self.player, self.screen)
 
 	# TODO: for loop to populate assets
 
@@ -67,21 +68,21 @@ class Game:
 	# self.player_img = pygame.transform.scale(assets.get_asset_from_name(self.graphics, 'player1').image, (64, 64))
 
 	def new(self):
-
-
 		# initialize all variables and do all the setup for a new game
 		self.sprites = pygame.sprite.Group()
 		self.walls = pygame.sprite.Group()
 		self.trees = pygame.sprite.Group()
 		self.world = World("test/world1")
 		self.world.load()
-		self.player = Player(self, 20, 20, 0, 350, 0, 0)
+		self.player = Player(self, 100, 100, 0, 350, 0, 0)
 		self.spawner = Spawner(self, 64, 1)
 
 		# Initialize camera map specific
 		# TODO: might have to change the camera's settings
 		self.camera = Camera(48, 16)
 		# self.items = item.populate_items(self.graphics)
+
+		UI.load(self)
 
 		self.consoleThread.start()
 		print("Reading console input")
@@ -134,8 +135,9 @@ class Game:
 
 		self.screen.blit(self.player.image, self.camera.apply(self.player))
 
-		# Healthbar van de speler
-		self.healthbar.drawhealthbar(self)
+		# Display healthbar
+		# self.healthbar.draw()  # OLD METHOD
+		UI.draw()
 
 		# Collision debug rects
 
