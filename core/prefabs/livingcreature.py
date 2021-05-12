@@ -8,7 +8,7 @@ class LivingCreature(pygame.sprite.Sprite):
 		# Get the game's object so we can interact with the world
 		self.game = game
 
-# LivingCreature Base
+		# LivingCreature Base
 		self.hp = hp
 		self.max_hp = max_hp
 		self.armor = armor

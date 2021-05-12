@@ -7,12 +7,12 @@ from pygame.locals import *
 import assets
 from core.inventory import inventory
 from core.items import item
+from core.prefabs.livingcreature import LivingCreature
 from core.skills import baseskills, levelbase
 from core.skills import playerskills
-from core.prefabs.livingcreature import LivingCreature
 from settings import *
 from world.block import Block
-from world.materials import Materials
+from world.material.materials import Materials
 
 
 class Player(LivingCreature):
@@ -67,7 +67,8 @@ class Player(LivingCreature):
 				bs.value.lvl.levelup(t="player")
 				# Display text to notify player of level up
 				# TODO: Make notification on-screen, not in console
-				print(f"You leveled up {bs.value.name} to level {bs.value.lvl.level}! You need {bs.value.lvl.xp_needed} xp for the next level")
+				print(
+					f"You leveled up {bs.value.name} to level {bs.value.lvl.level}! You need {bs.value.lvl.xp_needed} xp for the next level")
 
 		# Check player skills
 		for ps in playerskills.Playerskills:
@@ -75,7 +76,8 @@ class Player(LivingCreature):
 				ps.value.lvl.levelup(t="player")
 				# Display text to notify player of level up
 				# TODO: Make notification on-screen, not in console
-				print(f"You leveled up {ps.value.name} to level {ps.value.lvl.level}! You need {ps.value.lvl.xp_needed} xp for the next level")
+				print(
+					f"You leveled up {ps.value.name} to level {ps.value.lvl.level}! You need {ps.value.lvl.xp_needed} xp for the next level")
 
 		# Check player level
 		while self.lvl.xp >= self.lvl.xp_needed:
@@ -83,7 +85,8 @@ class Player(LivingCreature):
 			self.skillpoints += self.lvl.level * 333 % 4  # TODO: make dynamic
 			# Display text to notify player of level up
 			# TODO: Make notification on-screen, not in console
-			print(f"Your player leveled up to level {self.lvl.level}! You need {self.lvl.xp_needed} xp for the next level")
+			print(
+				f"Your player leveled up to level {self.lvl.level}! You need {self.lvl.xp_needed} xp for the next level")
 
 	# Check player input (currently only movement keys)
 	def get_keys(self):
@@ -136,7 +139,7 @@ class Player(LivingCreature):
 		if mouse[0]:
 			for tree in self.game.trees:
 				rel_mouse = (math.floor((pygame.mouse.get_pos()[0] + self.game.player.pos[0]) - WIDTH / 2),
-								math.floor((pygame.mouse.get_pos()[1] + self.game.player.pos[1]) - HEIGHT / 2))
+							 math.floor((pygame.mouse.get_pos()[1] + self.game.player.pos[1]) - HEIGHT / 2))
 
 				# print(rel_mouse, pygame.mouse.get_pos())
 				# Check if the mouse and tree image collide
@@ -201,59 +204,23 @@ class Player(LivingCreature):
 				if block.material.id == Materials.WALL.value.id:
 					rect: Rect = block.material.rect.move((px + dx) * TILESIZE, (py + dy) * TILESIZE)
 					if rect.colliderect(movedColRect):
-						print(f"COLLIDE {self.vel} {dx},{dy}")
+						# print(f"COLLIDE {self.vel} {dx},{dy}")
 						if self.vel.x > 0 and dx > 0:
-							print("d")
+							# print("d")
 							self.vel.x = 0
 							self.hp -= 5
 						if self.vel.x < 0 and dx < 0:
-							print("a")
+							# print("a")
 							self.vel.x = 0
 							self.hp -= 5
 						if self.vel.y > 0 and dy > 0:
-							print("s")
+							# print("s")
 							self.vel.y = 0
 							self.hp -= 5
 						if self.vel.y < 0 and dy < 0:
-							print("w")
+							# print("w")
 							self.vel.y = 0
 							self.hp -= 5
-
-
-class Wall(pygame.sprite.Sprite):
-	def __init__(self, game, x, y):
-		self.groups = game.sprites, game.walls
-		pygame.sprite.Sprite.__init__(self, self.groups)
-
-		# Game object so we can interact with the world
-		self.game = game
-
-		# Wall image asset
-		self.image = pygame.transform.scale(assets.get_asset_from_name(game.graphics, "wall1").image, (64, 64))
-		self.rect = self.image.get_rect()
-
-		# Set positions
-		self.x = x
-		self.y = y
-		self.rect.x = x * TILESIZE
-		self.rect.y = y * TILESIZE
-
-
-class Tree(pygame.sprite.Sprite):
-	def __init__(self, game, x, y):
-		self.groups = game.sprites, game.trees
-		pygame.sprite.Sprite.__init__(self, self.groups)
-
-		# Game object so we can interact with the world
-		self.game = game
-		self.image = pygame.transform.scale(assets.get_asset_from_name(game.graphics, "tree1").image, (64, 64))
-		self.rect = self.image.get_rect()
-
-		# Set positions
-		self.x = x
-		self.y = y
-		self.rect.x = x * TILESIZE
-		self.rect.y = y * TILESIZE
 
 
 class EnemyStandard(LivingCreature):
@@ -262,10 +229,10 @@ class EnemyStandard(LivingCreature):
 		# TODO: Add movement (pathfinding
 		# Getting specific information from LivingCreature class
 		super().__init__(game, hp, max_hp, armor, speed)
-# Assets
+		# Assets
 		self.image = pygame.transform.scale(assets.get_asset_from_name(game.graphics, 'mage3').image, (64, 64))
 		self.rect = self.image.get_rect()
-# Possition
+		# Possition
 		self.pos = pygame.math.Vector2(x, y) * TILESIZE
 		self.rect.center = self.pos
 
@@ -274,4 +241,4 @@ class EnemyStandard(LivingCreature):
 		if self.image is not None:
 			self.rect = self.image.get_rect()
 		self.rect.center = self.pos
-		# self.pos += self.vel * self.game.dt
+# self.pos += self.vel * self.game.dt

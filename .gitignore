@@ -30,7 +30,7 @@ MANIFEST
 # User-made files
 appveyor.yml
 tox.ini
-assets/
+assets/visual/**
 
 # PyInstaller
 #  Usually these files are written by a python script from a template
@@ -133,4 +133,8 @@ dmypy.json
 # Pyre type checker
 .pyre/
 
+# Kevin's pc being weird so gitignoring it
 .idea
+
+# Don't wanna upload all our save files
+saves/**

@@ -1,23 +1,22 @@
 import getopt
 import sys
 import threading
-from os import path
 from configparser import ConfigParser
-
+from os import path
 
 import console
+from settings import *
+from cfg.cfgparser import CfgParser
 from core.controller.camera import Camera
 from core.prefabs.sprites import *
 # from core.UI.healthbar import Healthbar
 from core.UI.ui import UI
 from world.chunk import Chunk
-from world.material import Material
-from world.materials import Materials
-from world.world import World
+from world.entity.entitytypes import EntityTypes
+from world.material.material import Material
+from world.material.materials import Materials
 from world.spawner import Spawner
-from world.entitytypes import EntityTypes
-from cfg.cfgparser import CfgParser
-
+from world.world import World
 
 # TODO: make this better lol
 # Check arguments
@@ -43,13 +42,10 @@ class Game:
 		self.graphics = assets.populate_assets()
 		self.load_data()
 		self.world = None
-		# self.healthbar = Healthbar(self.player, self.screen)
-
-	# TODO: for loop to populate assets
 
 		# Make console
 		self.console = console.Console(self)
-		self.consoleThread = threading.Thread(target=self.console.run, daemon=True)
+		self.consoleThread = threading.Thread(name="console", target=self.console.run, daemon=True)
 
 	def load_data(self):
 		game_folder = path.dirname(__file__)
@@ -63,16 +59,13 @@ class Game:
 		cfgp = CfgParser(self, path.join(game_folder, 'cfg/autoexec.cfg'))
 		cfgp.read()
 
-	# self.map = tilemap.Map(path.join(game_folder, 'saves/map3.txt'))
-	# self.player_img = pygame.image.load(path.join(assets_folder, 'visual/')).convert_alpha()
-	# self.player_img = pygame.transform.scale(assets.get_asset_from_name(self.graphics, 'player1').image, (64, 64))
-
 	def new(self):
 		# initialize all variables and do all the setup for a new game
+		# Initialize all variables and do all the setup for a new game
 		self.sprites = pygame.sprite.Group()
 		self.walls = pygame.sprite.Group()
 		self.trees = pygame.sprite.Group()
-		self.world = World("test/world1")
+		self.world = World(path.join(path.dirname(__file__), "saves/world1"), self)
 		self.world.load()
 		self.player = Player(self, 100, 100, 0, 350, 0, 0)
 		self.spawner = Spawner(self, 64, 1)
@@ -105,6 +98,7 @@ class Game:
 		# update portion of the game loop
 		self.sprites.update()
 		self.camera.update(self.player)
+		self.world.tick()
 
 	def draw(self):
 		pygame.display.set_caption(TITLE + " - " + "{:.2f}".format(self.clock.get_fps()))
@@ -128,19 +122,18 @@ class Game:
 
 				for ent in self.world.entities:
 					if ent is not None and ent.entitytype.image is not None:
+						# logging.debug(f"ent: {ent.pos}, {ent.chunk}")
 						self.screen.blit(ent.entitytype.image, self.camera.applyraw(
 							ent.entitytype.rect.move((ent.chunk[0] * 16 + (ent.pos.x / TILESIZE)) * TILESIZE,
-											(ent.chunk[1] * 16 + (ent.pos.y / TILESIZE)) * TILESIZE)
+														(ent.chunk[1] * 16 + (ent.pos.y / TILESIZE)) * TILESIZE)
 						))
 
 		self.screen.blit(self.player.image, self.camera.apply(self.player))
 
-		# Display healthbar
-		# self.healthbar.draw()  # OLD METHOD
+		# Display UI
 		UI.draw()
 
 		# Collision debug rects
-
 		# self.screen.blit(Materials.GRASS.value.image,self.camera.apply(self.player))
 		# for sprite in self.sprites:
 		#	self.screen.blit(sprite.image, self.camera.apply(sprite))
