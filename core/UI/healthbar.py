@@ -2,9 +2,8 @@ import pygame
 
 
 class Healthbar:
-    def __init__(self, player, screen):
+    def __init__(self, player):
         self.countdown = 0
-        self.screen = screen
         self.player = player
 
     def resethealth(self):
@@ -25,13 +24,13 @@ class Healthbar:
             # TODO: DIE
             self.player.hp = 100
 
-    def draw(self):
+    def draw(self, screen):
         backgroundhealthbar = pygame.Rect(50, 50, 180, 50)
-        pygame.draw.rect(self.screen, (0, 0, 0), backgroundhealthbar)
+        pygame.draw.rect(screen, (0, 0, 0), backgroundhealthbar)
         currenthealthbar = pygame.Rect(50, 50, self.player.hp / 100 * 180, 50)
-        pygame.draw.rect(self.screen, (0, 200, 0), currenthealthbar)
+        pygame.draw.rect(screen, (0, 200, 0), currenthealthbar)
         currenthealthtext = pygame.font.SysFont('Corbel', 40).render(str(self.player.hp), True, (255, 255, 255))
-        self.screen.blit(currenthealthtext, (currenthealthbar.x + 60, currenthealthbar.y))
+        screen.blit(currenthealthtext, (currenthealthbar.x + 60, currenthealthbar.y))
 
     def regen(self):
         if self.countdown > 0:
