@@ -6,9 +6,9 @@ class UI:
 
 	@staticmethod
 	def load(game):
-		UI.uiElements.append(Healthbar(game.player, game.screen))
+		UI.uiElements.append(Healthbar(game.player))
 
 	@staticmethod
-	def draw():
+	def draw(screen):
 		for obj in UI.uiElements:
-			obj.draw()
+			obj.draw(screen)
