@@ -58,6 +58,7 @@ class Player(LivingCreature):
 		# TODO: Set debug cooldown (might remove later)
 		self.debug_print_cooldown = 0
 
+
 	# Methods
 	def check_levels(self):
 		# Check base skills
@@ -207,15 +208,19 @@ class Player(LivingCreature):
 						if self.vel.x > 0 and dx > 0:
 							# print("d")
 							self.vel.x = 0
+							self.hp -= 5
 						if self.vel.x < 0 and dx < 0:
 							# print("a")
 							self.vel.x = 0
+							self.hp -= 5
 						if self.vel.y > 0 and dy > 0:
 							# print("s")
 							self.vel.y = 0
+							self.hp -= 5
 						if self.vel.y < 0 and dy < 0:
 							# print("w")
 							self.vel.y = 0
+							self.hp -= 5
 
 
 class EnemyStandard(LivingCreature):
