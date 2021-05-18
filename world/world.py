@@ -49,8 +49,8 @@ class World:
 				self.filepath[0:self.filepath.rfind("\\")], self.seed)
 
 	def loadChunk(self, x: int, y: int):
-		if os.path.isfile(os.path.join(self.filepath, "chunks", f"{x},{y}.json")):
-			data = json.loads(open(os.path.join(self.filepath, "chunks", f"{x},{y}.json"), "r").read())
+		if os.path.isfile(os.path.join(self.filepath, "chunks", f"{int(x)},{int(y)}.json")):
+			data = json.loads(open(os.path.join(self.filepath, "chunks", f"{int(x)},{int(y)}.json"), "r").read())
 			blocks_json_list = data["b"]
 			blocks_list: list[list[Block]] = []
 			for cx in range(16):
@@ -62,7 +62,7 @@ class World:
 		return self.generator.generateChunk(x, y)
 
 	def unload(self, x: int, y: int):
-		print(f"Unloading: {x}, {y}")
+		print(f"Unloading: {int(x)}, {int(y)}")
 		self.save(x, y)
 		del self.cache.chunks[x, y]
 
@@ -77,16 +77,13 @@ class World:
 				blockjsonobj.append(block.material.id)
 		open(cfile, "w").write(json.dumps({
 			"b": blockjsonobj
-		}))
+		}, separators=(',', ':')))
 
 	def tick(self):
 		now = time.time()
 		if now - self.lastTick > 1.0 / 20:
 			self.cache.checkForLazyChunks()
 			self.lastTick = now
-
-	def specialLoadChunk(self, x, y):
-		return self.generator.specialGen(x, y)
 
 	def getBlockAt(self, x: int, y: int):
 		return self.getChunkAt(x // 16, y // 16).getBlock(x % 16, y % 16)
