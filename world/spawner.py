@@ -38,7 +38,7 @@ class Spawner:
 																self.radius + self.min_r) - self.min_r)) / TILESIZE
 
 		while self.game.world.getChunkAt(chunk[0], chunk[0]).getBlock(int(loc.x % 16),
-																	  int(loc.y % 16)).material.id not in [0, 1]:
+																	int(loc.y % 16)).material.id not in [0, 1]:
 			print(f"There is already a sprite at {loc}.")
 			loc = Vector2(math.floor(
 				self.game.player.pos.x + randint(-self.radius + self.min_r, self.radius + self.min_r) - self.min_r),
@@ -46,8 +46,8 @@ class Spawner:
 															self.radius + self.min_r) - self.min_r)) / TILESIZE
 
 		self.game.world.entities.append(
-			Enemy(EntityTypes.ENEMYTEST.value, EnemyStandard(self.game, 10, 10, 2, 300, loc.x, loc.y),
-				  (chunk[0], chunk[1]), loc))
+			Enemy(EntityTypes.ENEMYTEST.value, EnemyStandard(self.game, 10, 10, 2, 300,),
+					(chunk[0], chunk[1]), loc, 300, self.game))
 		print(f"Enemy spawned at {loc} in chunk {chunk}")
 
 	def spawnEventLoc(self, x, y):
@@ -73,8 +73,8 @@ class Spawner:
 			return 1
 
 		self.game.world.entities.append(
-			Enemy(EntityTypes.ENEMYTEST.value, EnemyStandard(self.game, 10, 10, 2, 300, loc.x, loc.y),
-					(chunk[0], chunk[1]), loc))
+			Enemy(EntityTypes.ENEMYTEST.value, EnemyStandard(self.game, 10, 10, 2, 300),
+					(chunk[0], chunk[1]), loc, 300, self.game))
 		print(f"Enemy spawned at {loc} in chunk {chunk}")
 		return 0
 
@@ -107,7 +107,6 @@ class Spawner:
 			loc = Vector2((x * 16 + loc.x) * TILESIZE,
 							(y * 16 + loc.y) * TILESIZE)
 			logging.debug(f"Spawning enemy at {loc}")
-			en = Enemy(EntityTypes.ENEMYTEST.value, EnemyStandard(self.game, 10, 10, 2, 300,
-														loc.x, loc.y), (x, y), loc)
+			en = Enemy(EntityTypes.ENEMYTEST.value, EnemyStandard(self.game, 10, 10, 2, 300), (x, y), loc, 300, self.game)
 			ents.append(en)
 			self.game.world.entities.append(en)

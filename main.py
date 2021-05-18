@@ -97,6 +97,8 @@ class Game:
 	def update(self):
 		# update portion of the game loop
 		self.sprites.update()
+		for ent in self.world.entities:
+			ent.update()
 		self.camera.update(self.player)
 		self.world.tick()
 

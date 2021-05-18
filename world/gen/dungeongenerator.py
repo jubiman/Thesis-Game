@@ -6,7 +6,6 @@ from os import path
 from world.block import Block
 from world.chunk import Chunk
 from world.material.materials import Materials
-from world.spawner import Spawner
 from settings import GAMEDIR
 
 
