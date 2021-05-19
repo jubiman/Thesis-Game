@@ -6,13 +6,14 @@ from pygame.locals import *
 
 import assets
 from core.inventory import inventory
-from core.items import item
+from core.items.items import Items
 from core.prefabs.livingcreature import LivingCreature
 from core.skills import baseskills, levelbase
 from core.skills import playerskills
 from settings import *
 from world.block import Block
 from world.material.materials import Materials
+from console import Console
 
 
 class Player(LivingCreature):
@@ -66,8 +67,9 @@ class Player(LivingCreature):
 				bs.value.lvl.levelup(t="player")
 				# Display text to notify player of level up
 				# TODO: Make notification on-screen, not in console
-				print(
-					f"You leveled up {bs.value.name} to level {bs.value.lvl.level}! You need {bs.value.lvl.xp_needed} xp for the next level")
+				Console.log(thread="Player",
+					message=f"You leveled up {bs.value.name} to level {bs.value.lvl.level}! \
+					You need {bs.value.lvl.xp_needed} xp for the next level")
 
 		# Check player skills
 		for ps in playerskills.Playerskills:
@@ -75,8 +77,9 @@ class Player(LivingCreature):
 				ps.value.lvl.levelup(t="player")
 				# Display text to notify player of level up
 				# TODO: Make notification on-screen, not in console
-				print(
-					f"You leveled up {ps.value.name} to level {ps.value.lvl.level}! You need {ps.value.lvl.xp_needed} xp for the next level")
+				Console.log(thread="Player",
+							message=f"You leveled up {ps.value.name} to level {ps.value.lvl.level}! \
+							You need {ps.value.lvl.xp_needed} xp for the next level")
 
 		# Check player level
 		while self.lvl.xp >= self.lvl.xp_needed:
@@ -84,8 +87,8 @@ class Player(LivingCreature):
 			self.skillpoints += self.lvl.level * 333 % 4  # TODO: make dynamic
 			# Display text to notify player of level up
 			# TODO: Make notification on-screen, not in console
-			print(
-				f"Your player leveled up to level {self.lvl.level}! You need {self.lvl.xp_needed} xp for the next level")
+			Console.log(thread="Player",
+						message=f"Your player leveled up to level {self.lvl.level}! You need {self.lvl.xp_needed} xp for the next level")
 
 	# Check player input (currently only movement keys)
 	def get_keys(self):
@@ -104,33 +107,42 @@ class Player(LivingCreature):
 			self.vel *= 0.7071
 		if keys[K_p] and self.debug_print_cooldown == 0:
 			# TODO: Debug menu for skills
-			print("-------------------------------------------------")
+			Console.log(thread="Player",
+						message="-------------------------------------------------")
 			for bs in baseskills.Baseskills:
-				print(bs.value.name, bs.value.lvl.level, bs.value.lvl.xp, bs.value.lvl.xp_needed)
-			print("-------------------------------------------------")
+				Console.log(thread="Player",
+							message=f"{bs.value.name} {bs.value.lvl.level} {bs.value.lvl.xp} {bs.value.lvl.xp_needed}")
+			Console.log(thread="Player",
+						message="-------------------------------------------------")
 			for ps in playerskills.Playerskills:
-				print(ps.value.name, ps.value.lvl.level, ps.value.lvl.xp_needed)
-			print("-------------------------------------------------")
-			print("Format: level | xp | sp | hp | armor")
-			print("Player", self.lvl.level, self.lvl.xp, self.skillpoints, self.hp, self.armor)
+				Console.log(thread="Player",
+							message=f"{ps.value.name} {ps.value.lvl.level} {ps.value.lvl.xp_needed}")
+			Console.log(thread="Player",
+						message="-------------------------------------------------")
+			Console.log(thread="Player",
+						message="Format: level | xp | sp | hp | armor")
+			Console.log(thread="Player",
+						message=f"Player {self.lvl.level} {self.lvl.xp} {self.skillpoints} {self.hp} {self.armor}")
 			self.debug_print_cooldown = 1
 		if keys[K_i] and self.debug_print_cooldown == 0:
-			print("Inventory:")
+			Console.log(thread="Player",
+						message="Inventory:")
 			for it in self.inventory.inv.ls:
-				print(it.item.displayName, it.quantity, it.item.max_stack)
+				Console.log(thread="Player",
+							message=f"{it.item.displayName} {it.quantity} {it.item.max_stack}")
 			self.debug_print_cooldown = 1
 		if keys[K_o]:
-			print(f"world.entities: {self.game.world.entities}")
+			Console.log(thread="Player",
+						message=f"world.entities: {self.game.world.entities}")
 
+	# DEPRICATED
 	def get_events(self):
 		for ev in pygame.event.get():
-			print("1")
 			if ev.type == MOUSEBUTTONDOWN and pygame.mouse.get_pressed(3)[0]:
-				print("2")
 				for tree in self.game.trees:
 					if tree.collidepoint(pygame.mouse.get_pos()):
 						# Chop down the tree
-						print(tree)
+						pass
 
 	# Check mouse actions
 	def get_mouse(self):
@@ -138,7 +150,7 @@ class Player(LivingCreature):
 		if mouse[0]:
 			for tree in self.game.trees:
 				rel_mouse = (math.floor((pygame.mouse.get_pos()[0] + self.game.player.pos[0]) - WIDTH / 2),
-							 math.floor((pygame.mouse.get_pos()[1] + self.game.player.pos[1]) - HEIGHT / 2))
+								math.floor((pygame.mouse.get_pos()[1] + self.game.player.pos[1]) - HEIGHT / 2))
 
 				# print(rel_mouse, pygame.mouse.get_pos())
 				# Check if the mouse and tree image collide
@@ -152,21 +164,25 @@ class Player(LivingCreature):
 						# Add wood to inventory
 						# TODO: Add woodcutting skill multiplier
 						amount = randint(1, 5)
-						self.inventory.add_new_item(item.get_item_from_name(self.game.items, 'Wood'), amount)
+						self.inventory.add_new_item(Items['WOOD'], amount)
 						# Display message for amount of wood
-						print(f"You got {amount} wood!")
+						Console.log(thread="Player",
+									message=f"You got {amount} wood!")
 
 						# TODO: Add wood to inventory
 						# Add exp to woodcutting
 						# TODO: Add multiplier/check tree type?
 						baseskill.get_from_name(self.baseskills, "Woodcutting").lvl.xp += 10
 						# TODO: Pure debug text, remove later
-						print("You chopped down a tree and gained 10 Woodcutting xp!")
-						print("Your player gained 10 xp")
+						Console.log(thread="Player",
+									message="You chopped down a tree and gained 10 Woodcutting xp!")
+						Console.log(thread="Player",
+									message="Your player gained 10 xp")
 						self.lvl.xp += 10
 						self.check_levels()
 					else:
-						print("You need an axe to break a tree")
+						Console.log(thread="Player",
+									message="You need an axe to break a tree")
 
 	# Gets called every frame to update the player's status
 	def update(self):

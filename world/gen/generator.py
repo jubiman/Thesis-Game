@@ -5,6 +5,7 @@ from opensimplex import OpenSimplex
 from world.block import Block
 from world.chunk import Chunk
 from world.material.materials import Materials
+from console import Console
 
 
 class Generator:
@@ -19,7 +20,8 @@ class Generator:
 		return (self.noise.noise2d(x, y) + 1) / 2
 
 	def generateChunk(self, x: int, y: int):
-		print(f"generating chunk ({x},{y})")
+		Console.log(thread="WORLD",
+					message=f"Generating chunk ({x},{y})")
 		chunk: Chunk = Chunk([[Block(Materials.GRASS.value) for x in range(16)] for y in range(16)])
 		for dx in range(16):
 			for dy in range(16):
