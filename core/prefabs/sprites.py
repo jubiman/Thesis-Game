@@ -58,7 +58,6 @@ class Player(LivingCreature):
 		# TODO: Set debug cooldown (might remove later)
 		self.debug_print_cooldown = 0
 
-
 	# Methods
 	def check_levels(self):
 		# Check base skills
@@ -224,21 +223,20 @@ class Player(LivingCreature):
 
 
 class EnemyStandard(LivingCreature):
-	def __init__(self, game, hp, max_hp, armor, speed, x, y):
+	def __init__(self, game, hp, max_hp, armor, speed):
 		# TODO: Remove pos and image from this class as it will be in enemy.py
 		# TODO: Add movement (pathfinding
 		# Getting specific information from LivingCreature class
 		super().__init__(game, hp, max_hp, armor, speed)
 		# Assets
-		self.image = pygame.transform.scale(assets.get_asset_from_name(game.graphics, 'mage3').image, (64, 64))
+		self.image = pygame.transform.scale(assets.get_asset_from_name(self.game.graphics, 'mage3').image, (64, 64))
 		self.rect = self.image.get_rect()
-		# Possition
-		self.pos = pygame.math.Vector2(x, y) * TILESIZE
-		self.rect.center = self.pos
 
 	def update(self):
 		# Move the player
 		if self.image is not None:
 			self.rect = self.image.get_rect()
-		self.rect.center = self.pos
-# self.pos += self.vel * self.game.dt
+		self.move()
+
+	def move(self):
+		pass

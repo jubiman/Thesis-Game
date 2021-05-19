@@ -39,6 +39,7 @@ class Console:
 					self.game.spawner.spawnEvent()
 				except ValueError:
 					print(f"Could not convert ({s[1]}, {s[2]}) to a position, please try again.")
+				print(self.game.world.entities)
 				continue
 			elif s[0] == "debug":
 				try:

@@ -121,7 +121,7 @@ class World:
 		return self.generator.specialGen(x, y)
 
 	def getBlockAt(self, x: int, y: int):
-		return self.getChunkAt(x // 16, y // 16).getBlock(x % 16, y % 16)
+		return self.getChunkAt(x // 16, y // 16).getBlock(int(x % 16), int(y % 16))
 
 	def getBlockAtTup(self, loc: tuple[int, int]):
 		return self.getChunkAt(loc[0] // 16, loc[1] // 16).getBlock(loc[0] % 16, loc[1] % 16)
