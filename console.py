@@ -9,37 +9,144 @@ from settings import *
 from world.world import World
 
 
+# TODO: Make new console window for console
 class Console:
 	def __init__(self, game):
 		self.game = game
 		self.running = True
+		Console.event(thread="ConsoleThread", message="Console initialized")
+
+	@staticmethod
+	def log(**kwargs):
+		if 'thread' in kwargs:
+			print(f"[LOG] ({kwargs['thread']}) {kwargs['message']}\033[0m")
+		else:
+			print(f"[LOG] (UnkownThread) {kwargs['message']}\033[0m")
+
+	@staticmethod
+	def error(**kwargs):
+		if 'thread' in kwargs:
+			print(f"{ANSI_COLORS['red']}[ERROR] ({kwargs['thread']}) {kwargs['message']}\033[0m")
+		else:
+			print(f"{ANSI_COLORS['red']}[ERROR] (UnkownThread) {kwargs['message']}\033[0m")
+
+	@staticmethod
+	def warning(**kwargs):
+		if 'thread' in kwargs:
+			print(f"{ANSI_COLORS['red']}[WARNING] ({kwargs['thread']}) {kwargs['message']}\033[0m")
+		else:
+			print(f"{ANSI_COLORS['red']}[WARNING] (UnkownThread) {kwargs['message']}\033[0m")
+
+	@staticmethod
+	def debug(**kwargs):
+		if not DEBUG:
+			return
+		if 'thread' in kwargs:
+			print(f"{ANSI_COLORS['green']}[DEBUG] ({kwargs['thread']}) {kwargs['message']}\033[0m")
+		else:
+			print(f"{ANSI_COLORS['green']}[DEBUG] (UnkownThread) {kwargs['message']}\033[0m")
+
+	@staticmethod
+	def event(**kwargs):
+		if 'thread' in kwargs:
+			print(f"{ANSI_COLORS['yellow']}[EVENT] ({kwargs['thread']}) {kwargs['message']}\033[0m")
+		else:
+			print(f"{ANSI_COLORS['yellow']}[EVENT] (UnkownThread) {kwargs['message']}\033[0m")
+
+	def give(self, **kwargs):
+		try:
+			it = Items.getItemFromName(kwargs['item'])
+			if it is not None:
+				self.game.player.inventory.add_new_item(it, 1 if 'quantity' not in kwargs else int(kwargs['quantity']))
+				return
+			print(f"Could not add {kwargs['item']} to inventory, please check your spelling and try again.")
+		except ValueError:
+			print("Could not convert int to string, please check if you put a valid number.")
+
+	def spawn(self, **kwargs):
+		try:
+			# TODO: add all enemies with arguments
+			if self.game.spawner.spawnEventLoc(float(kwargs['x']), float(kwargs['y']),
+												None if 'enemy' not in kwargs else kwargs['enemy']):
+				print(f"Could not spawn an enemy at ({kwargs['x']}, {kwargs['y']})")
+		except KeyError as err:
+			print(err)
+			self.game.spawner.spawnEvent()
+		except ValueError:
+			print(f"Could not convert ({kwargs['x']}, {kwargs['y']}) to a position, please try again.")
+		print(self.game.world.entities)
+
+	def setpos(self, **kwargs):
+		try:
+			self.game.player.pos = pygame.math.Vector2(float(kwargs['x']), float(kwargs['y']))
+		except ValueError:
+			print(
+				f"Could not convert ({kwargs['x']}. {kwargs['y']}) to a valid position, please check your values and try again")
+		except KeyError:
+			print(f"Expected 2 arguments, got {len(kwargs)} instead")
+
+	def xp(self, **kwargs):
+		try:
+			if kwargs['operation'] == "give" or kwargs['operation'] == "add":
+				try:
+					if kwargs['object'].lower() == "p" or kwargs['object'].lower() == "player":
+						self.game.player.lvl.xp += int(kwargs['amount'])
+					# TODO: Add all induvidual skills (possibly without if chain)
+				except ValueError:
+					print(f"Could not convert {kwargs['amount']} to an integer, please check your values and try again")
+				except IndexError:
+					print(f"Expected 4 arguments, got {len(kwargs)} instead")
+		except ValueError:
+			print(f"Could not convert {kwargs['amount']} to an integer, please check your values and try again")
+		except KeyError:
+			print(f"Expected at least 2 arguments, got {len(kwargs)} instead")
+		else:
+			self.game.player.check_levels()
+
+	def loadmap(self, **kwargs):
+		try:
+			p = path.join(GAMEDIR, f"saves/{kwargs['path']}")
+			if not path.isdir(p):
+				raise NotADirectoryError
+			self.game.world = World(p, self.game)
+			self.game.world.load()
+		except IndexError:
+			print(f"Expected at least 1 argument, got {len(kwargs)} instead")
+		except NotADirectoryError:
+			try:
+				p = path.join(GAMEDIR, f"world/dungeon/dungeons/{kwargs['path'].rsplit('/')[-1]}")
+				if not path.isdir(p):
+					raise NotADirectoryError
+				try:
+					pa = kwargs['path']
+					print(f"Copying {p} to {path.join(GAMEDIR, f'saves/{self.game.world.name}/{pa}')}")
+					p = shutil.copytree(p, path.join(GAMEDIR, f"saves/{self.game.world.name}/{pa}"))
+				except FileExistsError:
+					p = path.join(GAMEDIR, f"saves/{self.game.world.name}/{kwargs['path']}")
+				print(f"p: {p}")
+				self.game.world = World(p, self.game)
+				self.game.world.load()
+			except NotADirectoryError:
+				print(f"Could not open map: {kwargs['path']}")
 
 	def run(self):
 		while self.running:
 			inp = sys.stdin.readline()
 			s = inp.split()
+			# TODO: Run methods from string without if-chain
 			if s[0] == "give":
 				try:
-					it = Items.getItemFromName(s[1])
-					if it is not None:
-						self.game.player.inventory.add_new_item(it, 1 if len(s) == 2 else int(s[2]))
-						continue
-					print(f"Could not add {s[1]} to inventory, please check your spelling and try again")
-				except ValueError:
-					print("Could not convert int to string")
+					self.give(item=s[1], quantity=s[2])
 				except IndexError:
-					print(f"Expected at least 1 argument, got {len(s) - 1} instead")
+					self.give(item=s[1])
 				continue
 			elif s[0] == "spawn":
 				try:
-					# TODO: add all enemies with arguments
-					if self.game.spawner.spawnEventLoc(float(s[1]), float(s[2])):
-						print(f"Could not spawn an enemy at ({s[1]}, {s[2]})")
+					self.spawn(x=s[1], y=s[2], enemy=s[3])
 				except IndexError:
+					if len(s) == 2:
+						self.spawn(x=s[1], y=s[2])
 					self.game.spawner.spawnEvent()
-				except ValueError:
-					print(f"Could not convert ({s[1]}, {s[2]}) to a position, please try again.")
-				print(self.game.world.entities)
 				continue
 			elif s[0] == "debug":
 				try:
@@ -55,59 +162,16 @@ class Console:
 					print(f"Expected at least 1 argument, got {len(s) - 1} instead")
 				continue
 			elif s[0] == "setpos":
-				try:
-					self.game.player.pos = pygame.math.Vector2(float(s[1]), float(s[2]))
-				except ValueError:
-					print(
-						f"Could not convert ({s[1]}. {s[2]}) to a valid position, please check your values and try again")
-				except IndexError:
-					print(f"Expected 2 arguments, got {len(s) - 1} instead")
+				self.setpos(x=s[1], y=s[2])
 				continue
 			elif s[0] == "xp":
-				try:
-					if s[1] == "give" or s[1] == "add":
-						if len(s) < 4:
-							self.game.player.lvl.xp += int(s[2])
-						else:
-							try:
-								if s[2].lower() == "p" or s[2].lower() == "player":
-									self.game.player.lvl.xp += int(s[3])
-							# TODO: Add all induvidual skills (possibly without if chain)
-							except ValueError:
-								print(f"Could not convert {s[3]} to an integer, please check your values and try again")
-							except IndexError:
-								print(f"Expected 4 arguments, got {len(s) - 1} instead")
-				except ValueError:
-					print(f"Could not convert {s[2]} to an integer, please check your values and try again")
-				except IndexError:
-					print(f"Expected at least 2 arguments, got {len(s) - 1} instead")
+				if len(s) < 4:
+					self.xp(operation=s[1], amount=s[2])
 				else:
-					self.game.player.check_levels()
+					self.xp(operation=s[1], object=s[2], amount=s[3])
 				continue
 			elif s[0] == "loadmap":
-				try:
-					p = path.join(GAMEDIR, f"saves/{s[1]}")
-					if not path.isdir(p):
-						raise NotADirectoryError
-					self.game.world = World(p, self.game)
-					self.game.world.load()
-				except IndexError:
-					print(f"Expected at least 1 argument, got {len(s) - 1} instead")
-				except NotADirectoryError:
-					try:
-						p = path.join(GAMEDIR, f"world/dungeon/dungeons/{s[1].rsplit('/')[-1]}")
-						if not path.isdir(p):
-							raise NotADirectoryError
-						try:
-							print(f"Copying {p} to {path.join(GAMEDIR, f'saves/{self.game.world.name}/{s[1]}')}")
-							p = shutil.copytree(p, path.join(GAMEDIR, f"saves/{self.game.world.name}/{s[1]}"))
-						except FileExistsError:
-							p = path.join(GAMEDIR, f"saves/{self.game.world.name}/{s[1]}")
-						print(f"p: {p}")
-						self.game.world = World(p, self.game)
-						self.game.world.load()
-					except NotADirectoryError:
-						print(f"Could not open map: {s[1]}")
+				self.loadmap(path=s[1])
 				continue
 
 			print(f"Could not find command {s[0]}. Please check for correct spelling")

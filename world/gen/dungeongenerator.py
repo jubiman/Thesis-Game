@@ -7,6 +7,7 @@ from world.block import Block
 from world.chunk import Chunk
 from world.material.materials import Materials
 from settings import GAMEDIR
+from console import Console
 
 
 # TODO: load random dungeon from room files
@@ -22,7 +23,8 @@ class DungeonGenerator:
 		}
 
 	def generateChunk(self, x: int, y: int):
-		print(f"generating dungeon chunk ({x}, {y})")
+		Console.debug(thread="WORLD",
+						message=f"Generating dungeon chunk ({x}, {y})")
 		# chunk: Chunk = Chunk([[Block(Materials.GRASS.value) for x in range(16)] for y in range(16)])
 		rnd = randint(0, 3)
 		cfg = json.loads(open(self.rooms[f"room{rnd}"], "r").read())

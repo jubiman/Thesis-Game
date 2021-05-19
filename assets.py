@@ -38,7 +38,7 @@ def populate_assets():
 			assets.append(Asset(get_name(x * 22 + y), sheet.subsurface(pygame.Rect((16 * x, 16 * y), (16, 16)))))
 	# Debugging:
 	for asset in assets:
-		print(f"Loaded asset: {asset.name}")
+		print(f"[LOG] (ASSETS) Loaded asset: {asset.name}\033[0m")
 	return assets
 
 

@@ -28,7 +28,6 @@ share/python-wheels/
 MANIFEST
 
 # User-made files
-appveyor.yml
 tox.ini
 assets/visual/**
 

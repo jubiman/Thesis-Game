@@ -1,9 +1,25 @@
 import os
 import logging
+from sys import platform
 
+
+DEBUG = True
 
 logging.basicConfig(level=logging.DEBUG,
 					format='[%(levelname)s] (%(threadName)-10s) %(message)s')
+
+if platform == "win32":
+	ANSI_COLORS = {
+		'red': "\033[38;5;124m",
+		'green': "\033[38;5;148m",
+		'yellow': "\033[38;5;226m"
+	}
+else:
+	ANSI_COLORS = {
+		'red': "\033[38;5;$124m",
+		'green': "\033[38;5;$148m",
+		'yellow': "\033[38;5;$226m"
+	}
 
 WHITE = (255, 255, 255)
 BLACK = (0, 0, 0)
