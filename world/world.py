@@ -14,6 +14,7 @@ from world.gen.dungeongenerator import DungeonGenerator
 from world.gen.generator import Generator
 from world.material.materials import Materials
 from settings import GAMEDIR
+from core.console.console import Console
 
 
 class World:
@@ -68,7 +69,8 @@ class World:
 
 			# Do dungeon stuff if world is a dungeon
 			if self.worldtype == "dungeon":
-				print(self.name, self.filepath)
+				Console.debug(thread="WORLD",
+							message=f"{self.name} {self.filepath}")
 				# Set the player to the middle of the spawn or different posision if needed
 				self.game.player.pos = Vector2(*map(int, self.config["startpos"].split(' ')))
 
@@ -79,10 +81,12 @@ class World:
 			# Set isloaded True so we don't reload the world
 			self.isloaded = True
 		else:
-			print(f"{self.name} is already loaded.")
+			Console.log(thread="WORLD",
+						message=f"{self.name} is already loaded.")
 
 	def loadChunk(self, x: int, y: int):
-		print(f"Loading {x}, {y}")
+		Console.debug(thread="WORLD",
+					message=f"Loading {x}, {y}")
 		if os.path.isfile(os.path.join(self.filepath, "chunks", f"{x},{y}.json")):
 			data = json.loads(open(os.path.join(self.filepath, "chunks", f"{x},{y}.json"), "r").read())
 			blocks_json_list = data["b"]
@@ -96,7 +100,8 @@ class World:
 		return self.generator.generateChunk(x, y)
 
 	def unload(self, x: int, y: int):
-		print(f"Unloading: {x}, {y}")
+		Console.log(thread="WORLD",
+					message=f"Unloading: {x}, {y}")
 		self.save(x, y)
 		del self.cache.chunks[x, y]
 

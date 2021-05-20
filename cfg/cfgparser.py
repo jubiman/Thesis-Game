@@ -1,4 +1,5 @@
 from os import path
+from core.console.consolefunctions import Console
 
 
 class CfgParser:
@@ -17,7 +18,8 @@ class CfgParser:
 					try:
 						self.game.cpc['BINDS'][s[1].strip('"')] = s[2].strip('"')
 					except IndexError:
-						print(f"Expected 2 arguments, got {len(s) - 1} instead.")
+						Console.error(thread="CFGPARSER",
+									message=f"Expected 2 arguments, got {len(s) - 1} instead.")
 					except KeyError:
 						try:
 							self.game.cpc.add_section('BINDS')
@@ -26,9 +28,11 @@ class CfgParser:
 							pass
 						else:
 							continue
-						print(f"Couldn't find {s[1]} in ConfigParser, please check your spelling.")
+						Console.error(thread="CFGPARSER",
+									message=f"Couldn't find {s[1]} in ConfigParser, please check your spelling.")
 			except Exception:
-				print("Failed")
+				Console.error(thread="CFGPARSER",
+							message="Failed")
 
 		with open(path.join(path.dirname(__file__), 'controls.ini'), 'w') as f:
 			self.game.cpc.write(f)

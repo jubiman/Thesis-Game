@@ -1,11 +1,11 @@
 import getopt
 import sys
 import threading
+import ctypes
 from configparser import ConfigParser
 from os import path
 
-import console
-from settings import *
+from core.console.consolefunctions import ConsoleFunctions
 from cfg.cfgparser import CfgParser
 from core.controller.camera import Camera
 from core.prefabs.sprites import *
@@ -23,13 +23,16 @@ from world.world import World
 try:
 	opts, args = getopt.getopt(sys.argv[1:], 'f', ["fps="])
 except getopt.GetoptError as err:
-	print(err)
+	Console.log(thread="Player",
+				message=err)
 	sys.exit()
 for o, a in opts:
 	if o == '--fps':
 		FPS = a
 
-print('FPS is: ', FPS)
+if platform == "win32":
+	kernel32 = ctypes.windll.kernel32
+	kernel32.SetConsoleMode(kernel32.GetStdHandle(-11), 7)
 
 
 class Game:
@@ -44,7 +47,7 @@ class Game:
 		self.world = None
 
 		# Make console
-		self.console = console.Console(self)
+		self.console = ConsoleFunctions(self)
 		self.consoleThread = threading.Thread(name="console", target=self.console.run, daemon=True)
 
 	def load_data(self):
@@ -78,16 +81,20 @@ class Game:
 		UI.load(self)
 
 		self.consoleThread.start()
-		print("Reading console input")
+		Console.log(thread="MainThread", message="Reading console input.")
 
 	def run(self):
 		# game loop - set self.playing = False to end the game
 		self.playing = True
 		while self.playing:
-			self.dt = self.clock.tick(FPS) / 1000
-			self.events()
-			self.update()
-			self.draw()
+			try:
+				self.dt = self.clock.tick(FPS) / 1000
+				self.events()
+				self.update()
+				self.draw()
+			except pygame.error:
+				# TODO: Improve error handling to not skip steps on error
+				Console.error(thread="UnkownThread", message=pygame.get_error())
 
 	def quit(self):
 		self.console.kill()
@@ -217,5 +224,6 @@ while True:
 	try:
 		g.run()
 	except pygame.error as err:
-		print(err)
+		# TODO: Decide where to do error handling
+		consolefunctions.Console.error(message=err)
 	g.show_go_screen()
