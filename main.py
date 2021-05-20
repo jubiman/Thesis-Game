@@ -225,5 +225,5 @@ while True:
 		g.run()
 	except pygame.error as err:
 		# TODO: Decide where to do error handling
-		consolefunctions.Console.error(message=err)
+		Console.error(message=err)
 	g.show_go_screen()
