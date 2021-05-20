@@ -4,10 +4,8 @@ import threading
 import ctypes
 from configparser import ConfigParser
 from os import path
-from sys import platform
 
-import console
-from settings import *
+from core.console.consolefunctions import ConsoleFunctions
 from cfg.cfgparser import CfgParser
 from core.controller.camera import Camera
 from core.prefabs.sprites import *
@@ -49,7 +47,7 @@ class Game:
 		self.world = None
 
 		# Make console
-		self.console = console.Console(self)
+		self.console = ConsoleFunctions(self)
 		self.consoleThread = threading.Thread(name="console", target=self.console.run, daemon=True)
 
 	def load_data(self):
@@ -83,7 +81,7 @@ class Game:
 		UI.load(self)
 
 		self.consoleThread.start()
-		console.Console.log(thread="MainThread", message="Reading console input.")
+		Console.log(thread="MainThread", message="Reading console input.")
 
 	def run(self):
 		# game loop - set self.playing = False to end the game
@@ -96,7 +94,7 @@ class Game:
 				self.draw()
 			except pygame.error:
 				# TODO: Improve error handling to not skip steps on error
-				console.Console.error(thread="UnkownThread", message=pygame.get_error())
+				Console.error(thread="UnkownThread", message=pygame.get_error())
 
 	def quit(self):
 		self.console.kill()
@@ -227,5 +225,5 @@ while True:
 		g.run()
 	except pygame.error as err:
 		# TODO: Decide where to do error handling
-		console.Console.error(message=err)
+		consolefunctions.Console.error(message=err)
 	g.show_go_screen()

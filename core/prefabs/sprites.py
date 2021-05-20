@@ -13,7 +13,7 @@ from core.skills import playerskills
 from settings import *
 from world.block import Block
 from world.material.materials import Materials
-from console import Console
+from core.console.consolefunctions import Console
 
 
 class Player(LivingCreature):

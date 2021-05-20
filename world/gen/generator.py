@@ -5,7 +5,7 @@ from opensimplex import OpenSimplex
 from world.block import Block
 from world.chunk import Chunk
 from world.material.materials import Materials
-from console import Console
+from core.console.console import Console
 
 
 class Generator:

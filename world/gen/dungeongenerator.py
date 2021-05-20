@@ -7,7 +7,7 @@ from world.block import Block
 from world.chunk import Chunk
 from world.material.materials import Materials
 from settings import GAMEDIR
-from console import Console
+from core.console.console import Console
 
 
 # TODO: load random dungeon from room files

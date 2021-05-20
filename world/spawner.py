@@ -7,7 +7,7 @@ from core.prefabs.sprites import EnemyStandard
 from settings import *
 from world.entity.enemy import Enemy
 from world.entity.entitytypes import EntityTypes
-from console import Console
+from core.console.consolefunctions import Console
 
 
 class Spawner:
@@ -58,10 +58,13 @@ class Spawner:
 		"""
 		:param Any x: X coordinate for the spawn location of the enemy
 		:param Any y: Y coordinate for the spawn location of the enemy
-		:param string enemy: The type of enemy to spawn
+		:param EntityTypes enemy: The type of enemy to spawn
 		:return: Returns 1 on failure and 0 on success
 		:rtype: int
 		"""
+		# TODO: Placeholder
+		if not enemy:
+			enemy = EntityTypes.ENEMYTEST
 		# TODO: Check for possible bugs and improve code
 		loc = Vector2(x, y)
 
@@ -81,7 +84,7 @@ class Spawner:
 
 		# TODO: Spawn specified enemy
 		self.game.world.entities.append(
-			Enemy(EntityTypes.ENEMYTEST.value, EnemyStandard(self.game, 10, 10, 2, 300),
+			Enemy(enemy.value, EnemyStandard(self.game, 10, 10, 2, 300),
 					(chunk[0], chunk[1]), loc, 300, self.game))
 		Console.event(thread="SPAWNER",
 						message=f"Enemy spawned at {loc} in chunk {chunk}")
