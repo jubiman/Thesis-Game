@@ -14,7 +14,7 @@ from world.gen.dungeongenerator import DungeonGenerator
 from world.gen.generator import Generator
 from world.material.materials import Materials
 from settings import GAMEDIR
-from console import Console
+from core.console.console import Console
 
 
 class World:

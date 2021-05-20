@@ -1,5 +1,5 @@
 from os import path
-from console import Console
+from core.console.consolefunctions import Console
 
 
 class CfgParser:
