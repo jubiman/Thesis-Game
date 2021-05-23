@@ -4,12 +4,12 @@ import threading
 import ctypes
 from configparser import ConfigParser
 from os import path
+from subprocess import Popen, PIPE, CREATE_NEW_CONSOLE  # Lib for creating a new window for the console thread
 
 from core.console.consolefunctions import ConsoleFunctions
 from cfg.cfgparser import CfgParser
 from core.controller.camera import Camera
 from core.prefabs.sprites import *
-# from core.UI.healthbar import Healthbar
 from core.UI.ui import UI
 from world.chunk import Chunk
 from world.entity.entitytypes import EntityTypes
@@ -19,7 +19,7 @@ from world.spawner import Spawner
 from world.world import World
 
 # TODO: make this better lol
-# Check arguments
+# Check console-line arguments
 try:
 	opts, args = getopt.getopt(sys.argv[1:], 'f', ["fps="])
 except getopt.GetoptError as err:
@@ -30,9 +30,13 @@ for o, a in opts:
 	if o == '--fps':
 		FPS = a
 
+# If the platform is Windows (win32) we need to load a kernal module and set the mode so we can have colored output
 if platform == "win32":
 	kernel32 = ctypes.windll.kernel32
 	kernel32.SetConsoleMode(kernel32.GetStdHandle(-11), 7)
+	nwc = "cmd.exe /c start".split()
+else:
+	nwc = "x-terminal-emulator -e".split()
 
 
 class Game:
@@ -58,7 +62,7 @@ class Game:
 
 		# Initialize config
 		self.cpc = ConfigParser()  # ConfigParserControls
-		self.cpc.read(path.join(path.dirname(__file__), 'cfg/controls.ini'))
+		self.cpc.read(path.join(path.dirname(__file__), 'cfg/settings.ini'))
 		cfgp = CfgParser(self, path.join(game_folder, 'cfg/autoexec.cfg'))
 		cfgp.read()
 
@@ -80,6 +84,7 @@ class Game:
 
 		UI.load(self)
 
+		# Start the console
 		self.consoleThread.start()
 		Console.log(thread="MainThread", message="Reading console input.")
 
