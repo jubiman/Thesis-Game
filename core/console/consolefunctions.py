@@ -212,31 +212,30 @@ class ConsoleFunctions(Console):
 			# TODO: Test on on other operating systems than Windows
 			Console.query = "$> " + self.query
 			inp = getch()  # Get a single character at a time
-			# print(f"inp = {inp}")
+			# Console.debug(message=f"inp = {inp}")
 			if inp != b"\r":  # If we don't return we don't want to execute the code yet, but add the letter to the query instead
 				if inp == b"\x08":  # Backspace
 					if len(self.query) > 0:  # If the query is empty we don't want to remove anything
-						self.query = self.query[:-1]
-						sys.stdout.write("\033[D \033[D")  # Remove the letter on the screen (check CVTS/ANSI for more info)
-					continue
+						self.query = self.query[:self.cursor-1] + self.query[self.cursor:]
+						self.cursor -= 1
+						sys.stdout.write(f"\r\033[K$> {self.query}\033[{self.cursor + 4}G")
 
-				elif inp == b"\xe0":  # First of 2 characters for arrow keys (control character)
+				elif inp == b"\xe0":  # First of 2 characters for control keys
 					key = getch()
-					# print(f"key = {key}")
-					# TODO: add cursor position
-					if key == b"K":  # Left arrow
+					# Console.debug(message=f"key = {key}")
+					if key == b"\x4b":  # Left arrow
 						if self.cursor == 0:
 							continue
 						self.cursor -= 1
 						sys.stdout.write("\033[D")
 
-					elif key == b"M":  # Right arrow
+					elif key == b"\x4d":  # Right arrow
 						if self.cursor == len(self.query):
 							continue
 						self.cursor += 1
 						sys.stdout.write("\033[C")
 
-					elif key == b"H":  # Up arrow
+					elif key == b"\x48":  # Up arrow
 						if self.histIndex == -1:
 							self.tmp = self.query
 						self.histIndex += 1
@@ -250,8 +249,9 @@ class ConsoleFunctions(Console):
 								self.query = self.tmp
 						sys.stdout.write(f"\r\033[K$> {self.query}")
 						sys.stdout.flush()
+						self.cursor = len(self.query) + 1
 
-					elif key == b"P":  # Down arrow
+					elif key == b"\x50":  # Down arrow
 						if self.histIndex == -1:  # We can't go down in history
 							continue
 						if self.histIndex == 0:  # We have reached the beginning of the history
@@ -259,6 +259,7 @@ class ConsoleFunctions(Console):
 							self.tmp = ""  # Reset the tempory variable
 							self.histIndex = -1
 							sys.stdout.write(f"\r\033[K$> {self.query}")
+							self.cursor = len(self.query) + 1
 							continue
 						self.histIndex -= 1
 						try:
@@ -268,6 +269,12 @@ class ConsoleFunctions(Console):
 							self.query = self.tmp
 						sys.stdout.write(f"\r\033[K$> {self.query}")
 						sys.stdout.flush()
+						self.cursor = len(self.query) + 1
+					elif key == b"S":  # Delete key
+						if len(self.query) > 0:  # If the query is empty we don't want to remove anything
+							self.query = self.query[:self.cursor] + self.query[self.cursor + 1:]
+							sys.stdout.write(f"\r\033[K$> {self.query}\033[{self.cursor + 4}G")
+
 					continue
 
 				elif inp == b"\t":
@@ -276,10 +283,9 @@ class ConsoleFunctions(Console):
 				else:
 					try:
 						self.query = self.query[:self.cursor] + inp.decode("utf-8") + self.query[self.cursor:]
-						# sys.stdout.write(inp.decode("utf-8"))  # OLD WAY
+						self.cursor += 1
 					except UnicodeDecodeError:
 						pass
-				self.cursor += 1
 				sys.stdout.write(f"\r\033[K$> {self.query}\033[{self.cursor + 4}G")
 				sys.stdout.flush()
 				continue
