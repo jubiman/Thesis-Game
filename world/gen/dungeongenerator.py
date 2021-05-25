@@ -1,7 +1,6 @@
 import json
-
-from random import randint
 from os import path
+from random import randint
 
 from world.block import Block
 from world.chunk import Chunk
