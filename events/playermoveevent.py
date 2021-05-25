@@ -13,12 +13,3 @@ class PlayerMoveEvent(PlayerEvent, CancelableEvent):
 		super(CancelableEvent, self).__init__()
 		self.fromloc = fromloc
 		self.toloc = toloc
-
-	def get_from(self):
-		return self.fromloc
-
-	def get_to(self):
-		return self.toloc
-
-	def set_to(self, toloc: Location):
-		self.toloc = toloc
