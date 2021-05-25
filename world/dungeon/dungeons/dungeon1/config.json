@@ -1,5 +1,6 @@
 {
-  "name": "test_dungeon",
+  "name": "dungeon1",
   "seed": "1",
-  "worldtype": "dungeon"
+  "worldtype": "dungeon",
+  "startpos" : "512 512"
 }
