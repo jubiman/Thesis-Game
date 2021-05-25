@@ -6,6 +6,7 @@ from utils.timer import Timer
 from world.block import Block
 from world.chunk import Chunk
 from world.material.materials import Materials
+from core.console.console import Console
 
 
 class Generator:
@@ -35,7 +36,8 @@ class Generator:
 					int(y * self.settings["randomizers"][3]) ^ self.settings["randomizers"][4]
 		print(chunkseed)
 		random.seed(chunkseed)
-		print(f"generating chunk ({x},{y})")
+		Console.log(thread="WORLD",
+					message=f"Generating chunk ({x},{y})")
 		chunk: Chunk = Chunk([[Block(Materials.GRASS.value) for x in range(16)] for y in range(16)])
 		for dx in range(16):
 			for dy in range(16):
@@ -46,5 +48,6 @@ class Generator:
 					chunk.setBlock(dx, dy, Block(Materials.WALL.value))
 				if random.randint(0, 64) == 0:
 					chunk.setBlock(dx, dy, Block(Materials.TREE.value))
-		print(f"Took: {Timer.stop(f'Chunk: {x},{y}')} seconds")
+		Console.log(thread="WORLD",
+					message=f"Took: {Timer.stop(f'Chunk: {x},{y}')} seconds")
 		return chunk
