@@ -5,4 +5,3 @@ class AsyncEvent(Event):
 	"""
 	These events are executed asynchronously.
 	"""
-	pass
