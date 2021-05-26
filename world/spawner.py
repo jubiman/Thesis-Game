@@ -3,11 +3,11 @@ from random import randint
 
 from pygame.math import Vector2
 
+from core.console.consolefunctions import Console
 from core.prefabs.sprites import EnemyStandard
 from settings import *
 from world.entity.enemy import Enemy
 from world.entity.entitytypes import EntityTypes
-from core.console.consolefunctions import Console
 
 
 class Spawner:
@@ -23,6 +23,7 @@ class Spawner:
 
 	def spawnEvent(self):
 		# TODO: Check for possible bugs and improve code
+		# TODO: Add event call.
 		loc = Vector2(math.floor(
 			self.game.player.pos.x + randint(-self.radius + self.min_r, self.radius + self.min_r) - self.min_r),
 			math.floor(self.game.player.pos.y + randint(-self.radius + self.min_r,
