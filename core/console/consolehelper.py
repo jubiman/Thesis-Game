@@ -18,9 +18,9 @@ class ConsoleHelper:
 		keyValue: bool = False
 		key = ""
 
-		for i in range(len(inputString)):
+		for i, it in enumerate(inputString):
 			# current character is a space?
-			if inputString[i] == ' ':
+			if it == ' ':
 				# not in quotation marks?
 				if not inQuotationMarks:
 					# add this token and reset the current token
@@ -32,16 +32,16 @@ class ConsoleHelper:
 							args.append(currentToken)
 					currentToken = ""
 				else:
-					currentToken += inputString[i]
-			elif inputString[i] == '\"':
+					currentToken += it
+			elif it == '\"':
 				# are we currently in quotation marks?
 				inQuotationMarks = False if inQuotationMarks else True
-			elif inputString[i] == '=':
+			elif it == '=' and not inQuotationMarks:
 				key = currentToken
 				currentToken = ""
 				keyValue = True
 			else:
-				currentToken += inputString[i]
+				currentToken += it
 
 		# if there is data in the current token then add it
 		if len(currentToken) > 0:
