@@ -34,7 +34,7 @@ class CfgParser:
 				Console.error(thread="CFGPARSER",
 							message="Failed")
 
-		with open(path.join(path.dirname(__file__), 'controls.ini'), 'w') as f:
+		with open(path.join(path.dirname(__file__), 'settings.ini'), 'w') as f:
 			self.game.cpc.write(f)
 			f.close()
 		self.file.close()

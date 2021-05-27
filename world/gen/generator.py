@@ -2,7 +2,7 @@ import random
 
 from opensimplex import OpenSimplex
 
-from utils.timer import Timer
+from core.utils.timer import Timer
 from world.block import Block
 from world.chunk import Chunk
 from world.material.materials import Materials
