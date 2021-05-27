@@ -7,7 +7,7 @@ class ConsoleHelper:
 		"""
 		:param inputString: The sting to tokenise
 		:return: Returns the input split with ' ' ignoring quotation marks
-		:rtype: list[str]
+		:rtype: tuple[list[str], dict[str]]
 		"""
 		args: list = []
 		kwargs = {}
@@ -16,10 +16,15 @@ class ConsoleHelper:
 		currentToken: str = ""
 		inQuotationMarks: bool = False
 		keyValue: bool = False
+		backslash: bool = False
 		key = ""
 
 		for i, it in enumerate(inputString):
 			# current character is a space?
+			if backslash:
+				currentToken += it
+				backslash = False
+				continue
 			if it == ' ':
 				# not in quotation marks?
 				if not inQuotationMarks:
@@ -33,9 +38,12 @@ class ConsoleHelper:
 					currentToken = ""
 				else:
 					currentToken += it
+			elif it == '\\':
+				backslash = True
+				continue
 			elif it == '\"':
 				# are we currently in quotation marks?
-				inQuotationMarks = False if inQuotationMarks else True
+				inQuotationMarks = not inQuotationMarks
 			elif it == '=' and not inQuotationMarks:
 				key = currentToken
 				currentToken = ""
