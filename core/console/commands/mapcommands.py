@@ -12,7 +12,7 @@ class CommandsMap:
 		names = ["loadmap", "mapload"]
 
 		@staticmethod
-		def loadmap(*args, **kwargs):
+		def execute(*args, **kwargs):
 			try:
 				p = path.join(GAMEDIR, f"saves/{kwargs['path']}")
 				if not path.isdir(p):
