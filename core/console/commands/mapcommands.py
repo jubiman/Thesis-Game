@@ -82,4 +82,3 @@ class CommandsMap:
 					if key.startswith(parameter):
 						if key != "":
 							yield key
-			return None

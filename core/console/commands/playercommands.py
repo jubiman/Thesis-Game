@@ -50,7 +50,6 @@ class CommandsPlayer:
 					if key.startswith(parameter):
 						if key != "":
 							yield key
-			return None
 
 	class XP:
 		names = ["xp", "exp"]
@@ -107,4 +106,3 @@ class CommandsPlayer:
 					if key.startswith(parameter):
 						if key != "":
 							yield key
-			return None
