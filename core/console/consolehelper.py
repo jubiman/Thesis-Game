@@ -66,4 +66,3 @@ class ConsoleHelper:
 			for key in cmds.keys():
 				if key.startswith(query):
 					yield key
-			return None
