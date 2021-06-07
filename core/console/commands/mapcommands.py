@@ -10,9 +10,15 @@ from core.console.consolehelper import ConsoleHelper
 class CommandsMap:
 	class LoadMap:
 		names = ["loadmap", "mapload"]
+		parameters: list[list[str]] = [["dungeon1"]]  # TODO: load from saved paths (possibly config parser/saves parser)
 
 		@staticmethod
 		def execute(*args, **kwargs):
+			"""
+			:param args: Needs a mapname or path from gamefolder to map
+			:param kwargs: Available kwargs: path
+			:return: None
+			"""
 			try:
 				p = path.join(GAMEDIR, f"saves/{kwargs['path']}")
 				if not path.isdir(p):
@@ -65,5 +71,14 @@ class CommandsMap:
 					Console.error(thread="CONSOLE", message=f"Could not open map: {kwargs['path']}.")
 
 		@staticmethod
-		def fetchAutocompleteOptions(command, *args):
-			pass
+		def fetchAutocompleteOptions(parameter, *args):
+			"""
+			:param parameter: The current parameter we are working with
+			:param args:
+			:return: Yields all possible option or None if not available
+			"""
+			if len(args) == 1:  # we have an argc value
+				for key in CommandsMap.LoadMap.parameters[args[0] - 1]:
+					if key.startswith(parameter):
+						yield key
+			return None

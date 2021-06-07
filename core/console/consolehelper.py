@@ -59,3 +59,11 @@ class ConsoleHelper:
 				args.append(currentToken)
 
 		return args, kwargs
+
+	class Autocompletion:
+		@staticmethod
+		def find(cmds: dict[str, object], query: str):
+			for key in cmds.keys():
+				if key.startswith(query):
+					yield key
+			return None
