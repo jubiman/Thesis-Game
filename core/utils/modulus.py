@@ -6,5 +6,4 @@ def mod(x, y):
 		raise InfinityException
 	if x < y:
 		return x
-	else:
-		return mod(x - y, y)
+	return mod(x - y, y)
