@@ -48,7 +48,8 @@ class CommandsPlayer:
 			if len(args) == 1:  # we have an argc value
 				for key in CommandsPlayer.Give.parameters[args[0]-1]:
 					if key.startswith(parameter):
-						yield key
+						if key != "":
+							yield key
 			return None
 
 	class XP:
@@ -104,5 +105,6 @@ class CommandsPlayer:
 					yield "give"
 				for key in CommandsPlayer.XP.parameters[args[0] - 1]:
 					if key.startswith(parameter):
-						yield key
+						if key != "":
+							yield key
 			return None

@@ -80,5 +80,6 @@ class CommandsMap:
 			if len(args) == 1:  # we have an argc value
 				for key in CommandsMap.LoadMap.parameters[args[0] - 1]:
 					if key.startswith(parameter):
-						yield key
+						if key != "":
+							yield key
 			return None
