@@ -2,6 +2,7 @@ import shutil
 import sys
 import inspect
 from os import path
+from distutils.util import strtobool
 
 import pygame.math
 
@@ -15,6 +16,7 @@ from core.console.commands.worldcommands import CommandsWorld
 from core.console.commands.playercommands import CommandsPlayer
 from core.console.commands.mapcommands import CommandsMap
 from core.utils.timer import Timer
+from core.utils.modulus import mod
 
 
 # TODO: Make every function compatible with kwargs
@@ -38,6 +40,10 @@ class ConsoleFunctions(Console):
 		self.histIndex = -1
 		self.tmp = ""  # Temp string for query saving before history switching
 
+		# Autocompletion
+		self.autocompleteOptions = None
+		self.autocompleteIndex = -1
+
 		# Create commands dictionary for autocompletion and make commands runnable
 		self.populateCommandRegistry()
 
@@ -45,46 +51,19 @@ class ConsoleFunctions(Console):
 		dura = Timer.stop('ConsoleInit')
 		Console.event(thread="CONSOLE", message=f"Console finished initializing in {dura} seconds.")
 
-	# @staticmethod
 	def populateCommandRegistry(self):
 		for name, obj in inspect.getmembers(CommandsWorld):
 			if inspect.isclass(obj) and name != "__class__":
 				for n in obj.names:
 					self.Commands[n] = obj
-					# Console.debug(message=f"Added {n} to console")
 		for name, obj in inspect.getmembers(CommandsPlayer):
 			if inspect.isclass(obj) and name != "__class__":
 				for n in obj.names:
 					self.Commands[n] = obj
-					# Console.debug(message=f"Added {n} to console")
 		for name, obj in inspect.getmembers(CommandsMap):
 			if inspect.isclass(obj) and name != "__class__":
 				for n in obj.names:
 					self.Commands[n] = obj
-					# Console.debug(message=f"Added {n} to console")
-
-	# Deprecated
-	def runOld(self):
-		while self.running:
-			inp = sys.stdin.readline()
-			s = inp.split()
-
-			# Algorithm to divide args and kwargs
-			kwargs = {}
-			for index, arg in enumerate(s[1:]):
-				if '=' in s[index+1].replace(' ', ''):
-					kwargs[s[index+1].split("=")[0]] = s[index+1].split("=")[1]
-					s.pop(index+1)
-			args = s[1:]
-			if s[0].lower() in ['error', 'debug', 'event', 'log', 'warning']:
-				Console.log(thread="CONSOLE", message=f"The command {s[0]} has been disabled for console use.")
-				continue
-			try:
-				getattr(self, s[0])(*args, **kwargs)
-			except AttributeError as att:
-				Console.error(thread="CONSOLE", message=f"Could not find command {att}, please check your spelling and try again.")
-
-		raise DeprecationWarning
 
 	@staticmethod
 	def executeInternal(command, *args, **kwargs):
@@ -167,8 +146,50 @@ class ConsoleFunctions(Console):
 					continue
 
 				elif inp == b"\t":
-					# TODO: Add completion
-					pass
+					# TODO: Add kwargs algorithms
+					# I want to fucking die
+					try:
+						if ' ' in self.query:
+							self.autocompleteOptions = list(ConsoleFunctions.Commands[self.query.split(' ')[0]]
+								.fetchAutocompleteOptions(self.query.split(' ')[-1], len(self.query.split(' ')[:1])))
+					except IndexError:
+						pass
+					if self.autocompleteOptions:
+						if strtobool(ConsoleHelper.Globals.game.cpc['CONSOLE']['cycle_autocompletion']):
+							try:
+								self.autocompleteIndex = mod(self.autocompleteIndex + 1, len(self.autocompleteOptions))
+							except Exception as ex:
+								Console.error(thread="CONSOLE", message=ex)
+							self.query = self.query[:self.query.rfind(' ')] + " " + self.autocompleteOptions[
+								self.autocompleteIndex]
+							if strtobool(ConsoleHelper.Globals.game.cpc['CONSOLE']['autocompleteaddspace']):
+								self.query += ' '
+							self.cursor = len(self.query)
+					else:
+						self.autocompleteOptions = list(ConsoleHelper.Autocompletion.find(ConsoleFunctions.Commands, self.query))
+						self.autocompleteOptions.sort()
+						if len(list(self.autocompleteOptions)) <= 0:
+							continue
+						elif len(list(self.autocompleteOptions)) == 1:
+							self.query = self.autocompleteOptions[0]
+							if strtobool(ConsoleHelper.Globals.game.cpc['CONSOLE']['autocompleteaddspace']):
+								self.query += ' '
+							self.cursor = len(self.query)
+						else:
+							if strtobool(ConsoleHelper.Globals.game.cpc['CONSOLE']['cycle_autocompletion']):
+								try:
+									self.autocompleteIndex = mod(self.autocompleteIndex + 1, len(self.autocompleteOptions))
+								except Exception as ex:
+									Console.error(thread="CONSOLE", message=ex)
+								self.query = self.query[:self.query.rfind(' ')] + " " + self.autocompleteOptions[self.autocompleteIndex]
+								if strtobool(ConsoleHelper.Globals.game.cpc['CONSOLE']['autocompleteaddspace']):
+									self.query += ' '
+								self.cursor = len(self.query)
+							else:
+								msg = ""
+								for k in self.autocompleteOptions:
+									msg += k + '    '
+								Console.printAutocomplete(message=msg[:-1])
 				else:
 					try:
 						self.query = self.query[:self.cursor] + inp.decode("utf-8") + self.query[self.cursor:]
@@ -182,13 +203,15 @@ class ConsoleFunctions(Console):
 			# Reset history and CHA
 			self.histIndex = -1
 			self.cursor = 0
+			self.autocompleteOptions = None
+			self.autocompleteIndex = -1
 
 			# If the query is empty, don't execute any code
 			if self.query == "":
 				continue
 
 			# Add command to history and check for duplicates if setting is disabled
-			if bool(ConsoleHelper.Globals.game.cpc['CONSOLE']['duplicate_history']) and self.query not in self.history:
+			if strtobool(ConsoleHelper.Globals.game.cpc['CONSOLE']['duplicate_history']) and self.query not in self.history:
 				self.history.insert(0, self.query)
 
 			# Create a new line in the console
@@ -221,7 +244,6 @@ class ConsoleFunctions(Console):
 
 			# Execute the command with arguments
 			self.executeInternal(s[0], *args, **kwargs)
-
 
 			sys.stdout.write("\n$> ")
 			sys.stdout.flush()

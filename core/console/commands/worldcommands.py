@@ -7,6 +7,7 @@ from world.entity.entitytypes import EntityTypes
 class CommandsWorld:
 	class SetPos:
 		names = ["setpos"]
+		parameters: list[list[str]] = [[""]]
 
 		@staticmethod
 		def execute(*args, **kwargs):
@@ -33,6 +34,7 @@ class CommandsWorld:
 
 	class Spawn:
 		names = ["spawn", "enemy"]
+		parameters: list[list[str]] = [[""], [""], [""]]  # TODO: add all enemies to last parameter
 
 		@staticmethod
 		def execute(*args, **kwargs):

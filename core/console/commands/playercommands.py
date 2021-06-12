@@ -7,6 +7,7 @@ from core.utils.errors.exceptions import *
 class CommandsPlayer:
 	class Give:
 		names = ["give", "item"]
+		parameters: list[list[str]] = [[""]]  # TODO: Get all items in parameters or a pointer to them
 
 		@staticmethod
 		def execute(*args, **kwargs):
@@ -38,11 +39,21 @@ class CommandsPlayer:
 									message=f"Could not get item '{key}', please check your spelling and try again.")
 
 		@staticmethod
-		def fetchAutocompleteOptions(command, *args):
-			pass
+		def fetchAutocompleteOptions(parameter, *args):
+			"""
+			:param parameter: The current parameter we are working with
+			:param args:
+			:return: Yields all possible option or None if not available
+			"""
+			if len(args) == 1:  # we have an argc value
+				for key in CommandsPlayer.Give.parameters[args[0]-1]:
+					if key.startswith(parameter):
+						if key != "":
+							yield key
 
 	class XP:
 		names = ["xp", "exp"]
+		parameters: list[list[str]] = [["give", "add"], [""]]
 
 		@staticmethod
 		def execute(*args, **kwargs):
@@ -82,5 +93,16 @@ class CommandsPlayer:
 				ConsoleHelper.Globals.game.player.check_levels()
 
 		@staticmethod
-		def fetchAutocompleteOptions(command, *args):
-			pass
+		def fetchAutocompleteOptions(parameter, *args):  # TODO: Might change *args for argc/completely remove it for eff
+			"""
+			:param parameter: The current parameter we are working with
+			:param args:
+			:return: Yields all possible option or None if not available
+			"""
+			if len(args) == 1:  # we have an argc value
+				if args[0] == 1 and parameter == "":
+					yield "give"
+				for key in CommandsPlayer.XP.parameters[args[0] - 1]:
+					if key.startswith(parameter):
+						if key != "":
+							yield key
