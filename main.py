@@ -35,6 +35,9 @@ if platform == "win32":
 	kernel32 = ctypes.windll.kernel32
 	kernel32.SetConsoleMode(kernel32.GetStdHandle(-11), 7)
 
+if not os.path.isdir("saves"):
+	os.mkdir("saves")
+
 
 class Game:
 	def __init__(self):

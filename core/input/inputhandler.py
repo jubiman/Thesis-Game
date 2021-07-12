@@ -74,8 +74,8 @@ class InputHandler:
 		mouse_pos = pygame.mouse.get_pos()
 		rel_mouse = (int((mouse_pos[0] - self.game.player.pos.x - (WIDTH / 2)) / TILESIZE),
 						int((mouse_pos[1] - self.game.player.pos.y - (HEIGHT / 2)) / TILESIZE))
-		Console.debug(message=f"mouse: {mouse_pos}\tplayer: {self.game.player.pos}, W/H: {WIDTH}x{HEIGHT}")
-		Console.debug(message=f"{(mouse_pos[0] // TILESIZE - self.game.player.pos.x - WIDTH / 2) // TILESIZE}")
+		# Console.debug(message=f"mouse: {mouse_pos}\tplayer: {self.game.player.pos}, W/H: {WIDTH}x{HEIGHT}")
+		# Console.debug(message=f"{(mouse_pos[0] // TILESIZE - self.game.player.pos.x - WIDTH / 2) // TILESIZE}")
 		if mouse[0]:
 			block = self.game.world.getBlockAt(*rel_mouse)
 
