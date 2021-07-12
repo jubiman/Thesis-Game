@@ -14,6 +14,7 @@ from settings import *
 from world.block import Block
 from world.material.materials import Materials
 from core.console.consolefunctions import Console
+from core.UI.ui import UI
 
 
 class Player(LivingCreature):
@@ -90,111 +91,13 @@ class Player(LivingCreature):
 			Console.log(thread="Player",
 						message=f"Your player leveled up to level {self.lvl.level}! You need {self.lvl.xp_needed} xp for the next level")
 
-	# Check player input (currently only movement keys)
-	def get_keys(self):
-		self.vel = pygame.math.Vector2(0, 0)
-		keys = pygame.key.get_pressed()
-
-		if keys[ord(self.game.cpc['BINDS']['MOVELEFT'])]:
-			self.vel.x = -self.speed
-		if keys[ord(self.game.cpc['BINDS']['MOVERIGHT'])]:
-			self.vel.x = self.speed
-		if keys[ord(self.game.cpc['BINDS']['MOVEUP'])]:
-			self.vel.y = -self.speed
-		if keys[ord(self.game.cpc['BINDS']['MOVEDOWN'])]:
-			self.vel.y = self.speed
-		if self.vel.x != 0 and self.vel.y != 0:
-			self.vel *= 0.7071
-		if keys[K_p] and self.debug_print_cooldown == 0:
-			# TODO: Debug menu for skills
-			Console.log(thread="Player",
-						message="-------------------------------------------------")
-			for bs in baseskills.Baseskills:
-				Console.log(thread="Player",
-							message=f"{bs.value.name} {bs.value.lvl.level} {bs.value.lvl.xp} {bs.value.lvl.xp_needed}")
-			Console.log(thread="Player",
-						message="-------------------------------------------------")
-			for ps in playerskills.Playerskills:
-				Console.log(thread="Player",
-							message=f"{ps.value.name} {ps.value.lvl.level} {ps.value.lvl.xp_needed}")
-			Console.log(thread="Player",
-						message="-------------------------------------------------")
-			Console.log(thread="Player",
-						message="Format: level | xp | sp | hp | armor")
-			Console.log(thread="Player",
-						message=f"Player {self.lvl.level} {self.lvl.xp} {self.skillpoints} {self.hp} {self.armor}")
-			self.debug_print_cooldown = 1
-		if keys[K_i] and self.debug_print_cooldown == 0:
-			Console.log(thread="Player",
-						message="Inventory:")
-			for it in self.inventory.inv.ls:
-				Console.log(thread="Player",
-							message=f"{it.item.displayName} {it.quantity} {it.item.max_stack}")
-			self.debug_print_cooldown = 1
-		if keys[K_o]:
-			Console.log(thread="Player",
-						message=f"world.entities: {self.game.world.entities}")
-
-	# DEPRICATED
-	def get_events(self):
-		for ev in pygame.event.get():
-			if ev.type == MOUSEBUTTONDOWN and pygame.mouse.get_pressed(3)[0]:
-				for tree in self.game.trees:
-					if tree.collidepoint(pygame.mouse.get_pos()):
-						# Chop down the tree
-						pass
-
-	# Check mouse actions
-	def get_mouse(self):
-		mouse = pygame.mouse.get_pressed(5)
-		if mouse[0]:
-			for tree in self.game.trees:
-				rel_mouse = (math.floor((pygame.mouse.get_pos()[0] + self.game.player.pos[0]) - WIDTH / 2),
-								math.floor((pygame.mouse.get_pos()[1] + self.game.player.pos[1]) - HEIGHT / 2))
-
-				# print(rel_mouse, pygame.mouse.get_pos())
-				# Check if the mouse and tree image collide
-				if tree.rect.collidepoint(rel_mouse):
-					if self.inventory.hands[0].item.name.lower() == 'axe' or self.inventory.hands[
-						1].item.name.lower() == 'axe':
-
-						# Chop down the tree
-						tree.kill()
-
-						# Add wood to inventory
-						# TODO: Add woodcutting skill multiplier
-						amount = randint(1, 5)
-						self.inventory.add_new_item(Items['WOOD'], amount)
-						# Display message for amount of wood
-						Console.log(thread="Player",
-									message=f"You got {amount} wood!")
-
-						# TODO: Add wood to inventory
-						# Add exp to woodcutting
-						# TODO: Add multiplier/check tree type?
-						baseskill.get_from_name(self.baseskills, "Woodcutting").lvl.xp += 10
-						# TODO: Pure debug text, remove later
-						Console.log(thread="Player",
-									message="You chopped down a tree and gained 10 Woodcutting xp!")
-						Console.log(thread="Player",
-									message="Your player gained 10 xp")
-						self.lvl.xp += 10
-						self.check_levels()
-					else:
-						Console.log(thread="Player",
-									message="You need an axe to break a tree")
-
 	# Gets called every frame to update the player's status
 	def update(self):
 		# self.get_keys()
 		# Move the player
 		self.rect = self.image.get_rect()
-		self.rect.center = self.pos
 		self.collision_rect.centerx = self.pos.x
-		# self.collide_with_walls('x')
 		self.collision_rect.centery = self.pos.y
-		# self.collide_with_walls('y')
-		# self.collide_with_walls()
 		self.pos += self.vel * self.game.dt
 		self.rect.center = self.collision_rect.center
 
@@ -223,19 +126,19 @@ class Player(LivingCreature):
 						if self.vel.x > 0 and dx > 0:
 							# print("d")
 							self.vel.x = 0
-							self.hp -= 5
+							UI.getElementByID(0).setHealthbar(self.hp - 5)
 						if self.vel.x < 0 and dx < 0:
 							# print("a")
 							self.vel.x = 0
-							self.hp -= 5
+							UI.getElementByID(0).setHealthbar(self.hp - 5)
 						if self.vel.y > 0 and dy > 0:
 							# print("s")
 							self.vel.y = 0
-							self.hp -= 5
+							UI.getElementByID(0).setHealthbar(self.hp - 5)
 						if self.vel.y < 0 and dy < 0:
 							# print("w")
 							self.vel.y = 0
-							self.hp -= 5
+							UI.getElementByID(0).setHealthbar(self.hp - 5)
 
 
 class EnemyStandard(LivingCreature):
@@ -252,7 +155,3 @@ class EnemyStandard(LivingCreature):
 		# Move the player
 		if self.image is not None:
 			self.rect = self.image.get_rect()
-		self.move()
-
-	def move(self):
-		pass
