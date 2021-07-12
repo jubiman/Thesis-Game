@@ -4,13 +4,13 @@ import threading
 import ctypes
 from configparser import ConfigParser
 from os import path
-from subprocess import Popen, PIPE, CREATE_NEW_CONSOLE  # Lib for creating a new window for the console thread
 
-from core.console.consolefunctions import ConsoleFunctions
 from cfg.cfgparser import CfgParser
+from core.console.consolefunctions import ConsoleFunctions
 from core.controller.camera import Camera
 from core.prefabs.sprites import *
 from core.UI.ui import UI
+from core.input.inputhandler import InputHandler
 from world.chunk import Chunk
 from world.entity.entitytypes import EntityTypes
 from world.material.material import Material
@@ -34,9 +34,6 @@ for o, a in opts:
 if platform == "win32":
 	kernel32 = ctypes.windll.kernel32
 	kernel32.SetConsoleMode(kernel32.GetStdHandle(-11), 7)
-	nwc = "cmd.exe /c start".split()
-else:
-	nwc = "x-terminal-emulator -e".split()
 
 
 class Game:
@@ -50,6 +47,8 @@ class Game:
 		self.load_data()
 		self.world = None
 
+		# Make input handler
+		self.inputHandler = InputHandler(self)
 		# Make console
 		self.console = ConsoleFunctions(self)
 		self.consoleThread = threading.Thread(name="console", target=self.console.run, daemon=True)
@@ -108,6 +107,7 @@ class Game:
 
 	def update(self):
 		# update portion of the game loop
+		self.inputHandler.handleInput()
 		self.sprites.update()
 		for ent in self.world.entities:
 			ent.update()

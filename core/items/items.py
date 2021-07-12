@@ -10,12 +10,13 @@ class Items(Enum):
 	EMPTY = Item("Empty", "empty", 0, 1)
 
 	# Tools
-	AXE = Item("Axe", "", 1, 1)
-	PICKAXE = Item("Pickaxe", "pickaxe", 2, 1)
-	HAMMER = Item("Hammer", "hammer", 3, 1)
+	# TODO: Add all materials to tools
+	IRON_AXE = Item("Iron Axe", "iron_axe", 1, 1)
+	IRON_PICKAXE = Item("Iron Pickaxe", "iron_pickaxe", 2, 1)
+	IRON_HAMMER = Item("Iron Hammer", "iron_hammer", 3, 1)
 
 	# Weapons
-	SWORD = Item("Sword", "sword", 25, 1)
+	IRON_SWORD = Item("Iron Sword", "iron_sword", 25, 1)
 	BOW = Item("Bow", "bow", 26, 1)
 	GUN = Item("Gun", "gun", 27, 1)
 

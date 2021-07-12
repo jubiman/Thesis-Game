@@ -186,7 +186,7 @@ class Player(LivingCreature):
 
 	# Gets called every frame to update the player's status
 	def update(self):
-		self.get_keys()
+		# self.get_keys()
 		# Move the player
 		self.rect = self.image.get_rect()
 		self.rect.center = self.pos
@@ -194,11 +194,11 @@ class Player(LivingCreature):
 		# self.collide_with_walls('x')
 		self.collision_rect.centery = self.pos.y
 		# self.collide_with_walls('y')
-		self.collide_with_walls()
+		# self.collide_with_walls()
 		self.pos += self.vel * self.game.dt
 		self.rect.center = self.collision_rect.center
 
-		self.get_mouse()
+		# self.get_mouse()
 
 		# TODO: Debug cooldown, might remove later
 		if self.debug_print_cooldown != 0:

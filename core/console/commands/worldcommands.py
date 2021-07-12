@@ -2,6 +2,8 @@ import pygame
 from core.console.console import Console
 from core.console.consolehelper import ConsoleHelper
 from world.entity.entitytypes import EntityTypes
+from world.material.materials import Materials
+from world.block import Block
 
 
 class CommandsWorld:
@@ -69,3 +71,48 @@ class CommandsWorld:
 		@staticmethod
 		def fetchAutocompleteOptions(command, *args):
 			pass
+
+	class SetBlock:
+		names = ["setblock", "set"]
+		parameters: list[int, int, list[str]] = [int, int, []]  # TODO: add all blocks to last parameter
+		# setblock x y block
+
+		@staticmethod
+		def execute(*args, **kwargs):
+			try:
+				blockstr = kwargs['block'][kwargs['block'].rfind(':')+1].upper()
+				try:
+					ConsoleHelper.Globals.game.world.setBlock(int(kwargs['x']), int(kwargs['y']), Block(Materials[blockstr].value))
+				except KeyError:
+					Console.error(thread="CONSOLE",
+									message=f"Couldn't find block {args[2]}. Please check your spelling and try again.")
+			except KeyError:
+				if len(args) < 3:
+					return Console.error(thread="CONSOLE", message=f"Expected 3 arguments, got {len(args)} instead.")
+				loc = args[2].rfind(':')+1
+				if loc > 0:
+					blockstr = args[2][loc:].upper()
+				else:
+					blockstr = args[2].upper()
+				try:
+					ConsoleHelper.Globals.game.world.setBlock(int(args[0]), int(args[1]), Block(Materials[blockstr].value))
+				except KeyError:
+					Console.error(thread="CONSOLE",
+									message=f"Couldn't find block {args[2]}. Please check your spelling and try again.")
+
+		@staticmethod
+		def fetchAutocompleteOptions(parameter, *args):  # TODO: Might change *args for argc/completely remove it for eff
+			"""
+			:param parameter: The current parameter we are working with
+			:param args:
+			:return: Yields all possible option or None if not available
+			"""
+			if len(args) > 0:  # we have an argc value
+				if args[0] == 3 and parameter == "" or parameter in "game:":
+					for param in CommandsWorld.SetBlock.parameters[2]:
+						yield param
+					return
+				for key in CommandsWorld.SetBlock.parameters[args[0] - 1]:
+					if key.startswith(parameter):
+						if key != "":
+							yield key
