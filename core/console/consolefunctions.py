@@ -79,31 +79,49 @@ class ConsoleFunctions(Console):
 		while self.running:
 			# TODO: Test on on other operating systems than Windows
 			Console.query = "$> " + self.query
-			inp = getch()  # Get a single character at a time
+
+			try:
+				inp = getch()  # Returns a byte string on windows or a string on UNIX/POSIX
+			except KeyboardInterrupt:
+				inp = "ctr c lol"  # TODO: Add copy and pasting
+			# Decode the input if we are on windows
+			try:
+				inp = inp.decode("utf-8")  # Get a single character at a time
+			except UnicodeDecodeError:
+				inp = inp.decode("unicode_escape")
+			except AttributeError:
+				pass
+
 			# Console.debug(message=f"inp = {inp}")
-			if inp != b"\r":  # If we don't return we don't want to execute the code yet, but add the letter to the query instead
-				if inp == b"\x08":  # Backspace
+			if inp != "\r":  # If we don't return we don't want to execute the code yet, but add the letter to the query instead
+				if inp == "\x08":  # Backspace
 					if len(self.query) > 0:  # If the query is empty we don't want to remove anything
 						self.query = self.query[:self.cursor-1] + self.query[self.cursor:]
 						self.cursor -= 1
 						sys.stdout.write(f"\r\033[K$> {self.query}\033[{self.cursor + 4}G")
 
-				elif inp == b"\xe0":  # First of 2 characters for control keys
+				elif inp == "\xe0":  # First of 2 characters for control keys
 					key = getch()
-					# Console.debug(message=f"key = {key}")
-					if key == b"\x4b":  # Left arrow
+					try:
+						key = key.decode("utf-8")
+					except UnicodeDecodeError:
+						key = key.decode("unicode_escape")
+					except AttributeError:
+						pass
+
+					if key == "\x4b":  # Left arrow
 						if self.cursor == 0:
 							continue
 						self.cursor -= 1
 						sys.stdout.write("\033[D")
 
-					elif key == b"\x4d":  # Right arrow
+					elif key == "\x4d":  # Right arrow
 						if self.cursor == len(self.query):
 							continue
 						self.cursor += 1
 						sys.stdout.write("\033[C")
 
-					elif key == b"\x48":  # Up arrow
+					elif key == "\x48":  # Up arrow
 						if self.histIndex == -1:
 							self.tmp = self.query
 						self.histIndex += 1
@@ -119,7 +137,7 @@ class ConsoleFunctions(Console):
 						sys.stdout.flush()
 						self.cursor = len(self.query) + 1
 
-					elif key == b"\x50":  # Down arrow
+					elif key == "\x50":  # Down arrow
 						if self.histIndex == -1:  # We can't go down in history
 							continue
 						if self.histIndex == 0:  # We have reached the beginning of the history
@@ -138,14 +156,13 @@ class ConsoleFunctions(Console):
 						sys.stdout.write(f"\r\033[K$> {self.query}")
 						sys.stdout.flush()
 						self.cursor = len(self.query) + 1
-					elif key == b"S":  # Delete key
+					elif key == "S":  # Delete key
 						if len(self.query) > 0:  # If the query is empty we don't want to remove anything
 							self.query = self.query[:self.cursor] + self.query[self.cursor + 1:]
 							sys.stdout.write(f"\r\033[K$> {self.query}\033[{self.cursor + 4}G")
 
 					continue
-
-				elif inp == b"\t":
+				elif inp == "\t":
 					# TODO: Add kwargs algorithms
 					# I want to fucking die
 					if self.completionQuery:
@@ -211,7 +228,7 @@ class ConsoleFunctions(Console):
 								Console.printAutocomplete(message=msg[:-1])
 				else:
 					try:
-						self.query = self.query[:self.cursor] + inp.decode("utf-8") + self.query[self.cursor:]
+						self.query = self.query[:self.cursor] + inp + self.query[self.cursor:]
 						self.cursor += 1
 						self.completionQuery = ""
 					except UnicodeDecodeError:
