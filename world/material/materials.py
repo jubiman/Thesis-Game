@@ -7,13 +7,14 @@ from world.material.material import Material
 
 
 class Materials(Enum):
-	AIR = Material("Air", "empty", 0)
-	GRASS = Material("Grass", "grass_0", 1)
-	TREE = Material("Tree", "tree_0", 2)
-	WALL = Material("Wall", "wall_part_0_11111111", 3)
+	# TODO: add tools to materials and add all materials
+	AIR = Material("Air", "empty", 0, "game:air")
+	GRASS = Material("Grass", "grass_0", 1, "game:grass")
+	TREE = Material("Tree", "tree_0", 2, "game:tree", ['wood_axe', 'iron_axe', 'copper_axe', 'bronze_axe'])
+	WALL = Material("Wall", "wall_part_0_11111111", 3, "game:wall_part_0_11111111")
 
 	@staticmethod
-	def getMaterial(iden: int):
+	def getMaterial(iden: int):  # TODO: Order materials by id for faster id searching
 		for mat in Materials:
 			if mat.value.id == iden:
 				return mat.value

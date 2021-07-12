@@ -1,4 +1,4 @@
-from core.items.item import Item
+from core.items.items import Items
 
 
 class InventoryItem:
@@ -46,7 +46,7 @@ class Inventory:
 	def __init__(self):
 		self.inv = InventoryList(27)  # Inventory only has 27 slots
 		# self.hands[0] is main hand, hands[1] is offhand
-		self.hands = [InventorySlot(Item('Axe', 'axe', 1, 1), 1, 1), None]
+		self.hands = [InventorySlot(Items.IRON_AXE.value, 1, 1), InventorySlot(Items.EMPTY.value, 2, 1)]
 
 	# for i in range(9):
 	# self.slots.append(InventorySlot(item.Item('Axe', 1), 1, 1))

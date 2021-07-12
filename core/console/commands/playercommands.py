@@ -106,3 +106,26 @@ class CommandsPlayer:
 					if key.startswith(parameter):
 						if key != "":
 							yield key
+
+	class ShowPos:
+		names = ["showpos", "pos"]
+		parameters: list[list[str]] = [[]]
+
+		@staticmethod
+		def execute(*args, **kwargs):
+			Console.log(thread="CONSOLE", message=f"{ConsoleHelper.Globals.game.player.pos}")
+
+		@staticmethod
+		def fetchAutocompleteOptions(parameter, *args):  # TODO: Might change *args for argc/completely remove it for eff
+			"""
+			:param parameter: The current parameter we are working with
+			:param args:
+			:return: Yields all possible option or None if not available
+			"""
+			if len(args) == 1:  # we have an argc value
+				if args[0] == 1 and parameter == "":
+					yield "give"
+				for key in CommandsPlayer.XP.parameters[args[0] - 1]:
+					if key.startswith(parameter):
+						if key != "":
+							yield key

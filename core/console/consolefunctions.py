@@ -1,15 +1,8 @@
-import shutil
 import sys
 import inspect
-from os import path
 from distutils.util import strtobool
 
-import pygame.math
-
-from settings import *
-from world.world import World
 from core.console.console import Console
-from world.entity.entitytypes import EntityTypes
 from core.utils.getch import getch
 from core.console.consolehelper import ConsoleHelper
 from core.console.commands.worldcommands import CommandsWorld
@@ -17,6 +10,7 @@ from core.console.commands.playercommands import CommandsPlayer
 from core.console.commands.mapcommands import CommandsMap
 from core.utils.timer import Timer
 from core.utils.modulus import mod
+from world.material.materials import Materials
 
 
 # TODO: Make every function compatible with kwargs
@@ -33,6 +27,7 @@ class ConsoleFunctions(Console):
 
 		# Initialize basic variables
 		self.query = ""
+		self.completionQuery = ""
 		# The location where we are typing in the query (CHA = cursor + 4)
 		self.cursor = 0
 		# History
@@ -52,6 +47,11 @@ class ConsoleFunctions(Console):
 		Console.event(thread="CONSOLE", message=f"Console finished initializing in {dura} seconds.")
 
 	def populateCommandRegistry(self):
+		# Populate all blocks in setblock command
+		for mat in Materials:
+			CommandsWorld.SetBlock.parameters[2].append(mat.value.idstring)  # Fake warning, is type list[str]
+
+		# Create command registry
 		for name, obj in inspect.getmembers(CommandsWorld):
 			if inspect.isclass(obj) and name != "__class__":
 				for n in obj.names:
@@ -66,7 +66,7 @@ class ConsoleFunctions(Console):
 					self.Commands[n] = obj
 
 	@staticmethod
-	def executeInternal(command, *args, **kwargs):
+	def __executeInternal(command, *args, **kwargs):
 		# TODO: maybe output stuff
 		try:
 			cmd = ConsoleFunctions.Commands[command]
@@ -148,14 +148,30 @@ class ConsoleFunctions(Console):
 				elif inp == b"\t":
 					# TODO: Add kwargs algorithms
 					# I want to fucking die
+					if self.completionQuery:
+						Console.log(message=self.completionQuery)
+						try:
+							self.autocompleteIndex = mod(self.autocompleteIndex + 1, len(self.autocompleteOptions))
+						except Exception as ex:
+							Console.error(thread="CONSOLE", message=ex)
+						self.query = self.completionQuery[:self.completionQuery.rfind(' ')] + " " + self.autocompleteOptions[
+							self.autocompleteIndex]
+						if strtobool(ConsoleHelper.Globals.game.cpc['CONSOLE']['autocompleteaddspace']):
+							self.query += ' '
+						self.cursor = len(self.query)
+
+						sys.stdout.write(f"\r\033[K$> {self.query}\033[{self.cursor + 4}G")
+						sys.stdout.flush()
+						continue
 					try:
 						if ' ' in self.query:
 							self.autocompleteOptions = list(ConsoleFunctions.Commands[self.query.split(' ')[0]]
-								.fetchAutocompleteOptions(self.query.split(' ')[-1], len(self.query.split(' ')[:1])))
+								.fetchAutocompleteOptions(self.query.split(' ')[-1], len(self.query.split(' ')[1:])))
 					except IndexError:
 						pass
 					if self.autocompleteOptions:
 						if strtobool(ConsoleHelper.Globals.game.cpc['CONSOLE']['cycle_autocompletion']):
+							self.completionQuery = self.query
 							try:
 								self.autocompleteIndex = mod(self.autocompleteIndex + 1, len(self.autocompleteOptions))
 							except Exception as ex:
@@ -165,10 +181,12 @@ class ConsoleFunctions(Console):
 							if strtobool(ConsoleHelper.Globals.game.cpc['CONSOLE']['autocompleteaddspace']):
 								self.query += ' '
 							self.cursor = len(self.query)
+						else:
+							Console.log(thread="CONSOLE", message=self.autocompleteOptions)
 					else:
 						self.autocompleteOptions = list(ConsoleHelper.Autocompletion.find(ConsoleFunctions.Commands, self.query))
 						self.autocompleteOptions.sort()
-						if len(list(self.autocompleteOptions)) <= 0:
+						if len(list(self.autocompleteOptions)) < 1:
 							continue
 						elif len(list(self.autocompleteOptions)) == 1:
 							self.query = self.autocompleteOptions[0]
@@ -177,6 +195,7 @@ class ConsoleFunctions(Console):
 							self.cursor = len(self.query)
 						else:
 							if strtobool(ConsoleHelper.Globals.game.cpc['CONSOLE']['cycle_autocompletion']):
+								self.completionQuery = self.query
 								try:
 									self.autocompleteIndex = mod(self.autocompleteIndex + 1, len(self.autocompleteOptions))
 								except Exception as ex:
@@ -194,6 +213,7 @@ class ConsoleFunctions(Console):
 					try:
 						self.query = self.query[:self.cursor] + inp.decode("utf-8") + self.query[self.cursor:]
 						self.cursor += 1
+						self.completionQuery = ""
 					except UnicodeDecodeError:
 						pass
 				sys.stdout.write(f"\r\033[K$> {self.query}\033[{self.cursor + 4}G")
@@ -205,6 +225,7 @@ class ConsoleFunctions(Console):
 			self.cursor = 0
 			self.autocompleteOptions = None
 			self.autocompleteIndex = -1
+			self.completionQuery = ""
 
 			# If the query is empty, don't execute any code
 			if self.query == "":
@@ -243,7 +264,7 @@ class ConsoleFunctions(Console):
 				continue
 
 			# Execute the command with arguments
-			self.executeInternal(s[0], *args, **kwargs)
+			self.__executeInternal(s[0], *args, **kwargs)
 
 			sys.stdout.write("\n$> ")
 			sys.stdout.flush()
