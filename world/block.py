@@ -1,4 +1,4 @@
-from world.material import Material
+from world.material.material import Material
 
 
 class Block:
