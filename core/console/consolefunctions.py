@@ -249,7 +249,9 @@ class ConsoleFunctions(Console):
 				continue
 
 			# Add command to history and check for duplicates if setting is disabled
-			if strtobool(ConsoleHelper.Globals.game.cpc['CONSOLE']['duplicate_history']) and self.query not in self.history:
+			if strtobool(ConsoleHelper.Globals.game.cpc['CONSOLE']['duplicate_history']):
+				self.history.insert(0, self.query)
+			elif self.query not in self.history:
 				self.history.insert(0, self.query)
 
 			# Create a new line in the console
