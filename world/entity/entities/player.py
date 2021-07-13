@@ -1,4 +1,4 @@
-from pygame import Vector2, Rect
+from pygame import Vector2, Rect, draw
 
 from core.UI.ui import UI
 from core.inventory.inventory import Inventory
@@ -10,7 +10,6 @@ from core.console.console import Console
 from settings import TILESIZE
 from world.block import Block
 from world.material.materials import Materials
-from world.entity.entitytypes import EntityTypes
 
 
 class Player(LivingCreature):
@@ -93,6 +92,7 @@ class Player(LivingCreature):
 		self.entitytype.rect = self.entitytype.image.get_rect()
 		self.entitytype.rect.centerx = self.pos.x * TILESIZE
 		self.entitytype.rect.centery = self.pos.y * TILESIZE
+		self.collision_rect.center = self.entitytype.rect.center
 
 		# TODO: Debug cooldown, might remove later
 		if self.debug_print_cooldown != 0:
@@ -100,11 +100,11 @@ class Player(LivingCreature):
 		if self.debug_print_cooldown > 400:
 			self.debug_print_cooldown = 0
 
-	# Called from move(), checks if the direction we're going is obstructed
+	# Called from inputhandler, checks if the direction we're going is obstructed
 	def collide_with_walls(self):
 		# TODO: Make algorithm that checks only surrounding tiles + rewrite with world gen
-		# if pos/TILESIZE+64 ==
-		movedColRect = self.collision_rect.move(self.vel.x * self.game.dt, self.vel.y * self.game.dt)
+		movedColRect = self.collision_rect.move(self.vel * self.game.dt / TILESIZE)
+		draw.rect(self.game.screen, (125, 125, 125), self.game.camera.applyraw(movedColRect), 1)
 		for dx in range(-3, 3):
 			for dy in range(-3, 3):
 				block: Block = self.game.world.getBlockAt(self.pos.x + dx, self.pos.y + dy)
@@ -113,13 +113,13 @@ class Player(LivingCreature):
 					if rect.colliderect(movedColRect):
 						if self.vel.x > 0 and dx > 0:
 							self.vel.x = 0
-							UI.getElementByID(0).setHealthbar(self.hp - 5)
+							UI.HEALTHBAR.value.setHealthbar(self.hp - 5)
 						if self.vel.x < 0 and dx < 0:
 							self.vel.x = 0
-							UI.getElementByID(0).setHealthbar(self.hp - 5)
+							UI.HEALTHBAR.value.setHealthbar(self.hp - 5)
 						if self.vel.y > 0 and dy > 0:
 							self.vel.y = 0
-							UI.getElementByID(0).setHealthbar(self.hp - 5)
+							UI.HEALTHBAR.value.setHealthbar(self.hp - 5)
 						if self.vel.y < 0 and dy < 0:
 							self.vel.y = 0
-							UI.getElementByID(0).setHealthbar(self.hp - 5)
+							UI.HEALTHBAR.value.setHealthbar(self.hp - 5)

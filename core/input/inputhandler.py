@@ -34,7 +34,7 @@ class InputHandler:
 			self.game.player.vel.y = self.game.player.speed
 		if self.game.player.vel.x != 0 and self.game.player.vel.y != 0:
 			self.game.player.vel *= 0.7071
-		# self.game.player.collide_with_walls()
+		self.game.player.collide_with_walls()
 
 		# Misc
 		if keys[K_p] and self.game.player.debug_print_cooldown == 0:
