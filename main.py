@@ -82,7 +82,7 @@ class Game:
 
 		# Initialize camera map specific
 		# TODO: might have to change the camera's settings
-		self.camera = Camera(WIDTH / TILESIZE, HEIGHT / TILESIZE)
+		self.camera = Camera(5, 5)
 		# self.camera = Camera(80, 80)  # Same as render distance?
 		# self.items = item.populate_items(self.graphics)
 
@@ -122,7 +122,8 @@ class Game:
 
 	def draw(self):
 		# Console.debug(self.player.pos)
-		pygame.display.set_caption(TITLE + " - " + "{:.2f}".format(self.clock.get_fps()))
+		pygame.display.set_caption(TITLE + " - " + "{:.2f}".format(self.clock.get_fps()) +
+									" - ({:.4f}, {:.4f})".format(*self.player.pos))
 		self.screen.fill(BGCOLOR)
 
 		pcx = int(self.player.pos.x / TILESIZE / 16)
@@ -143,6 +144,8 @@ class Game:
 						if mat is not None and mat.image is not None:
 							self.screen.blit(mat.image, self.camera.applyraw(
 								mat.rect.move(((pcx + cx) * 16 + x) * TILESIZE, ((pcy + cy) * 16 + y) * TILESIZE)))
+
+		# pygame.draw.rect(self.screen, (255, 255, 255), self.camera.applyraw(self.player.collision_rect), 1)
 
 		for ent in self.world.entities:
 			if ent is not None and ent.entitytype.image is not None:

@@ -1,4 +1,6 @@
-from pygame import Vector2, Rect, draw
+from math import floor
+
+from pygame import Vector2, Rect
 
 from core.UI.ui import UI
 from core.inventory.inventory import Inventory
@@ -12,6 +14,14 @@ from world.block import Block
 from world.material.materials import Materials
 
 
+adjacents = [
+	(-1, 0),
+	(1, 0),
+	(0, -1),
+	(0, 1)
+]
+
+
 class Player(LivingCreature):
 	def __init__(self, game, hp, max_hp, armor, speed, x, y, ent):
 
@@ -20,7 +30,7 @@ class Player(LivingCreature):
 
 		self.entitytype = ent
 
-	# World interaction
+		# World interaction
 		# Create player position and velocity
 		self.vel = Vector2(0, 0)
 		self.pos = Vector2(x, y)
@@ -30,7 +40,7 @@ class Player(LivingCreature):
 		self.collision_rect.centerx = self.pos.x
 		self.collision_rect.centery = self.pos.y
 
-	# Inventory
+		# Inventory
 		# Create an empty inventory
 		self.inventory = Inventory()
 		# Set equipped slot to the first slot
@@ -44,7 +54,7 @@ class Player(LivingCreature):
 		# Initialize all upgradable skills for the player
 		# self.playerskills = playerskill.init()
 
-	# Player base
+		# Player base
 		# Set initial skill/level values
 		self.skillpoints = 0
 		self.lvl = Levelbase(0, 0, 10, game=self.game)
@@ -62,7 +72,7 @@ class Player(LivingCreature):
 				# Display text to notify player of level up
 				# TODO: Make notification on-screen, not in console
 				Console.log(thread="Player",
-					message=f"You leveled up {bs.value.name} to level {bs.value.lvl.level}! \
+							message=f"You leveled up {bs.value.name} to level {bs.value.lvl.level}! \
 					You need {bs.value.lvl.xp_needed} xp for the next level")
 
 		# Check player skills
@@ -102,24 +112,27 @@ class Player(LivingCreature):
 
 	# Called from inputhandler, checks if the direction we're going is obstructed
 	def collide_with_walls(self):
+		Console.debug(self.vel)
 		# TODO: Make algorithm that checks only surrounding tiles + rewrite with world gen
-		movedColRect = self.collision_rect.move(self.vel * self.game.dt / TILESIZE)
-		draw.rect(self.game.screen, (125, 125, 125), self.game.camera.applyraw(movedColRect), 1)
-		for dx in range(-3, 3):
-			for dy in range(-3, 3):
-				block: Block = self.game.world.getBlockAt(self.pos.x + dx, self.pos.y + dy)
-				if block.material.id == Materials.WALL.value.id:
-					rect: Rect = block.material.rect.move(self.pos.x + dx, self.pos.y + dy)
-					if rect.colliderect(movedColRect):
-						if self.vel.x > 0 and dx > 0:
-							self.vel.x = 0
-							UI.HEALTHBAR.value.setHealthbar(self.hp - 5)
-						if self.vel.x < 0 and dx < 0:
-							self.vel.x = 0
-							UI.HEALTHBAR.value.setHealthbar(self.hp - 5)
-						if self.vel.y > 0 and dy > 0:
-							self.vel.y = 0
-							UI.HEALTHBAR.value.setHealthbar(self.hp - 5)
-						if self.vel.y < 0 and dy < 0:
-							self.vel.y = 0
-							UI.HEALTHBAR.value.setHealthbar(self.hp - 5)
+		movedColRect = self.collision_rect.move(self.vel * self.game.dt)
+		# movedColRect = self.collision_rect.move(self.pos.x * TILESIZE, self.pos.y * TILESIZE)
+		# draw.rect(self.game.screen, (125, 125, 125), self.game.camera.applyraw(movedColRect), 1)
+		for dx, dy in adjacents:
+			block: Block = self.game.world.getBlockAt(self.pos.x + dx, self.pos.y + dy)
+			if block.material.id == Materials.WALL.value.id:
+				# Console.debug((self.pos.x + dx, self.pos.y + dy, block.material.displayName))
+				# Console.debug((movedColRect.centerx / TILESIZE, movedColRect.centery / TILESIZE))
+				rect: Rect = block.material.rect.move((floor(self.pos.x) + dx) * TILESIZE, (floor(self.pos.y) + dy) * TILESIZE)
+				if rect.colliderect(movedColRect):
+					if self.vel.x > 0 and dx > 0:
+						self.vel.x = 0
+						UI.HEALTHBAR.value.setHealthbar(self.hp - 5)
+					if self.vel.x < 0 and dx < 0:
+						self.vel.x = 0
+						UI.HEALTHBAR.value.setHealthbar(self.hp - 5)
+					if self.vel.y > 0 and dy > 0:
+						self.vel.y = 0
+						UI.HEALTHBAR.value.setHealthbar(self.hp - 5)
+					if self.vel.y < 0 and dy < 0:
+						self.vel.y = 0
+						UI.HEALTHBAR.value.setHealthbar(self.hp - 5)
