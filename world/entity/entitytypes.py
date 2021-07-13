@@ -7,7 +7,8 @@ from world.entity.entitytype import EntityType
 
 
 class EntityTypes(Enum):
-	ENEMYTEST = EntityType("EnemyTest", "mage3", 0)
+	PLAYER = EntityType("Player", "player1", 0)
+	ENEMYTEST = EntityType("EnemyTest", "mage3", 1)
 
 	@staticmethod
 	def getEntity(iden):

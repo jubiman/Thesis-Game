@@ -8,7 +8,6 @@ from settings import *
 
 import pygame
 from pygame.locals import *
-import math
 from random import randint
 
 
@@ -17,28 +16,27 @@ class InputHandler:
 		self.game = game
 
 	def handleInput(self):
-		self.__getKeys()
-		self.__getMouse()
+		self.__handleKeys()
+		self.__handleMouse()
 
-	def __getKeys(self):
-		self.game.player.game.player.vel = pygame.math.Vector2(0, 0)
+	def __handleKeys(self):
+		self.game.player.game.player.vel = pygame.Vector2(0, 0)
 		keys = pygame.key.get_pressed()
 
+		# Movement
 		if keys[ord(self.game.cpc['BINDS']['MOVELEFT'])]:
 			self.game.player.vel.x = -self.game.player.speed
-			self.game.player.collide_with_walls()
 		if keys[ord(self.game.cpc['BINDS']['MOVERIGHT'])]:
 			self.game.player.vel.x = self.game.player.speed
-			self.game.player.collide_with_walls()
 		if keys[ord(self.game.cpc['BINDS']['MOVEUP'])]:
 			self.game.player.vel.y = -self.game.player.speed
-			self.game.player.collide_with_walls()
 		if keys[ord(self.game.cpc['BINDS']['MOVEDOWN'])]:
 			self.game.player.vel.y = self.game.player.speed
-			self.game.player.collide_with_walls()
 		if self.game.player.vel.x != 0 and self.game.player.vel.y != 0:
 			self.game.player.vel *= 0.7071
-			self.game.player.collide_with_walls()
+		# self.game.player.collide_with_walls()
+
+		# Misc
 		if keys[K_p] and self.game.player.debug_print_cooldown == 0:
 			# TODO: Debug menu for skills
 			Console.log(thread="PLAYER",
@@ -66,14 +64,14 @@ class InputHandler:
 							message=f"{it.item.displayName} {it.quantity} {it.item.max_stack}")
 			self.game.player.debug_print_cooldown = 1
 		if keys[K_o]:
-			Console.log(thread="PLAYER",
+			Console.debug(thread="DEBUG",
 						message=f"world.entities: {self.game.world.entities}")
 
-	def __getMouse(self):
+	def __handleMouse(self):
 		mouse = pygame.mouse.get_pressed(5)
 		mouse_pos = pygame.mouse.get_pos()
-		rel_mouse = (int((mouse_pos[0] - self.game.player.pos.x - (WIDTH / 2)) / TILESIZE),
-						int((mouse_pos[1] - self.game.player.pos.y - (HEIGHT / 2)) / TILESIZE))
+		rel_mouse = (int((mouse_pos[0] - self.game.player.pos.x * TILESIZE - (WIDTH / 2)) / TILESIZE),
+						int((mouse_pos[1] - self.game.player.pos.y * TILESIZE - (HEIGHT / 2)) / TILESIZE))
 		# Console.debug(message=f"mouse: {mouse_pos}\tplayer: {self.game.player.pos}, W/H: {WIDTH}x{HEIGHT}")
 		# Console.debug(message=f"{(mouse_pos[0] // TILESIZE - self.game.player.pos.x - WIDTH / 2) // TILESIZE}")
 		if mouse[0]:

@@ -9,7 +9,7 @@ from pygame.math import Vector2
 from world.block import Block
 from world.cache import Cache
 from world.chunk import Chunk
-from world.entity.enemy import Enemy
+from world.entity.entities.enemy import Enemy
 from world.gen.dungeongenerator import DungeonGenerator
 from world.gen.generator import Generator
 from world.material.materials import Materials
@@ -123,13 +123,13 @@ class World:
 			self.lastTick = now
 
 	def getBlockAt(self, x: int, y: int):
-		return self.getChunkAt(x // 16, y // 16).getBlock(int(x % 16), int(y % 16))
+		return self.getChunkAt(int(x / 16), int(y / 16)).getBlock(int(x % 16), int(y % 16))
 
 	def getBlockAtTup(self, loc: tuple[int, int]):
-		return self.getChunkAt(loc[0] // 16, loc[1] // 16).getBlock(loc[0] % 16, loc[1] % 16)
+		return self.getChunkAt(int(loc[0] / 16), int(loc[1] / 16)).getBlock(loc[0] % 16, loc[1] % 16)
 
 	def getChunkAt(self, x: int, y: int):
 		return self.cache.getChunk(x, y)
 
 	def setBlock(self, x: int, y: int, block: Block):
-		self.getChunkAt(x // 16, y // 16).setBlock(x, y, block)
+		self.getChunkAt(int(x / 16), int(y / 16)).setBlock(x, y, block)

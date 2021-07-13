@@ -12,6 +12,7 @@ from core.prefabs.sprites import *
 from core.UI.ui import UI
 from core.input.inputhandler import InputHandler
 from world.chunk import Chunk
+from world.entity.entities.player import Player
 from world.entity.entitytypes import EntityTypes
 from world.material.material import Material
 from world.material.materials import Materials
@@ -76,19 +77,20 @@ class Game:
 		self.trees = pygame.sprite.Group()
 		self.world = World(path.join(path.dirname(__file__), "saves/world1"), self)
 		self.world.load()
-		self.player = Player(self, 100, 100, 0, 350, 0, 0)
+		self.player = Player(self, 100, 100, 0, 350, 0.5, 0.5, EntityTypes.PLAYER.value)
 		self.spawner = Spawner(self, 64, 1)
 
 		# Initialize camera map specific
 		# TODO: might have to change the camera's settings
-		self.camera = Camera(48, 16)
+		self.camera = Camera(WIDTH / TILESIZE, HEIGHT / TILESIZE)
+		# self.camera = Camera(80, 80)  # Same as render distance?
 		# self.items = item.populate_items(self.graphics)
 
 		UI.load(self)
 
 		# Start the console
 		self.consoleThread.start()
-		Console.log(thread="MainThread", message="Reading console input.")
+		Console.log(thread="MAIN", message="Reading console input.")
 
 	def run(self):
 		# game loop - set self.playing = False to end the game
@@ -114,38 +116,43 @@ class Game:
 		self.sprites.update()
 		for ent in self.world.entities:
 			ent.update()
-		self.camera.update(self.player)
+		self.player.update()
+		self.camera.update(self.player.entitytype)
 		self.world.tick()
 
 	def draw(self):
+		# Console.debug(self.player.pos)
 		pygame.display.set_caption(TITLE + " - " + "{:.2f}".format(self.clock.get_fps()))
 		self.screen.fill(BGCOLOR)
 
-		px = self.player.pos.x / TILESIZE // 16
-		py = self.player.pos.y / TILESIZE // 16
+		pcx = int(self.player.pos.x / TILESIZE / 16)
+		pcy = int(self.player.pos.y / TILESIZE / 16)
+
+		# Console.debug((self.player.pos.x / TILESIZE, self.player.pos.y / TILESIZE))
 
 		# print(f"Player pos: {self.player.pos.x / TILESIZE:.2f}, {self.player.pos.y / TILESIZE:.2f}")
 		# TODO: add setting for "render distance"
 		for cy in range(-2, 2):
 			for cx in range(-2, 2):
-				chunk: Chunk = self.world.getChunkAt(px + cx, py + cy)
+				# Console.debug(f"Rendering {pcx + cx, pcy + cy}")
+				chunk: Chunk = self.world.getChunkAt(pcx + cx, pcy + cy)
 				# print(f"Rendering chunk: {px+cx},{py+cy}")
 				for y in range(16):
 					for x in range(16):
 						mat: Material = chunk.getBlock(x, y).material
 						if mat is not None and mat.image is not None:
 							self.screen.blit(mat.image, self.camera.applyraw(
-								mat.rect.move(((px + cx) * 16 + x) * TILESIZE, ((py + cy) * 16 + y) * TILESIZE)))
+								mat.rect.move(((pcx + cx) * 16 + x) * TILESIZE, ((pcy + cy) * 16 + y) * TILESIZE)))
 
-				for ent in self.world.entities:
-					if ent is not None and ent.entitytype.image is not None:
-						# logging.debug(f"ent: {ent.pos}, {ent.chunk}")
-						self.screen.blit(ent.entitytype.image, self.camera.applyraw(
-							ent.entitytype.rect.move((ent.chunk[0] * 16 + (ent.pos.x / TILESIZE)) * TILESIZE,
-														(ent.chunk[1] * 16 + (ent.pos.y / TILESIZE)) * TILESIZE)
-						))
+		for ent in self.world.entities:
+			if ent is not None and ent.entitytype.image is not None:
+				# Console.debug(f"ent: {ent.pos}, {ent.chunk}")
+				self.screen.blit(ent.entitytype.image, self.camera.applyraw(
+					ent.entitytype.rect.move((ent.chunk[0] * 16 + ent.pos.x) * TILESIZE,
+												(ent.chunk[1] * 16 + ent.pos.y) * TILESIZE)
+				))
 
-		self.screen.blit(self.player.image, self.camera.apply(self.player))
+		self.screen.blit(self.player.entitytype.image, self.camera.apply(self.player.entitytype))
 
 		# Display UI
 		UI.draw(self.screen)
@@ -226,7 +233,7 @@ class Game:
 
 # create the game object
 g = Game()
-g.show_start_screen()
+# g.show_start_screen()
 g.new()
 while True:
 	try:
