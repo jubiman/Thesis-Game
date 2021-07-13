@@ -9,7 +9,7 @@ from settings import *
 import pygame
 from pygame.locals import *
 from random import randint
-
+from core.UI.ui import UI
 
 class InputHandler:
 	def __init__(self, game):
@@ -35,6 +35,22 @@ class InputHandler:
 		if self.game.player.vel.x != 0 and self.game.player.vel.y != 0:
 			self.game.player.vel *= 0.7071
 		self.game.player.collide_with_walls()
+
+		# Inv
+		if keys[K_1]:
+			UI.getElementByID(1).setItemSlot(1)
+		if keys[K_2]:
+			UI.getElementByID(1).setItemSlot(2)
+		if keys[K_3]:
+			UI.getElementByID(1).setItemSlot(3)
+		if keys[K_4]:
+			UI.getElementByID(1).setItemSlot(4)
+		if keys[K_5]:
+			UI.getElementByID(1).setItemSlot(5)
+		if keys[K_6]:
+			UI.getElementByID(1).setItemSlot(6)
+		if keys[K_7]:
+			UI.getElementByID(1).setItemSlot(7)
 
 		# Misc
 		if keys[K_p] and self.game.player.debug_print_cooldown == 0:
