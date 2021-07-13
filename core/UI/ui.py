@@ -24,4 +24,3 @@ class UI(Enum):
 		:rtype: Any
 		"""
 		return list(UI)[iden]
-
