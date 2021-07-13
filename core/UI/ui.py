@@ -1,34 +1,26 @@
+from enum import Enum
+
 from core.UI.healthbar import Healthbar
 
 
-class UI:
-	uiElements = []
+class UI(Enum):
+	HEALTHBAR = Healthbar()
 
 	@staticmethod
 	def load(game):
-		UI.uiElements.append(Healthbar(game.player))
+		for obj in UI:
+			obj.value.game = game
 
 	@staticmethod
 	def draw(screen):
-		for obj in UI.uiElements:
-			obj.draw(screen)
+		for obj in UI:
+			obj.value.draw(screen)
 
 	@staticmethod
 	def getElementByID(iden):
 		"""
-		:param iden: The ID of the element (can also do UI.uiElements[id])
+		:param iden: The ID of the element (you can also use list(UI)[id])
 		:return: UI element
 		:rtype: Any
 		"""
-		return UI.uiElements[iden]
-
-	@staticmethod
-	def getElementByStr(name):
-		"""
-		:param name: The name of the element
-		:return: None or the UI element
-		"""
-		for el in UI.uiElements:
-			if name.lower() == el.__class__.__name__.lower():
-				return el
-		return None
+		return list(UI)[iden]

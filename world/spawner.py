@@ -4,9 +4,7 @@ from random import randint
 from pygame.math import Vector2
 
 from core.console.consolefunctions import Console
-from core.prefabs.sprites import EnemyStandard
-from settings import *
-from world.entity.enemy import Enemy
+from world.entity.entities.enemy import Enemy
 from world.entity.entitytypes import EntityTypes
 
 
@@ -29,7 +27,7 @@ class Spawner:
 			math.floor(self.game.player.pos.y + randint(-self.radius + self.min_r,
 														self.radius + self.min_r) - self.min_r))
 
-		chunk: tuple[int, int] = loc / TILESIZE // 16
+		chunk: tuple[int, int] = (int(loc.x // 16), int(loc.y // 16))
 
 		for ent in self.game.world.entities:
 			while ent.entitytype.rect.collidepoint(loc):
@@ -38,20 +36,19 @@ class Spawner:
 				loc = Vector2(math.floor(
 					self.game.player.pos.x + randint(-self.radius + self.min_r, self.radius + self.min_r) - self.min_r),
 					math.floor(self.game.player.pos.y + randint(-self.radius + self.min_r,
-																self.radius + self.min_r) - self.min_r)) / TILESIZE
+																self.radius + self.min_r) - self.min_r))
 
-		while self.game.world.getChunkAt(chunk[0], chunk[0]).getBlock(int(loc.x % 16),
+		while self.game.world.getChunkAt(chunk[0], chunk[1]).getBlock(int(loc.x % 16),
 																	int(loc.y % 16)).material.id not in [0, 1]:
 			Console.log(thread="SPAWNER",
 						message=f"There is already a sprite at {loc}.")
 			loc = Vector2(math.floor(
 				self.game.player.pos.x + randint(-self.radius + self.min_r, self.radius + self.min_r) - self.min_r),
 				math.floor(self.game.player.pos.y + randint(-self.radius + self.min_r,
-															self.radius + self.min_r) - self.min_r)) / TILESIZE
+															self.radius + self.min_r) - self.min_r))
 
 		self.game.world.entities.append(
-			Enemy(EntityTypes.ENEMYTEST.value, EnemyStandard(self.game, 10, 10, 2, 300,),
-					(chunk[0], chunk[1]), loc, 300, self.game))
+			Enemy(EntityTypes.ENEMYTEST.value, chunk, loc, 300, self.game, 10, 2))
 		Console.event(thread="SPAWNER",
 						message=f"Enemy spawned at {loc} in chunk {chunk}")
 
@@ -65,11 +62,11 @@ class Spawner:
 		"""
 		# TODO: Placeholder
 		if not enemy:
-			enemy = EntityTypes.ENEMYTEST
+			enemy = EntityTypes.ENEMYTEST.value
 		# TODO: Check for possible bugs and improve code
 		loc = Vector2(x, y)
 
-		chunk: tuple[int, int] = loc / TILESIZE // 16
+		chunk: tuple[int, int] = (int(loc.x // 16), int(loc.y // 16))
 
 		for ent in self.game.world.entities:
 			while ent.entitytype.rect.collidepoint(loc):
@@ -77,18 +74,13 @@ class Spawner:
 							message=f"There is already a sprite at {loc}.")
 				return 1
 
-		if self.game.world.getChunkAt(chunk[0], chunk[0]).getBlock(int(loc.x % 16),
-																	int(loc.y % 16)).material.id not in [0, 1]:
-			Console.log(thread="SPAWNER",
-						message=f"There is already a sprite at {loc}.")
+		if self.game.world.getBlockAt(int(loc.x % 16), int(loc.y % 16)).material.id not in [0, 1]:
+			Console.log(f"There is already a sprite at {loc}.", thread="SPAWNER")
 			return 1
 
-		# TODO: Spawn specified enemy
 		self.game.world.entities.append(
-			Enemy(enemy.value, EnemyStandard(self.game, 10, 10, 2, 300),
-					(chunk[0], chunk[1]), loc, 300, self.game))
-		Console.event(thread="SPAWNER",
-						message=f"Enemy spawned at {loc} in chunk {chunk}")
+			Enemy(enemy, chunk, loc, 10, self.game, 10, 2))
+		Console.event(f"Enemy spawned at {loc} in chunk {chunk}", thread="SPAWNERLOC")
 		return 0
 
 	def dungeonSpawn(self, nmin, nmax, chunk, x, y):
@@ -109,7 +101,7 @@ class Spawner:
 				if ent.entitytype.rect.collidepoint(loc):
 					Console.log(thread="SPAWNER",
 								message=f"There is already a sprite at {loc}.")
-					print((x * 16 + (loc.x / TILESIZE)) * TILESIZE, (y * 16 + (loc.y / TILESIZE)) * TILESIZE)
+					# Console.debug(((x * 16 + loc.x) * TILESIZE, (y * 16 + loc.y) * TILESIZE))
 					loc = Vector2(randint(0, 15), randint(0, 15))
 			# return 1  # why while loop if ur gonna return instantly??? what was i thinking man
 
@@ -119,10 +111,11 @@ class Spawner:
 				Console.log(thread="SPAWNER",
 							message=f"There is already a block at {loc}.")
 				loc = Vector2(randint(0, 15), randint(0, 15))
-			loc = Vector2((x * 16 + loc.x) * TILESIZE,
-							(y * 16 + loc.y) * TILESIZE)
+			# loc = Vector2(x * 16 + loc.x, y * 16 + loc.y)
+			loc = Vector2(*(loc * 16))
+
 			Console.event(thread="SPAWNER",
 							message=f"Spawning enemy at {loc}")
-			en = Enemy(EntityTypes.ENEMYTEST.value, EnemyStandard(self.game, 10, 10, 2, 300), (x, y), loc, 300, self.game)
+			en = Enemy(EntityTypes.ENEMYTEST.value, (x, y), loc, 300, self.game, 10, 2)
 			ents.append(en)
 			self.game.world.entities.append(en)

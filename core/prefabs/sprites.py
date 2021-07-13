@@ -17,7 +17,7 @@ from core.console.consolefunctions import Console
 from core.UI.ui import UI
 
 
-class Player(LivingCreature):
+class PlayerOld(LivingCreature):
 	def __init__(self, game, hp, max_hp, armor, speed, x, y):
 
 		# Getting specific information from LivingCreature class
@@ -30,8 +30,8 @@ class Player(LivingCreature):
 
 		# World interaction
 		# Create player position and velocity
-		self.vel = pygame.math.Vector2(0, 0)
-		self.pos = pygame.math.Vector2(x, y) * TILESIZE
+		self.vel = pygame.Vector2(0, 0)
+		self.pos = pygame.Vector2(x, y)
 		# Collision properties
 		self.collision_rect = pygame.Rect(0, 0, 35, 35)
 		# self.collision_rect = pygame.Rect(0, 0, 64, 64)
@@ -93,12 +93,14 @@ class Player(LivingCreature):
 
 	# Gets called every frame to update the player's status
 	def update(self):
+		Console.debug("yes")
 		# self.get_keys()
 		# Move the player
+		self.pos += self.vel * self.game.dt
+
 		self.rect = self.image.get_rect()
 		self.collision_rect.centerx = self.pos.x
 		self.collision_rect.centery = self.pos.y
-		self.pos += self.vel * self.game.dt
 		self.rect.center = self.collision_rect.center
 
 		# self.get_mouse()
@@ -116,42 +118,36 @@ class Player(LivingCreature):
 		movedColRect = self.collision_rect.move(self.vel.x * self.game.dt, self.vel.y * self.game.dt)
 		for dx in range(-3, 3):
 			for dy in range(-3, 3):
-				px = int(self.pos.x // TILESIZE)
-				py = int(self.pos.y // TILESIZE)
-				block: Block = self.game.world.getBlockAt(px + dx, py + dy)
+				block: Block = self.game.world.getBlockAt(self.pos.x + dx, self.pos.y + dy)
 				if block.material.id == Materials.WALL.value.id:
-					rect: Rect = block.material.rect.move((px + dx) * TILESIZE, (py + dy) * TILESIZE)
+					rect: Rect = block.material.rect.move(self.pos.x + dx, self.pos.y + dy)
 					if rect.colliderect(movedColRect):
-						# print(f"COLLIDE {self.vel} {dx},{dy}")
 						if self.vel.x > 0 and dx > 0:
-							# print("d")
 							self.vel.x = 0
 							UI.getElementByID(0).setHealthbar(self.hp - 5)
 						if self.vel.x < 0 and dx < 0:
-							# print("a")
 							self.vel.x = 0
 							UI.getElementByID(0).setHealthbar(self.hp - 5)
 						if self.vel.y > 0 and dy > 0:
-							# print("s")
 							self.vel.y = 0
 							UI.getElementByID(0).setHealthbar(self.hp - 5)
 						if self.vel.y < 0 and dy < 0:
-							# print("w")
 							self.vel.y = 0
 							UI.getElementByID(0).setHealthbar(self.hp - 5)
 
 
-class EnemyStandard(LivingCreature):
-	def __init__(self, game, hp, max_hp, armor, speed):
+# DEPRICATED
+class EnemyStandard:
+	def __init__(self, game):
 		# TODO: Remove pos and image from this class as it will be in enemy.py
 		# TODO: Add movement (pathfinding
 		# Getting specific information from LivingCreature class
-		super().__init__(game, hp, max_hp, armor, speed)
+		# super().__init__(game, hp, max_hp, armor, speed)
 		# Assets
-		self.image = pygame.transform.scale(assets.get_asset_from_name(self.game.graphics, 'mage3').image, (64, 64))
+		self.image = pygame.transform.scale(assets.get_asset_from_name(game.graphics, 'mage3').image, (64, 64))
 		self.rect = self.image.get_rect()
 
-	def update(self):
-		# Move the player
+	def updaterect(self):
+		# Move the entity
 		if self.image is not None:
 			self.rect = self.image.get_rect()

@@ -14,14 +14,14 @@ class CommandsWorld:
 		@staticmethod
 		def execute(*args, **kwargs):
 			try:
-				ConsoleHelper.Globals.game.player.pos = pygame.math.Vector2(float(kwargs['x']), float(kwargs['y']))
+				ConsoleHelper.Globals.game.player.pos = pygame.Vector2(float(kwargs['x']), float(kwargs['y']))
 			except ValueError:
 				Console.error(thread="CONSOLE",
 								message=f"Could not convert ({kwargs['x']}. {kwargs['y']}) to a valid position, please check your "
 										f"values and try again.")
 			except KeyError:
 				try:
-					ConsoleHelper.Globals.game.player.pos = pygame.math.Vector2(float(args[0]), float(args[1]))
+					ConsoleHelper.Globals.game.player.pos = pygame.Vector2(float(args[0]), float(args[1]))
 				except ValueError:
 					Console.error(thread="CONSOLE", message=f"Could not convert ({args[0]}, {args[1]}) to a valid "
 															f"position, please check your values and try again.")
@@ -46,13 +46,14 @@ class CommandsWorld:
 					'enemy']
 				if en:
 					try:
-						enemy = EntityTypes[en.upper()]
+						enemy = EntityTypes[en.upper()].value
 					except KeyError:
 						Console.error(thread="CONSOLE", message=f"Could not find enemy {en}.")
 						return
 				else:
 					enemy = None
 
+				Console.debug("SpawnEventLoc\n\n")
 				if ConsoleHelper.Globals.game.spawner.spawnEventLoc(float(args[0]), float(args[1]), enemy):
 					Console.error(thread="CONSOLE",
 									message=f"Could not spawn an enemy at ({kwargs['x']}, {kwargs['y']}).")
@@ -60,6 +61,7 @@ class CommandsWorld:
 				# TODO: Placeholder
 				print(err)
 				print("keyerror")
+				Console.debug("SpawnEvent\n\n")
 				ConsoleHelper.Globals.game.spawner.spawnEvent()
 			except ValueError:
 				Console.error(thread="CONSOLE",
