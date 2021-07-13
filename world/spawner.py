@@ -27,7 +27,7 @@ class Spawner:
 			math.floor(self.game.player.pos.y + randint(-self.radius + self.min_r,
 														self.radius + self.min_r) - self.min_r))
 
-		chunk: tuple[int, int] = (int(loc.x / 16), int(loc.y / 16))
+		chunk: tuple[int, int] = (int(loc.x // 16), int(loc.y // 16))
 
 		for ent in self.game.world.entities:
 			while ent.entitytype.rect.collidepoint(loc):
@@ -66,7 +66,7 @@ class Spawner:
 		# TODO: Check for possible bugs and improve code
 		loc = Vector2(x, y)
 
-		chunk: tuple[int, int] = (int(loc.x / 16), int(loc.y / 16))
+		chunk: tuple[int, int] = (int(loc.x // 16), int(loc.y // 16))
 
 		for ent in self.game.world.entities:
 			while ent.entitytype.rect.collidepoint(loc):

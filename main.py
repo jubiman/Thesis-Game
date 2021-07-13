@@ -126,8 +126,8 @@ class Game:
 									" - ({:.4f}, {:.4f})".format(*self.player.pos))
 		self.screen.fill(BGCOLOR)
 
-		pcx = int(self.player.pos.x / TILESIZE / 16)
-		pcy = int(self.player.pos.y / TILESIZE / 16)
+		pcx = self.player.pos.x / TILESIZE // 16
+		pcy = self.player.pos.y / TILESIZE // 16
 
 		# Console.debug((self.player.pos.x / TILESIZE, self.player.pos.y / TILESIZE))
 
