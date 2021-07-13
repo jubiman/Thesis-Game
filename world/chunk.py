@@ -1,5 +1,5 @@
 from world.block import Block
-from world.entity.enemy import Enemy
+from world.entity.entities.enemy import Enemy
 
 
 class Chunk:

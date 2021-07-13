@@ -4,13 +4,20 @@
 # TODO: Improve algorithm so entities don't go in eachother (and possibly do random movements when too close to player)
 import pygame
 from settings import TILESIZE
+from core.console.console import Console
+
 
 # Diagonal movement is impossible (for now?)
 adjacents = [
 	(-1, 0),
 	(0, 1),
 	(1, 0),
-	(0, -1)
+	(0, -1),
+
+	(1, 1),
+	(-1, -1),
+	(1, -1),
+	(-1, 1)
 ]
 
 
@@ -18,8 +25,8 @@ class Pathfinding:
 	@staticmethod
 	def findFullStatic(ent, target, world):
 		# Create start and end node
-		startNode = Node(pos=ent.pos // TILESIZE)
-		endNode = Node(pos=target.pos // TILESIZE)
+		startNode = Node(pos=ent.pos)
+		endNode = Node(pos=target.pos)
 
 		# If the distance to the player is bigger than 10 tiles, we don't move
 		if ((startNode.pos.x - endNode.pos.x) ** 2) + ((startNode.pos.y - endNode.pos.y) ** 2) > 10:
@@ -81,26 +88,37 @@ class Pathfinding:
 	@staticmethod
 	def findOneStatic(ent, target, world):
 		h = 0
-		current = Node(pos=ent.pos // TILESIZE)
 		# Generate children
 		children = []
 		for newpos in adjacents:
 			# Get node pos
-			nodepos = pygame.Vector2(current.pos.x + newpos[0], current.pos.y + newpos[1])
+			nodepos = pygame.Vector2(ent.pos.x + newpos[0], ent.pos.y + newpos[1])
 
 			# TODO: Add all collidable blocks
-			if world.getBlockAt(*nodepos).material.id == 3:
-				continue
-			children.append(Node(current, nodepos))
+			try:
+				if world.getBlockAt(int(nodepos.x), int(nodepos.y)).material.id == 3:
+					# Console.debug(message=f"Wall at {nodepos}")
+					continue
+			except IndexError:
+				Console.error(f"IndexError: {nodepos}")
+
+			if newpos[0] != 0 and newpos[1] != 0:
+				nodepos1 = pygame.Vector2(ent.pos.x + newpos[0], ent.pos.y)
+				nodepos2 = pygame.Vector2(ent.pos.x, ent.pos.y + newpos[1])
+				if world.getBlockAt(nodepos1.x, nodepos1.y).material.id == 3:
+					continue
+				if world.getBlockAt(nodepos2.x, nodepos2.y).material.id == 3:
+					continue
+
+			children.append(Node(pos=nodepos))
 
 		ind = 0
 		for index, child in enumerate(children):
-			newH = ((child.pos.x - target.pos.x // TILESIZE) ** 2) + (
-					(child.pos.y - target.pos.y // TILESIZE) ** 2)
+			newH = ((child.pos.x - target.pos.x) ** 2) + ((child.pos.y - target.pos.y) ** 2)
 			if newH > h:
 				h = newH
 				ind = index
-		return [ent.pos // TILESIZE - children[ind].pos]
+		return [ent.pos - children[ind].pos]
 
 
 class Node:

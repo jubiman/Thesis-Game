@@ -6,56 +6,56 @@ class Console:
 	query = ""
 
 	@staticmethod
-	def printAutocomplete(**kwargs):
-		stdout.write(f"\r{kwargs['message']}\n{Console.query}")
+	def printAutocomplete(message):
+		stdout.write(f"\r{message}\n{Console.query}")
 		stdout.flush()
 
 	@staticmethod
-	def log(**kwargs):
+	def log(message, **kwargs):
 		if 'thread' in kwargs:
-			stdout.write(f"\r[LOG] ({kwargs['thread']}) {kwargs['message']}\n{Console.query}")
+			stdout.write(f"\r[LOG]\t({kwargs['thread']})\t{message}\n{Console.query}")
 		else:
-			stdout.write(f"\r[LOG] (UnkownThread) {kwargs['message']}\n{Console.query}")
+			stdout.write(f"\r[LOG]\t(UnkownThread)\t{message}\n{Console.query}")
 		stdout.flush()
 
 	@staticmethod
-	def error(**kwargs):
+	def error(message, **kwargs):
 		if 'thread' in kwargs:
-			stdout.write(f"\r{ANSI_COLORS['red']}[ERROR] ({kwargs['thread']}) {kwargs['message']}\033[0m\n"
-							f"{Console.query}")
-		else:
-			stdout.write(f"\r{ANSI_COLORS['red']}[ERROR] (UnkownThread) {kwargs['message']}\033[0m\n"
-							f"{Console.query}")
-		stdout.flush()
-
-	@staticmethod
-	def warning(**kwargs):
-		if 'thread' in kwargs:
-			stdout.write(f"\r{ANSI_COLORS['red']}[WARNING] ({kwargs['thread']}) {kwargs['message']}\033[0m\n"
+			stdout.write(f"\r{ANSI_COLORS['red']}[ERROR]\t({kwargs['thread']})\t{message}\033[0m\n"
 							f"{Console.query}")
 		else:
-			stdout.write(f"\r{ANSI_COLORS['red']}[WARNING] (UnkownThread) {kwargs['message']}\033[0m\n"
+			stdout.write(f"\r{ANSI_COLORS['red']}[ERROR]\t(UnkownThread)\t{message}\033[0m\n"
 							f"{Console.query}")
 		stdout.flush()
 
 	@staticmethod
-	def debug(**kwargs):
+	def warning(message, **kwargs):
+		if 'thread' in kwargs:
+			stdout.write(f"\r{ANSI_COLORS['red']}[WARNING]\t({kwargs['thread']})\t{message}\033[0m\n"
+							f"{Console.query}")
+		else:
+			stdout.write(f"\r{ANSI_COLORS['red']}[WARNING]\t(UnkownThread)\t{message}\033[0m\n"
+							f"{Console.query}")
+		stdout.flush()
+
+	@staticmethod
+	def debug(message, **kwargs):
 		if not DEBUG:
 			return
 		if 'thread' in kwargs:
-			stdout.write(f"\r{ANSI_COLORS['green']}[DEBUG] ({kwargs['thread']}) {kwargs['message']}\033[0m\n"
+			stdout.write(f"\r{ANSI_COLORS['green']}[DEBUG]\t({kwargs['thread']})\t{message}\033[0m\n"
 							f"{Console.query}")
 		else:
-			stdout.write(f"\r{ANSI_COLORS['green']}[DEBUG] (UnkownThread) {kwargs['message']}\033[0m\n"
+			stdout.write(f"\r{ANSI_COLORS['green']}[DEBUG]\t(UnkownThread)\t{message}\033[0m\n"
 							f"{Console.query}")
 		stdout.flush()
 
 	@staticmethod
-	def event(**kwargs):
+	def event(message, **kwargs):
 		if 'thread' in kwargs:
-			stdout.write(f"\r{ANSI_COLORS['yellow']}[EVENT] ({kwargs['thread']}) {kwargs['message']}\033[0m\n"
+			stdout.write(f"\r{ANSI_COLORS['yellow']}[EVENT]\t({kwargs['thread']})\t{message}\033[0m\n"
 							f"{Console.query}")
 		else:
-			stdout.write(f"\r{ANSI_COLORS['yellow']}[EVENT] (UnkownThread) {kwargs['message']}\033[0m\n"
+			stdout.write(f"\r{ANSI_COLORS['yellow']}[EVENT]\t(UnkownThread)\t{message}\033[0m\n"
 							f"{Console.query}")
 		stdout.flush()
