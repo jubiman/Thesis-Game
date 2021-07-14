@@ -41,7 +41,7 @@ class Healthbar:
         else:
             if self.game.player.hp >= 100:
                 return
-            elif self.game.player.hp <= 95:
+            if self.game.player.hp <= 95:
                 self.setHealthbarRegen(self.game.player.hp + 5)
             else:
                 self.setHealthbarRegen(100)
