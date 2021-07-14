@@ -17,6 +17,7 @@ from core.console.consolefunctions import Console
 from core.UI.ui import UI
 
 
+# DEPRICATED
 class PlayerOld(LivingCreature):
 	def __init__(self, game, hp, max_hp, armor, speed, x, y):
 
@@ -93,7 +94,6 @@ class PlayerOld(LivingCreature):
 
 	# Gets called every frame to update the player's status
 	def update(self):
-		Console.debug("yes")
 		# self.get_keys()
 		# Move the player
 		self.pos += self.vel * self.game.dt

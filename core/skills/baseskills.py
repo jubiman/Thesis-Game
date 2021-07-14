@@ -18,13 +18,12 @@ class Baseskills(Enum):
 	def getBaseskill(iden):
 		"""
 		:param int iden: the identifier of the entbsy type
-		:return: Returns entbsy or None
-		:rtype: Entbsy
+		:return: Returns Baseskill or None
+		:rtype: Baseskill
 		"""
-		for bs in Baseskills:
-			if bs.value.id == iden:
-				return bs.value
-		return None
+		if iden > len(list(Baseskills)) - 1:
+			return None
+		return list(Baseskills)[iden]
 
 	@staticmethod
 	def load(game):

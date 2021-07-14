@@ -12,12 +12,9 @@ class Levelbase:
 		self.xp_formula = xpf
 		self.game = game
 
-	def levelup(self, t=""):
-		"""
-		:param str t: Type of object levelup was called from (player/bs/ps)
-		"""
+	# TODO: Very experimental
+	def levelup(self):
 		self.level += 1
 		self.xp -= self.xp_needed
+		# TODO: Remope eval
 		self.xp_needed = eval(self.xp_formula)  # TODO: Make dynamic XP/SP system to have working lvlbase
-		if t == "player":
-			self.game.player.hp += 10  # TODO: Add more player levelup bonus
