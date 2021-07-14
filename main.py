@@ -82,7 +82,7 @@ class Game:
 
 		# Initialize camera map specific
 		# TODO: might have to change the camera's settings
-		self.camera = Camera(5, 5)
+		self.camera = Camera(0, 0)
 		# self.camera = Camera(80, 80)  # Same as render distance?
 		# self.items = item.populate_items(self.graphics)
 
@@ -126,8 +126,8 @@ class Game:
 									" - ({:.4f}, {:.4f})".format(*self.player.pos))
 		self.screen.fill(BGCOLOR)
 
-		pcx = self.player.pos.x / TILESIZE // 16
-		pcy = self.player.pos.y / TILESIZE // 16
+		pcx = self.player.pos.x // 16
+		pcy = self.player.pos.y // 16
 
 		# Console.debug((self.player.pos.x / TILESIZE, self.player.pos.y / TILESIZE))
 
