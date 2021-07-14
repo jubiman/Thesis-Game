@@ -82,7 +82,7 @@ class Game:
 
 		# Initialize camera map specific
 		# TODO: might have to change the camera's settings
-		self.camera = Camera(0, 0)
+		self.camera = Camera()
 		# self.camera = Camera(80, 80)  # Same as render distance?
 		# self.items = item.populate_items(self.graphics)
 
