@@ -2,6 +2,8 @@ from core.items.items import Items
 from core.console.console import Console
 from core.console.consolehelper import ConsoleHelper
 from core.utils.errors.exceptions import *
+from core.skills.baseskills import Baseskills
+from core.skills.playerskills import Playerskills
 
 
 class CommandsPlayer:
@@ -77,6 +79,15 @@ class CommandsPlayer:
 						try:
 							if args[1].lower() == "p" or args[1].lower() == "player":
 								ConsoleHelper.Globals.game.player.lvl.xp += int(args[2])
+							else:
+								try:
+									Baseskills[args[1].upper()].value.lvl.xp += int(args[2])
+								except KeyError:
+									try:
+										Playerskills[args[1].upper()].value.lvl.xp += int(args[2])
+									except KeyError:
+										Console.error(f"Could not find skill {args[1]}. Please check your spelling and try again",
+														thread="CONSOLE")
 						# TODO: Add all induvidual skills (possibly without if chain)
 						except ValueError:
 							Console.error(thread="CONSOLE",

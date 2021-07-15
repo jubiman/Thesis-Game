@@ -4,12 +4,14 @@ from core.skills.playerskills import Playerskills
 from core.items.items import Items
 from world.block import Block
 from world.material.materials import Materials
-from settings import *
+from settings import TILESIZE, WIDTH, HEIGHT
 
 import pygame
 from pygame.locals import *
+
 from random import randint
-from core.UI.ui import UI
+from math import floor
+
 
 class InputHandler:
 	def __init__(self, game):
@@ -36,22 +38,6 @@ class InputHandler:
 			self.game.player.vel *= 0.7071
 		self.game.player.collide_with_walls()
 
-		# Inv
-		if keys[K_1]:
-			UI.getElementByID(1).setItemSlot(1)
-		if keys[K_2]:
-			UI.getElementByID(1).setItemSlot(2)
-		if keys[K_3]:
-			UI.getElementByID(1).setItemSlot(3)
-		if keys[K_4]:
-			UI.getElementByID(1).setItemSlot(4)
-		if keys[K_5]:
-			UI.getElementByID(1).setItemSlot(5)
-		if keys[K_6]:
-			UI.getElementByID(1).setItemSlot(6)
-		if keys[K_7]:
-			UI.getElementByID(1).setItemSlot(7)
-
 		# Misc
 		if keys[K_p] and self.game.player.debug_print_cooldown == 0:
 			# TODO: Debug menu for skills
@@ -59,18 +45,18 @@ class InputHandler:
 						message="-------------------------------------------------")
 			for bs in Baseskills:
 				Console.log(thread="PLAYER",
-							message=f"{bs.value.name} {bs.value.game.player.lvl.legame.player.vel} {bs.value.game.player.lvl.xp} {bs.value.game.player.lvl.xp_needed}")
+							message=f"{bs.value.name} {bs.value.lvl.level} {bs.value.lvl.xp} {bs.value.lvl.xp_needed}")
 			Console.log(thread="PLAYER",
 						message="-------------------------------------------------")
 			for ps in Playerskills:
 				Console.log(thread="Player",
-							message=f"{ps.value.name} {ps.value.game.player.lvl.legame.player.vel} {ps.value.game.player.lvl.xp_needed}")
+							message=f"{ps.value.name} {ps.value.lvl.level} {ps.value.lvl.xp_needed}")
 			Console.log(thread="PLAYER",
 						message="-------------------------------------------------")
 			Console.log(thread="PLAYER",
 						message="Format: level | xp | sp | hp | armor")
 			Console.log(thread="PLAYER",
-						message=f"Player {self.game.player.lvl.legame.player.vel} {self.game.player.lvl.xp} {self.game.player.skillpoints} {self.game.player.hp} {self.game.player.armor}")
+						message=f"Player {self.game.player.lvl.level} {self.game.player.lvl.xp} {self.game.player.skillpoints} {self.game.player.hp} {self.game.player.armor}")
 			self.game.player.debug_print_cooldown = 1
 		if keys[K_i] and self.game.player.debug_print_cooldown == 0:
 			Console.log(thread="PLAYER",
@@ -86,13 +72,13 @@ class InputHandler:
 	def __handleMouse(self):
 		mouse = pygame.mouse.get_pressed(5)
 		mouse_pos = pygame.mouse.get_pos()
-		rel_mouse = (int((mouse_pos[0] - self.game.player.pos.x * TILESIZE - (WIDTH / 2)) / TILESIZE),
-						int((mouse_pos[1] - self.game.player.pos.y * TILESIZE - (HEIGHT / 2)) / TILESIZE))
-		# Console.debug(message=f"mouse: {mouse_pos}\tplayer: {self.game.player.pos}, W/H: {WIDTH}x{HEIGHT}")
-		# Console.debug(message=f"{(mouse_pos[0] // TILESIZE - self.game.player.pos.x - WIDTH / 2) // TILESIZE}")
+		rel_mouse = (floor((mouse_pos[0] + self.game.player.pos.x * TILESIZE - (WIDTH / 2)) / TILESIZE),
+						floor((mouse_pos[1] + self.game.player.pos.y * TILESIZE - (HEIGHT / 2)) / TILESIZE))
+
 		if mouse[0]:
 			block = self.game.world.getBlockAt(*rel_mouse)
 
+			# TODO: Place holder
 			if not block.material.displayName == "Tree":
 				# Console.debug(message=(rel_mouse, block.material.displayName))
 				pass
@@ -105,17 +91,17 @@ class InputHandler:
 			if self.game.player.inventory.hands[0].item.texturePath.lower() in block.material.tools or \
 				self.game.player.inventory.hands[1].item.texturePath.lower() in block.material.tools:
 
-				# Console.debug(message=f"{rel_mouse} {block.material.displayName}")
-
 				# Chop down the tree
 				self.game.world.setBlock(*rel_mouse, Block(Materials.GRASS.value))
 
 				# Add items to inventory
 				# TODO: Add woodcutting skill multiplier
-				amount = randint(1, 5)
-				self.game.player.inventory.add_new_item(Items.WOOD.value, amount)
-				# Display message for amount of wood
-				Console.log(thread="PLAYER", message=f"You got {amount} wood!")
+				# amount = randint(1, 5)
+				drops = list(block.material.calculateItemDrops())
+				for drop in drops:
+					self.game.player.inventory.add_new_item(*drop)
+					# Display message for amount of wood
+					Console.log(thread="PLAYER", message=f"You got {drop[1]} {drop[0].displayName}!")
 
 				# TODO: Add wood to inventory
 				# Add exp to woodcutting
