@@ -1,5 +1,6 @@
-from settings import ANSI_COLORS, DEBUG
 from sys import stdout
+
+from settings import ANSI_COLORS, DEBUG
 
 
 class Console:
@@ -22,20 +23,20 @@ class Console:
 	def error(message, **kwargs):
 		if 'thread' in kwargs:
 			stdout.write(f"\r{ANSI_COLORS['red']}[ERROR]\t({kwargs['thread']})\t{message}\033[0m\n"
-							f"{Console.query}")
+						 f"{Console.query}")
 		else:
 			stdout.write(f"\r{ANSI_COLORS['red']}[ERROR]\t(UnkownThread)\t{message}\033[0m\n"
-							f"{Console.query}")
+						 f"{Console.query}")
 		stdout.flush()
 
 	@staticmethod
 	def warning(message, **kwargs):
 		if 'thread' in kwargs:
 			stdout.write(f"\r{ANSI_COLORS['red']}[WARNING]\t({kwargs['thread']})\t{message}\033[0m\n"
-							f"{Console.query}")
+						 f"{Console.query}")
 		else:
 			stdout.write(f"\r{ANSI_COLORS['red']}[WARNING]\t(UnkownThread)\t{message}\033[0m\n"
-							f"{Console.query}")
+						 f"{Console.query}")
 		stdout.flush()
 
 	@staticmethod
@@ -44,18 +45,18 @@ class Console:
 			return
 		if 'thread' in kwargs:
 			stdout.write(f"\r{ANSI_COLORS['green']}[DEBUG]\t({kwargs['thread']})\t{message}\033[0m\n"
-							f"{Console.query}")
+						 f"{Console.query}")
 		else:
 			stdout.write(f"\r{ANSI_COLORS['green']}[DEBUG]\t(UnkownThread)\t{message}\033[0m\n"
-							f"{Console.query}")
+						 f"{Console.query}")
 		stdout.flush()
 
 	@staticmethod
 	def event(message, **kwargs):
 		if 'thread' in kwargs:
 			stdout.write(f"\r{ANSI_COLORS['yellow']}[EVENT]\t({kwargs['thread']})\t{message}\033[0m\n"
-							f"{Console.query}")
+						 f"{Console.query}")
 		else:
 			stdout.write(f"\r{ANSI_COLORS['yellow']}[EVENT]\t(UnkownThread)\t{message}\033[0m\n"
-							f"{Console.query}")
+						 f"{Console.query}")
 		stdout.flush()

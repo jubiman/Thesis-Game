@@ -3,9 +3,8 @@
 """
 # TODO: Improve algorithm so entities don't go in eachother (and possibly do random movements when too close to player)
 import pygame
-from settings import TILESIZE
-from core.console.console import Console
 
+from core.console.console import Console
 
 # Diagonal movement is impossible (for now?)
 adjacents = [

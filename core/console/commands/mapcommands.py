@@ -1,16 +1,17 @@
+import shutil
 from os import path
 
-import shutil
-from settings import GAMEDIR
-from world.world import World
 from core.console.console import Console
 from core.console.consolehelper import ConsoleHelper
+from settings import GAMEDIR
+from world.world import World
 
 
 class CommandsMap:
 	class LoadMap:
 		names = ["loadmap", "mapload"]
-		parameters: list[list[str]] = [["dungeon1"]]  # TODO: load from saved paths (possibly config parser/saves parser)
+		parameters: list[list[str]] = [
+			["dungeon1"]]  # TODO: load from saved paths (possibly config parser/saves parser)
 
 		@staticmethod
 		def execute(*args, **kwargs):
@@ -42,8 +43,9 @@ class CommandsMap:
 						try:
 							pa = args[0]
 							Console.debug(thread="CONSOLE",
-											message=f"Copying {p} to {path.join(GAMEDIR, f'saves/{ConsoleHelper.Globals.game.world.name}/{pa}')}.")
-							p = shutil.copytree(p, path.join(GAMEDIR, f"saves/{ConsoleHelper.Globals.game.world.name}/{pa}"))
+										  message=f"Copying {p} to {path.join(GAMEDIR, f'saves/{ConsoleHelper.Globals.game.world.name}/{pa}')}.")
+							p = shutil.copytree(p, path.join(GAMEDIR,
+															 f"saves/{ConsoleHelper.Globals.game.world.name}/{pa}"))
 						except FileExistsError:
 							p = path.join(GAMEDIR, f"saves/{ConsoleHelper.Globals.game.world.name}/{args[0]}")
 						ConsoleHelper.Globals.game.world = World(p, ConsoleHelper.Globals.game)
@@ -52,7 +54,7 @@ class CommandsMap:
 						Console.error(thread="CONSOLE", message=f"Could not open map: {args[0]}.")
 				else:
 					Console.error(thread="CONSOLE",
-									message=f"Could not get item '{key}', please check your spelling and try again.")
+								  message=f"Could not get item '{key}', please check your spelling and try again.")
 			except NotADirectoryError:
 				try:
 					p = path.join(GAMEDIR, f"world/dungeon/dungeons/{kwargs['path'].rsplit('/')[-1]}")
@@ -62,7 +64,8 @@ class CommandsMap:
 						pa = kwargs['path']
 						Console.log(thread="CONSOLE",
 									message=f"Copying {p} to {path.join(GAMEDIR, f'saves/{ConsoleHelper.Globals.game.world.name}/{pa}')}.")
-						p = shutil.copytree(p, path.join(GAMEDIR, f"saves/{ConsoleHelper.Globals.game.world.name}/{pa}"))
+						p = shutil.copytree(p,
+											path.join(GAMEDIR, f"saves/{ConsoleHelper.Globals.game.world.name}/{pa}"))
 					except FileExistsError:
 						p = path.join(GAMEDIR, f"saves/{ConsoleHelper.Globals.game.world.name}/{kwargs['path']}")
 					ConsoleHelper.Globals.game.world = World(p, ConsoleHelper.Globals.game)

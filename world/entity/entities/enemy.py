@@ -1,9 +1,6 @@
 from pygame.math import Vector2
 
 from world.entity.entitytype import EntityType
-from world.entity.pathfinding.pathfinding import Pathfinding
-from core.prefabs.livingcreature import LivingCreature
-from core.console.console import Console
 
 
 class Enemy:
