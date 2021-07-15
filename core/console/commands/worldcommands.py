@@ -10,13 +10,13 @@ from world.world import World
 
 
 class CommandsWorld:
-	class setWorld:
+	class SetWorld:
 		names = ["setworld"]
 		parameters: list[list[str]] = [[""]]
 
 		@staticmethod
 		def execute(*args, **kwargs):
-			print("Changing world!")
+			Console.log("Changing world!")
 			w = World("saves/test", ConsoleHelper.Globals.game)
 			w.worldtype = "dungeon"
 			w.generator = DungeonGenerator(w.seed, ConsoleHelper.Globals.game)
