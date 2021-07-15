@@ -70,7 +70,6 @@ class Game:
 		cfgp.read()
 
 	def new(self):
-		# initialize all variables and do all the setup for a new game
 		# Initialize all variables and do all the setup for a new game
 		self.sprites = pygame.sprite.Group()
 		self.walls = pygame.sprite.Group()

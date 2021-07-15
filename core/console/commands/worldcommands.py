@@ -19,6 +19,7 @@ class CommandsWorld:
 			Console.log("Changing world!")
 			w = World("saves/test", ConsoleHelper.Globals.game)
 			w.worldtype = "dungeon"
+			w.seed = ConsoleHelper.Globals.game.world.seed
 			w.generator = DungeonGenerator(w.seed, ConsoleHelper.Globals.game)
 			ConsoleHelper.Globals.game.world = w
 
