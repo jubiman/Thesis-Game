@@ -77,12 +77,12 @@ class Game:
 		self.trees = pygame.sprite.Group()
 		self.world = World(path.join(path.dirname(__file__), "saves/world1"), self)
 		self.world.load()
-		self.player = Player(self, 100, 100, 0, 350, 0.5, 0.5, EntityTypes.PLAYER.value)
+		self.player = Player(self, 100, 100, 0, 350, 0.5, 0.5, EntityTypes.PLAYER.value, 5)
 		self.spawner = Spawner(self, 64, 1)
 
 		# Initialize camera map specific
 		# TODO: might have to change the camera's settings
-		self.camera = Camera(5, 5)
+		self.camera = Camera()
 		# self.camera = Camera(80, 80)  # Same as render distance?
 		# self.items = item.populate_items(self.graphics)
 
@@ -126,15 +126,15 @@ class Game:
 									" - ({:.4f}, {:.4f})".format(*self.player.pos))
 		self.screen.fill(BGCOLOR)
 
-		pcx = self.player.pos.x / TILESIZE // 16
-		pcy = self.player.pos.y / TILESIZE // 16
+		pcx = self.player.pos.x // 16
+		pcy = self.player.pos.y // 16
 
 		# Console.debug((self.player.pos.x / TILESIZE, self.player.pos.y / TILESIZE))
 
 		# print(f"Player pos: {self.player.pos.x / TILESIZE:.2f}, {self.player.pos.y / TILESIZE:.2f}")
 		# TODO: add setting for "render distance"
-		for cy in range(-2, 2):
-			for cx in range(-2, 2):
+		for cy in range(-2, 3):
+			for cx in range(-2, 3):
 				# Console.debug(f"Rendering {pcx + cx, pcy + cy}")
 				chunk: Chunk = self.world.getChunkAt(pcx + cx, pcy + cy)
 				# print(f"Rendering chunk: {px+cx},{py+cy}")

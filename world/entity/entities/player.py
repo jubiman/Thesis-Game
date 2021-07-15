@@ -23,10 +23,10 @@ adjacents = [
 
 
 class Player(LivingCreature):
-	def __init__(self, game, hp, max_hp, armor, speed, x, y, ent):
+	def __init__(self, game, hp, max_hp, armor, speed, x, y, ent, hp_regen):
 
 		# Getting specific information from LivingCreature class
-		super().__init__(game, hp, max_hp, armor, speed)
+		super().__init__(game, hp, max_hp, armor, speed, hp_regen)
 
 		self.entitytype = ent
 
@@ -60,6 +60,9 @@ class Player(LivingCreature):
 		self.lvl = Levelbase(0, 0, 10, game=self.game)
 		self.xp_formula = "x = x + 10"  # TODO: Change XP system
 
+		self.out_of_combat = True
+		self.ooc_timer = 0
+
 		# TODO: Set debug cooldown (might remove later)
 		self.debug_print_cooldown = 0
 
@@ -68,7 +71,7 @@ class Player(LivingCreature):
 		# Check base skills
 		for bs in Baseskills:
 			if bs.value.lvl.xp >= bs.value.lvl.xp_needed:
-				bs.value.lvl.levelup(t="player")
+				bs.value.levelup()
 				# Display text to notify player of level up
 				# TODO: Make notification on-screen, not in console
 				Console.log(thread="Player",
@@ -78,7 +81,8 @@ class Player(LivingCreature):
 		# Check player skills
 		for ps in Playerskills:
 			if ps.value.lvl.xp >= ps.value.lvl.xp_needed:
-				ps.value.lvl.levelup(t="player")
+				ps.value.levelup()
+				# ps.value.levelup()
 				# Display text to notify player of level up
 				# TODO: Make notification on-screen, not in console
 				Console.log(thread="Player",
@@ -87,12 +91,25 @@ class Player(LivingCreature):
 
 		# Check player level
 		while self.lvl.xp >= self.lvl.xp_needed:
-			self.lvl.levelup()
+			self.levelup()
 			self.skillpoints += self.lvl.level * 333 % 4  # TODO: make dynamic
 			# Display text to notify player of level up
 			# TODO: Make notification on-screen, not in console
 			Console.log(thread="Player",
 						message=f"Your player leveled up to level {self.lvl.level}! You need {self.lvl.xp_needed} xp for the next level")
+
+	def levelup(self):
+		self.lvl.levelup()
+		self.max_hp += 10
+		self.hp += 10
+
+	def check_hp_regen(self):
+		if self.out_of_combat:
+			if self.ooc_timer == 0:
+				if self.hp + self.hp_regen < self.max_hp:
+					self.hp += self.hp_regen
+				else:
+					self.hp = self.max_hp
 
 	# Gets called every frame to update the player's status
 	def update(self):
@@ -104,6 +121,8 @@ class Player(LivingCreature):
 		self.entitytype.rect.centery = self.pos.y * TILESIZE
 		self.collision_rect.center = self.entitytype.rect.center
 
+		self.check_hp_regen()
+
 		# TODO: Debug cooldown, might remove later
 		if self.debug_print_cooldown != 0:
 			self.debug_print_cooldown += self.game.clock.get_time()
@@ -112,16 +131,10 @@ class Player(LivingCreature):
 
 	# Called from inputhandler, checks if the direction we're going is obstructed
 	def collide_with_walls(self):
-		Console.debug(self.vel)
-		# TODO: Make algorithm that checks only surrounding tiles + rewrite with world gen
 		movedColRect = self.collision_rect.move(self.vel * self.game.dt)
-		# movedColRect = self.collision_rect.move(self.pos.x * TILESIZE, self.pos.y * TILESIZE)
-		# draw.rect(self.game.screen, (125, 125, 125), self.game.camera.applyraw(movedColRect), 1)
 		for dx, dy in adjacents:
 			block: Block = self.game.world.getBlockAt(self.pos.x + dx, self.pos.y + dy)
 			if block.material.id == Materials.WALL.value.id:
-				# Console.debug((self.pos.x + dx, self.pos.y + dy, block.material.displayName))
-				# Console.debug((movedColRect.centerx / TILESIZE, movedColRect.centery / TILESIZE))
 				rect: Rect = block.material.rect.move((floor(self.pos.x) + dx) * TILESIZE, (floor(self.pos.y) + dy) * TILESIZE)
 				if rect.colliderect(movedColRect):
 					if self.vel.x > 0 and dx > 0:

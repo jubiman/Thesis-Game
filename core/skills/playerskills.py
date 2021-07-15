@@ -7,12 +7,13 @@ from core.skills.playerskill import Playerskill
 
 
 class Playerskills(Enum):
-	WOODCUTTING = Playerskill("Woodcutting", "skill_woodcutting", 0, 0, 0, 10, "self.xp_needed*2")
-	MINING = Playerskill("Mining", "skill_mining", 1, 0, 0, 10, "self.xp_needed+10")
-	FISHING = Playerskill("Fishing", "skill_fishing", 2, 0, 0, 10, "self.xp_needed+10")
-	FARMING = Playerskill("Farming", "skill_farming", 3, 0, 0, 10, "self.xp_needed+10")
-	HEALTH = Playerskill("Health", "skill_health", 4, 0, 0, 10, "self.xp_needed+10")
-	INTELLIGENCE = Playerskill("Intelligence", "skill_intelligence", 5, 0, 0, 10, "self.xp_needed+10")
+	# TODO: make these not a copy of baseskills lol
+	WOODCUTTING2 = Playerskill("Woodcutting2", "skill_woodcutting2", 0, 0, 0, 10, "self.xp_needed*2")
+	MINING2 = Playerskill("Mining2", "skill_mining2", 1, 0, 0, 10, "self.xp_needed+10")
+	FISHING2 = Playerskill("Fishing2", "skill_fishing2", 2, 0, 0, 10, "self.xp_needed+10")
+	FARMING2 = Playerskill("Farming2", "skill_farming2", 3, 0, 0, 10, "self.xp_needed+10")
+	HEALTH2 = Playerskill("Health2", "skill_health2", 4, 0, 0, 10, "self.xp_needed+10")
+	INTELLIGENCE2 = Playerskill("Intelligence2", "skill_intelligence2", 5, 0, 0, 10, "self.xp_needed+10")
 
 	@staticmethod
 	def getPlayerskill(iden):
