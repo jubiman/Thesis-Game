@@ -1,16 +1,16 @@
+import ctypes
 import getopt
 import sys
 import threading
-import ctypes
 from configparser import ConfigParser
 from os import path
 
 from cfg.cfgparser import CfgParser
 from core.console.consolefunctions import ConsoleFunctions
 from core.controller.camera import Camera
-from core.prefabs.sprites import *
-from core.UI.ui import UI
 from core.input.inputhandler import InputHandler
+from core.prefabs.sprites import *
+from settings import *
 from world.chunk import Chunk
 from world.entity.entities.player import Player
 from world.entity.entitytypes import EntityTypes
@@ -70,7 +70,6 @@ class Game:
 		cfgp.read()
 
 	def new(self):
-		# initialize all variables and do all the setup for a new game
 		# Initialize all variables and do all the setup for a new game
 		self.sprites = pygame.sprite.Group()
 		self.walls = pygame.sprite.Group()
@@ -103,7 +102,7 @@ class Game:
 				self.draw()
 			except pygame.error:
 				# TODO: Improve error handling to not skip steps on error
-				Console.error(thread="UnkownThread", message=pygame.get_error())
+				Console.error(thread="UnknownThread", message=pygame.get_error())
 
 	def quit(self):
 		self.console.kill()
@@ -123,7 +122,7 @@ class Game:
 	def draw(self):
 		# Console.debug(self.player.pos)
 		pygame.display.set_caption(TITLE + " - " + "{:.2f}".format(self.clock.get_fps()) +
-									" - ({:.4f}, {:.4f})".format(*self.player.pos))
+								   " - ({:.4f}, {:.4f})".format(*self.player.pos))
 		self.screen.fill(BGCOLOR)
 
 		pcx = self.player.pos.x // 16
@@ -152,7 +151,7 @@ class Game:
 				# Console.debug(f"ent: {ent.pos}, {ent.chunk}")
 				self.screen.blit(ent.entitytype.image, self.camera.applyraw(
 					ent.entitytype.rect.move((ent.chunk[0] * 16 + ent.pos.x) * TILESIZE,
-												(ent.chunk[1] * 16 + ent.pos.y) * TILESIZE)
+											 (ent.chunk[1] * 16 + ent.pos.y) * TILESIZE)
 				))
 
 		self.screen.blit(self.player.entitytype.image, self.camera.apply(self.player.entitytype))

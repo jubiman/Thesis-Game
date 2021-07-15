@@ -6,6 +6,8 @@ import time
 
 from pygame.math import Vector2
 
+from core.console.console import Console
+from settings import GAMEDIR
 from world.block import Block
 from world.cache import Cache
 from world.chunk import Chunk
@@ -13,8 +15,6 @@ from world.entity.entities.enemy import Enemy
 from world.gen.dungeongenerator import DungeonGenerator
 from world.gen.generator import Generator
 from world.material.materials import Materials
-from settings import GAMEDIR
-from core.console.console import Console
 
 
 class World:
@@ -65,12 +65,13 @@ class World:
 			self.worldtype = self.config["worldtype"]
 
 			# Select generator type
-			self.generator = Generator(self.seed) if self.worldtype == "default" else DungeonGenerator(self.seed, self.game)
+			self.generator = Generator(self.seed) if self.worldtype == "default" else DungeonGenerator(self.seed,
+																									   self.game)
 
 			# Do dungeon stuff if world is a dungeon
 			if self.worldtype == "dungeon":
 				Console.debug(thread="WORLD",
-							message=f"{self.name} {self.filepath}")
+							  message=f"{self.name} {self.filepath}")
 				# Set the player to the middle of the spawn or different posision if needed
 				self.game.player.pos = Vector2(*map(int, self.config["startpos"].split(' ')))
 
@@ -86,7 +87,7 @@ class World:
 
 	def loadChunk(self, x: int, y: int):
 		Console.debug(thread="WORLD",
-					message=f"Loading {x}, {y}")
+					  message=f"Loading {x}, {y}")
 		if os.path.isfile(os.path.join(self.filepath, "chunks", f"{int(x)},{int(y)}.json")):
 			data = json.loads(open(os.path.join(self.filepath, "chunks", f"{int(x)},{int(y)}.json"), "r").read())
 			blocks_json_list = data["b"]

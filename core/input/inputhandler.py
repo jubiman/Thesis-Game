@@ -1,16 +1,14 @@
-from core.console.console import Console
-from core.skills.baseskills import Baseskills
-from core.skills.playerskills import Playerskills
-from core.items.items import Items
-from world.block import Block
-from world.material.materials import Materials
-from settings import TILESIZE, WIDTH, HEIGHT
+from math import floor
 
 import pygame
 from pygame.locals import *
 
-from random import randint
-from math import floor
+from core.console.console import Console
+from core.skills.baseskills import Baseskills
+from core.skills.playerskills import Playerskills
+from settings import TILESIZE, WIDTH, HEIGHT
+from world.block import Block
+from world.material.materials import Materials
 
 
 class InputHandler:
@@ -67,13 +65,13 @@ class InputHandler:
 			self.game.player.debug_print_cooldown = 1
 		if keys[K_o]:
 			Console.debug(thread="DEBUG",
-						message=f"world.entities: {self.game.world.entities}")
+						  message=f"world.entities: {self.game.world.entities}")
 
 	def __handleMouse(self):
 		mouse = pygame.mouse.get_pressed(5)
 		mouse_pos = pygame.mouse.get_pos()
 		rel_mouse = (floor((mouse_pos[0] + self.game.player.pos.x * TILESIZE - (WIDTH / 2)) / TILESIZE),
-						floor((mouse_pos[1] + self.game.player.pos.y * TILESIZE - (HEIGHT / 2)) / TILESIZE))
+					 floor((mouse_pos[1] + self.game.player.pos.y * TILESIZE - (HEIGHT / 2)) / TILESIZE))
 
 		if mouse[0]:
 			block = self.game.world.getBlockAt(*rel_mouse)
@@ -89,7 +87,7 @@ class InputHandler:
 
 			# Check if the player has a correct tool
 			if self.game.player.inventory.hands[0].item.texturePath.lower() in block.material.tools or \
-				self.game.player.inventory.hands[1].item.texturePath.lower() in block.material.tools:
+					self.game.player.inventory.hands[1].item.texturePath.lower() in block.material.tools:
 
 				# Chop down the tree
 				self.game.world.setBlock(*rel_mouse, Block(Materials.GRASS.value))
@@ -112,7 +110,7 @@ class InputHandler:
 					Baseskills[xptype].lvl.xp += 10
 					# TODO: Pure debug text, remove later, also always tree's display text
 					Console.log(thread="PLAYER",
-									message="You chopped down a tree and gained 10 Woodcutting xp!")
+								message="You chopped down a tree and gained 10 Woodcutting xp!")
 					Console.log(thread="PLAYER", message="Your player gained 10 xp")
 					self.game.player.lvl.xp += 10
 					self.game.player.check_levels()
