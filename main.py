@@ -103,7 +103,7 @@ class Game:
 				self.draw()
 			except pygame.error:
 				# TODO: Improve error handling to not skip steps on error
-				Console.error(thread="UnkownThread", message=pygame.get_error())
+				Console.error(thread="UnknownThread", message=pygame.get_error())
 
 	def quit(self):
 		self.console.kill()
