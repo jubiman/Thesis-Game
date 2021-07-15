@@ -1,6 +1,7 @@
 from pygame.math import Vector2
 
 from world.entity.entitytype import EntityType
+from world.entity.pathfinding.pathfinding import Pathfinding
 
 
 class Enemy:
@@ -34,8 +35,8 @@ class Enemy:
 			self.cooldown = 0
 
 		if self.cooldown == 0:
-			# path = Pathfinding.findOneStatic(self, self.game.player, self.game.world)
-			path = None
+			path = Pathfinding.findOneStatic(self, self.game.player, self.game.world)
+			# path = None
 			if path is not None:
 				self.move(*path[0])
 			self.cooldown = 1
