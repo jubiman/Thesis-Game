@@ -1,15 +1,15 @@
-import sys
 import inspect
+import sys
 from distutils.util import strtobool
 
-from core.console.console import Console
-from core.utils.getch import getch
-from core.console.consolehelper import ConsoleHelper
-from core.console.commands.worldcommands import CommandsWorld
-from core.console.commands.playercommands import CommandsPlayer
 from core.console.commands.mapcommands import CommandsMap
-from core.utils.timer import Timer
+from core.console.commands.playercommands import CommandsPlayer
+from core.console.commands.worldcommands import CommandsWorld
+from core.console.console import Console
+from core.console.consolehelper import ConsoleHelper
+from core.utils.getch import getch
 from core.utils.modulus import mod
+from core.utils.timer import Timer
 from world.material.materials import Materials
 
 
@@ -71,7 +71,8 @@ class ConsoleFunctions(Console):
 		try:
 			cmd = ConsoleFunctions.Commands[command]
 		except KeyError:
-			Console.error(thread="CONSOLE", message=f"Could not find command {command}, please check your spelling and try again.")
+			Console.error(thread="CONSOLE",
+						  message=f"Could not find command {command}, please check your spelling and try again.")
 		else:
 			cmd.execute(*args, **kwargs)
 
@@ -96,7 +97,7 @@ class ConsoleFunctions(Console):
 			if inp != "\r":  # If we don't return we don't want to execute the code yet, but add the letter to the query instead
 				if inp == "\x08":  # Backspace
 					if len(self.query) > 0:  # If the query is empty we don't want to remove anything
-						self.query = self.query[:self.cursor-1] + self.query[self.cursor:]
+						self.query = self.query[:self.cursor - 1] + self.query[self.cursor:]
 						self.cursor -= 1
 						sys.stdout.write(f"\r\033[K$> {self.query}\033[{self.cursor + 4}G")
 
@@ -171,8 +172,9 @@ class ConsoleFunctions(Console):
 							self.autocompleteIndex = mod(self.autocompleteIndex + 1, len(self.autocompleteOptions))
 						except Exception as ex:
 							Console.error(thread="CONSOLE", message=ex)
-						self.query = self.completionQuery[:self.completionQuery.rfind(' ')] + " " + self.autocompleteOptions[
-							self.autocompleteIndex]
+						self.query = self.completionQuery[:self.completionQuery.rfind(' ')] + " " + \
+									 self.autocompleteOptions[
+										 self.autocompleteIndex]
 						if strtobool(ConsoleHelper.Globals.game.cpc['CONSOLE']['autocompleteaddspace']):
 							self.query += ' '
 						self.cursor = len(self.query)
@@ -183,7 +185,8 @@ class ConsoleFunctions(Console):
 					try:
 						if ' ' in self.query:
 							self.autocompleteOptions = list(ConsoleFunctions.Commands[self.query.split(' ')[0]]
-								.fetchAutocompleteOptions(self.query.split(' ')[-1], len(self.query.split(' ')[1:])))
+															.fetchAutocompleteOptions(self.query.split(' ')[-1],
+																					  len(self.query.split(' ')[1:])))
 					except IndexError:
 						pass
 					if self.autocompleteOptions:
@@ -201,7 +204,8 @@ class ConsoleFunctions(Console):
 						else:
 							Console.log(thread="CONSOLE", message=self.autocompleteOptions)
 					else:
-						self.autocompleteOptions = list(ConsoleHelper.Autocompletion.find(ConsoleFunctions.Commands, self.query))
+						self.autocompleteOptions = list(
+							ConsoleHelper.Autocompletion.find(ConsoleFunctions.Commands, self.query))
 						self.autocompleteOptions.sort()
 						if len(list(self.autocompleteOptions)) < 1:
 							continue
@@ -214,10 +218,12 @@ class ConsoleFunctions(Console):
 							if strtobool(ConsoleHelper.Globals.game.cpc['CONSOLE']['cycle_autocompletion']):
 								self.completionQuery = self.query
 								try:
-									self.autocompleteIndex = mod(self.autocompleteIndex + 1, len(self.autocompleteOptions))
+									self.autocompleteIndex = mod(self.autocompleteIndex + 1,
+																 len(self.autocompleteOptions))
 								except Exception as ex:
 									Console.error(thread="CONSOLE", message=ex)
-								self.query = self.query[:self.query.rfind(' ')] + " " + self.autocompleteOptions[self.autocompleteIndex]
+								self.query = self.query[:self.query.rfind(' ')] + " " + self.autocompleteOptions[
+									self.autocompleteIndex]
 								if strtobool(ConsoleHelper.Globals.game.cpc['CONSOLE']['autocompleteaddspace']):
 									self.query += ' '
 								self.cursor = len(self.query)

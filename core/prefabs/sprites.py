@@ -1,20 +1,15 @@
-import math
-from random import randint
-
 import pygame
 from pygame.locals import *
 
 import assets
+from core.UI.ui import UI
+from core.console.consolefunctions import Console
 from core.inventory import inventory
-from core.items.items import Items
 from core.prefabs.livingcreature import LivingCreature
 from core.skills import baseskills, levelbase
 from core.skills import playerskills
-from settings import *
 from world.block import Block
 from world.material.materials import Materials
-from core.console.consolefunctions import Console
-from core.UI.ui import UI
 
 
 # DEPRICATED
@@ -70,7 +65,7 @@ class PlayerOld(LivingCreature):
 				# Display text to notify player of level up
 				# TODO: Make notification on-screen, not in console
 				Console.log(thread="Player",
-					message=f"You leveled up {bs.value.name} to level {bs.value.lvl.level}! \
+							message=f"You leveled up {bs.value.name} to level {bs.value.lvl.level}! \
 					You need {bs.value.lvl.xp_needed} xp for the next level")
 
 		# Check player skills

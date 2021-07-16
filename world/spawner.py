@@ -39,7 +39,7 @@ class Spawner:
 																self.radius + self.min_r) - self.min_r))
 
 		while self.game.world.getChunkAt(chunk[0], chunk[1]).getBlock(int(loc.x % 16),
-																	int(loc.y % 16)).material.id not in [0, 1]:
+																	  int(loc.y % 16)).material.id not in [0, 1]:
 			Console.log(thread="SPAWNER",
 						message=f"There is already a sprite at {loc}.")
 			loc = Vector2(math.floor(
@@ -50,7 +50,7 @@ class Spawner:
 		self.game.world.entities.append(
 			Enemy(EntityTypes.ENEMYTEST.value, chunk, loc, 300, self.game, 10, 2))
 		Console.event(thread="SPAWNER",
-						message=f"Enemy spawned at {loc} in chunk {chunk}")
+					  message=f"Enemy spawned at {loc} in chunk {chunk}")
 
 	def spawnEventLoc(self, x, y, enemy):
 		"""
@@ -106,7 +106,7 @@ class Spawner:
 			# return 1  # why while loop if ur gonna return instantly??? what was i thinking man
 
 			Console.log(thread="SPAWNER",
-					message=loc)
+						message=loc)
 			while chunk.getBlock(int(loc.x), int(loc.y)).material.id not in [0, 1]:
 				Console.log(thread="SPAWNER",
 							message=f"There is already a block at {loc}.")
@@ -115,7 +115,7 @@ class Spawner:
 			loc = Vector2(*(loc * 16))
 
 			Console.event(thread="SPAWNER",
-							message=f"Spawning enemy at {loc}")
+						  message=f"Spawning enemy at {loc}")
 			en = Enemy(EntityTypes.ENEMYTEST.value, (x, y), loc, 300, self.game, 10, 2)
 			ents.append(en)
 			self.game.world.entities.append(en)

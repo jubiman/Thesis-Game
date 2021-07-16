@@ -1,9 +1,9 @@
-from core.items.items import Items
 from core.console.console import Console
 from core.console.consolehelper import ConsoleHelper
-from core.utils.errors.exceptions import *
+from core.items.items import Items
 from core.skills.baseskills import Baseskills
 from core.skills.playerskills import Playerskills
+from core.utils.errors.exceptions import *
 
 
 class CommandsPlayer:
@@ -17,28 +17,30 @@ class CommandsPlayer:
 				it = Items.getItemFromName(kwargs['item'])
 				if it is not None:
 					ConsoleHelper.Globals.game.player.inventory.add_new_item(it,
-															1 if 'quantity' not in kwargs else int(kwargs['quantity']))
+																			 1 if 'quantity' not in kwargs else int(
+																				 kwargs['quantity']))
 					return
 				Console.error(thread="CONSOLE",
-								message=f"Could not add {kwargs['item']} to inventory, please check your spelling and try again.")
+							  message=f"Could not add {kwargs['item']} to inventory, please check your spelling and try again.")
 			except KeyError as key:
 				try:
 					if len(args) == 0:
 						raise ArgumentException
 					it = Items.getItemFromName(args[0])
 					if it is not None:
-						ConsoleHelper.Globals.game.player.inventory.add_new_item(it, 1 if len(args) < 2 else int(args[1]))
+						ConsoleHelper.Globals.game.player.inventory.add_new_item(it,
+																				 1 if len(args) < 2 else int(args[1]))
 						return
 					Console.error(thread="CONSOLE",
-									message=f"Could not add {args[0]} to inventory, please check your spelling and try again.")
+								  message=f"Could not add {args[0]} to inventory, please check your spelling and try again.")
 				except ValueError:
 					Console.error(thread="CONSOLE",
-									message="Could not convert int to string, please check if you put a valid number.")
+								  message="Could not convert int to string, please check if you put a valid number.")
 				except ArgumentException as ae:
 					Console.error(thread="CONSOLE", message=ae)
 				else:
 					Console.error(thread="CONSOLE",
-									message=f"Could not get item '{key}', please check your spelling and try again.")
+								  message=f"Could not get item '{key}', please check your spelling and try again.")
 
 		@staticmethod
 		def fetchAutocompleteOptions(parameter, *args):
@@ -48,7 +50,7 @@ class CommandsPlayer:
 			:return: Yields all possible option or None if not available
 			"""
 			if len(args) == 1:  # we have an argc value
-				for key in CommandsPlayer.Give.parameters[args[0]-1]:
+				for key in CommandsPlayer.Give.parameters[args[0] - 1]:
 					if key.startswith(parameter):
 						if key != "":
 							yield key
@@ -70,7 +72,7 @@ class CommandsPlayer:
 																"please check your values and try again.")
 					except KeyError as key:
 						Console.error(thread="CONSOLE",
-										message=f"Could not get item '{key}', please check your spelling and try again.")
+									  message=f"Could not get item '{key}', please check your spelling and try again.")
 			except ValueError:
 				print(f"Could not convert {kwargs['amount']} to an integer, please check your values and try again.")
 			except KeyError:
@@ -86,13 +88,14 @@ class CommandsPlayer:
 									try:
 										Playerskills[args[1].upper()].value.lvl.xp += int(args[2])
 									except KeyError:
-										Console.error(f"Could not find skill {args[1]}. Please check your spelling and try again",
-														thread="CONSOLE")
+										Console.error(
+											f"Could not find skill {args[1]}. Please check your spelling and try again",
+											thread="CONSOLE")
 						# TODO: Add all induvidual skills (possibly without if chain)
 						except ValueError:
 							Console.error(thread="CONSOLE",
-											message=f"Could not convert {args[2]} to an integer, please check "
-													f"your values and try again.")
+										  message=f"Could not convert {args[2]} to an integer, please check "
+												  f"your values and try again.")
 						except IndexError:
 							Console.error(thread="CONSOLE", message=f"Expected 4 arguments, got {len(args)} instead.")
 						else:
@@ -104,7 +107,8 @@ class CommandsPlayer:
 				ConsoleHelper.Globals.game.player.check_levels()
 
 		@staticmethod
-		def fetchAutocompleteOptions(parameter, *args):  # TODO: Might change *args for argc/completely remove it for eff
+		def fetchAutocompleteOptions(parameter,
+									 *args):  # TODO: Might change *args for argc/completely remove it for eff
 			"""
 			:param parameter: The current parameter we are working with
 			:param args:
@@ -127,7 +131,8 @@ class CommandsPlayer:
 			Console.log(thread="CONSOLE", message=f"{ConsoleHelper.Globals.game.player.pos}")
 
 		@staticmethod
-		def fetchAutocompleteOptions(parameter, *args):  # TODO: Might change *args for argc/completely remove it for eff
+		def fetchAutocompleteOptions(parameter,
+									 *args):  # TODO: Might change *args for argc/completely remove it for eff
 			"""
 			:param parameter: The current parameter we are working with
 			:param args:
