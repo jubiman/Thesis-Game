@@ -3,16 +3,15 @@ from math import floor
 from pygame import Vector2, Rect
 
 from core.UI.ui import UI
+from core.console.console import Console
 from core.inventory.inventory import Inventory
 from core.prefabs.livingcreature import LivingCreature
-from core.skills.levelbase import Levelbase
 from core.skills.baseskills import Baseskills
+from core.skills.levelbase import Levelbase
 from core.skills.playerskills import Playerskills
-from core.console.console import Console
 from settings import TILESIZE
 from world.block import Block
 from world.material.materials import Materials
-
 
 adjacents = [
 	(-1, 0),
@@ -135,7 +134,8 @@ class Player(LivingCreature):
 		for dx, dy in adjacents:
 			block: Block = self.game.world.getBlockAt(self.pos.x + dx, self.pos.y + dy)
 			if block.material.id == Materials.WALL.value.id:
-				rect: Rect = block.material.rect.move((floor(self.pos.x) + dx) * TILESIZE, (floor(self.pos.y) + dy) * TILESIZE)
+				rect: Rect = block.material.rect.move((floor(self.pos.x) + dx) * TILESIZE,
+													  (floor(self.pos.y) + dy) * TILESIZE)
 				if rect.colliderect(movedColRect):
 					if self.vel.x > 0 and dx > 0:
 						self.vel.x = 0

@@ -2,11 +2,11 @@ import random
 
 from opensimplex import OpenSimplex
 
+from core.console.console import Console
 from core.utils.timer import Timer
 from world.block import Block
 from world.chunk import Chunk
 from world.material.materials import Materials
-from core.console.console import Console
 
 
 class Generator:
