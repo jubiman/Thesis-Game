@@ -48,6 +48,7 @@ class Game:
 		self.clock = pygame.time.Clock()
 		pygame.key.set_repeat(1, 100)
 		self.graphics = assets.populate_assets()
+		self.itemslot = 1
 		self.load_data()
 		self.world = None
 

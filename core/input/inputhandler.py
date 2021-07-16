@@ -5,7 +5,7 @@ from core.items.items import Items
 from world.block import Block
 from world.material.materials import Materials
 from settings import TILESIZE, WIDTH, HEIGHT
-
+from core.UI.ui import UI
 import pygame
 from pygame.locals import *
 
@@ -68,6 +68,22 @@ class InputHandler:
 		if keys[K_o]:
 			Console.debug(thread="DEBUG",
 						message=f"world.entities: {self.game.world.entities}")
+
+		# itembar
+		if keys[K_1]:
+			UI.getElementByID(1).value.setItemSlot(1)
+		if keys[K_2]:
+			UI.getElementByID(1).value.setItemSlot(2)
+		if keys[K_3]:
+			UI.getElementByID(1).value.setItemSlot(3)
+		if keys[K_4]:
+			UI.getElementByID(1).value.setItemSlot(4)
+		if keys[K_5]:
+			UI.getElementByID(1).value.setItemSlot(5)
+		if keys[K_6]:
+			UI.getElementByID(1).value.setItemSlot(6)
+		if keys[K_7]:
+			UI.getElementByID(1).value.setItemSlot(7)
 
 	def __handleMouse(self):
 		mouse = pygame.mouse.get_pressed(5)
