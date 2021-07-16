@@ -49,10 +49,13 @@ class Game:
 		pygame.key.set_repeat(1, 100)
 		self.graphics = assets.populate_assets()
 		self.load_data()
-		self.world = None
 
-		# Make input handler
+		self.world = None
+		self.camera = None
+
+		# Make input handler to handle input
 		self.inputHandler = InputHandler(self)
+
 		# Make console
 		self.console = ConsoleFunctions(self)
 		self.consoleThread = threading.Thread(name="console", target=self.console.run, daemon=True)
@@ -70,21 +73,19 @@ class Game:
 		cfgp.read()
 
 	def new(self):
-		# initialize all variables and do all the setup for a new game
-		# Initialize all variables and do all the setup for a new game
+		# TODO: remove these
 		self.sprites = pygame.sprite.Group()
 		self.walls = pygame.sprite.Group()
 		self.trees = pygame.sprite.Group()
+
+		# Initialize all variables and do all the setup for a new game
 		self.world = World(path.join(path.dirname(__file__), "saves/world1"), self)
 		self.world.load()
 		self.player = Player(self, 100, 100, 0, 350, 0.5, 0.5, EntityTypes.PLAYER.value, 5)
 		self.spawner = Spawner(self, 64, 1)
 
-		# Initialize camera map specific
-		# TODO: might have to change the camera's settings
+		# Initialize camera
 		self.camera = Camera()
-		# self.camera = Camera(80, 80)  # Same as render distance?
-		# self.items = item.populate_items(self.graphics)
 
 		UI.load(self)
 

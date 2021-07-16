@@ -20,19 +20,25 @@ class InputHandler:
 	def handleInput(self):
 		self.__handleKeys()
 		self.__handleMouse()
+		self.__handleEvents()
+
+	def __handleEvents(self):
+		for event in pygame.event.get():
+			if event.type == MOUSEWHEEL:
+				pass
 
 	def __handleKeys(self):
 		self.game.player.game.player.vel = pygame.Vector2(0, 0)
 		keys = pygame.key.get_pressed()
 
 		# Movement
-		if keys[ord(self.game.cpc['BINDS']['MOVELEFT'])]:
+		if keys[ord(self.game.cpc['BINDS']['MOVELEFT'])] and not keys[ord(self.game.cpc['BINDS']['MOVERIGHT'])]:
 			self.game.player.vel.x = -self.game.player.speed
-		if keys[ord(self.game.cpc['BINDS']['MOVERIGHT'])]:
+		if keys[ord(self.game.cpc['BINDS']['MOVERIGHT'])] and not keys[ord(self.game.cpc['BINDS']['MOVELEFT'])]:
 			self.game.player.vel.x = self.game.player.speed
-		if keys[ord(self.game.cpc['BINDS']['MOVEUP'])]:
+		if keys[ord(self.game.cpc['BINDS']['MOVEUP'])] and not keys[ord(self.game.cpc['BINDS']['MOVEDOWN'])]:
 			self.game.player.vel.y = -self.game.player.speed
-		if keys[ord(self.game.cpc['BINDS']['MOVEDOWN'])]:
+		if keys[ord(self.game.cpc['BINDS']['MOVEDOWN'])] and not keys[ord(self.game.cpc['BINDS']['MOVEUP'])]:
 			self.game.player.vel.y = self.game.player.speed
 		if self.game.player.vel.x != 0 and self.game.player.vel.y != 0:
 			self.game.player.vel *= 0.7071
@@ -95,8 +101,6 @@ class InputHandler:
 				self.game.world.setBlock(*rel_mouse, Block(Materials.GRASS.value))
 
 				# Add items to inventory
-				# TODO: Add woodcutting skill multiplier
-				# amount = randint(1, 5)
 				drops = list(block.material.calculateItemDrops())
 				for drop in drops:
 					self.game.player.inventory.add_new_item(*drop)
