@@ -1,14 +1,13 @@
 import pygame
 import settings
 from core.controller.camera import Camera
-import assets
+
 
 class Itembar:
     def __init__(self):
         self.game = None
         self.camera = Camera
         self.screen = pygame.display.set_mode((settings.WIDTH, settings.HEIGHT))
-        self.assets = assets
 
     def setItemSlot(self, newitemslot):
         self.game.itemslot = newitemslot
