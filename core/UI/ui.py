@@ -1,10 +1,12 @@
 from enum import Enum
 
 from core.UI.healthbar import Healthbar
+from core.UI.itembar import Itembar
 
 
 class UI(Enum):
 	HEALTHBAR = Healthbar()
+	ITEMBAR = Itembar()
 
 	@staticmethod
 	def load(game):
@@ -12,9 +14,9 @@ class UI(Enum):
 			obj.value.game = game
 
 	@staticmethod
-	def draw(screen):
+	def draw():
 		for obj in UI:
-			obj.value.draw(screen)
+			obj.value.draw()
 
 	@staticmethod
 	def getElementByID(iden):

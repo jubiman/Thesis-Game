@@ -1,16 +1,15 @@
 from random import randint
 from typing import Generator
 
+from core.console.console import Console
 from core.items.item import Item
 from core.items.items import Items
 from core.skills.baseskills import Baseskills
 
-from core.console.console import Console
-
 
 class Material:
 	def __init__(self, displayName, texturePath, iden, idstring, tools: list[str] = None, xptypes: list[str] = None,
-					it_dr: list[tuple[str, float, tuple[int, int]]] = None, sk_mp: list[str] = None):
+				 it_dr: list[tuple[str, float, tuple[int, int]]] = None, sk_mp: list[str] = None):
 		"""
 		:param displayName: The display name of the material
 		:param texturePath: The idstring of the image

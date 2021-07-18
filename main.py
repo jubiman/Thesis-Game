@@ -10,6 +10,7 @@ from core.console.consolefunctions import ConsoleFunctions
 from core.controller.camera import Camera
 from core.prefabs.sprites import *
 from core.UI.ui import UI
+from settings import *
 from core.input.inputhandler import InputHandler
 from world.chunk import Chunk
 from world.entity.entities.player import Player
@@ -49,13 +50,13 @@ class Game:
 		pygame.key.set_repeat(1, 100)
 		self.graphics = assets.populate_assets()
 		self.load_data()
-
+		
 		self.world = None
 		self.camera = None
 
-		# Make input handler to handle input
+		# Make input handler
 		self.inputHandler = InputHandler(self)
-
+		
 		# Make console
 		self.console = ConsoleFunctions(self)
 		self.consoleThread = threading.Thread(name="console", target=self.console.run, daemon=True)
@@ -73,7 +74,8 @@ class Game:
 		cfgp.read()
 
 	def new(self):
-		# TODO: remove these
+		# initialize all variables and do all the setup for a new game
+		# Initialize all variables and do all the setup for a new game
 		self.sprites = pygame.sprite.Group()
 		self.walls = pygame.sprite.Group()
 		self.trees = pygame.sprite.Group()
@@ -104,7 +106,7 @@ class Game:
 				self.draw()
 			except pygame.error:
 				# TODO: Improve error handling to not skip steps on error
-				Console.error(thread="UnkownThread", message=pygame.get_error())
+				Console.error(thread="UnknownThread", message=pygame.get_error())
 
 	def quit(self):
 		self.console.kill()
@@ -159,7 +161,7 @@ class Game:
 		self.screen.blit(self.player.entitytype.image, self.camera.apply(self.player.entitytype))
 
 		# Display UI
-		UI.draw(self.screen)
+		UI.draw()
 
 		# Collision debug rects
 		# self.screen.blit(Materials.GRASS.value.image,self.camera.apply(self.player))

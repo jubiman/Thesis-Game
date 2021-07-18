@@ -1,6 +1,6 @@
+from core.utils.timer import Timer
 from events.cancelableevent import CancelableEvent
 from events.event import Event
-from core.utils.timer import Timer
 
 
 class EventManager:

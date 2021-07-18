@@ -1,12 +1,32 @@
 import pygame
+
 from core.console.console import Console
 from core.console.consolehelper import ConsoleHelper
-from world.entity.entitytypes import EntityTypes
-from world.material.materials import Materials
 from world.block import Block
+from world.entity.entitytypes import EntityTypes
+from world.gen.dungeongenerator import DungeonGenerator
+from world.material.materials import Materials
+from world.world import World
 
 
 class CommandsWorld:
+	class SetWorld:
+		names = ["setworld"]
+		parameters: list[list[str]] = [[""]]
+
+		@staticmethod
+		def execute(*args, **kwargs):
+			Console.log("Changing world!")
+			w = World("saves/test", ConsoleHelper.Globals.game)
+			w.worldtype = "dungeon"
+			w.seed = ConsoleHelper.Globals.game.world.seed
+			w.generator = DungeonGenerator(w.seed, ConsoleHelper.Globals.game)
+			ConsoleHelper.Globals.game.world = w
+
+		@staticmethod
+		def fetchAutocompleteOptions(command, *args):
+			pass
+
 	class SetPos:
 		names = ["setpos"]
 		parameters: list[list[str]] = [[""]]
@@ -17,8 +37,8 @@ class CommandsWorld:
 				ConsoleHelper.Globals.game.player.pos = pygame.Vector2(float(kwargs['x']), float(kwargs['y']))
 			except ValueError:
 				Console.error(thread="CONSOLE",
-								message=f"Could not convert ({kwargs['x']}. {kwargs['y']}) to a valid position, please check your "
-										f"values and try again.")
+							  message=f"Could not convert ({kwargs['x']}. {kwargs['y']}) to a valid position, please check your "
+									  f"values and try again.")
 			except KeyError:
 				try:
 					ConsoleHelper.Globals.game.player.pos = pygame.Vector2(float(args[0]), float(args[1]))
@@ -28,7 +48,7 @@ class CommandsWorld:
 					return
 				except IndexError:
 					Console.error(thread="CONSOLE",
-									message=f"Expected 2 arguments, got {len(args) + len(kwargs)} instead.")
+								  message=f"Expected 2 arguments, got {len(args) + len(kwargs)} instead.")
 
 		@staticmethod
 		def fetchAutocompleteOptions(command, *args):
@@ -56,7 +76,7 @@ class CommandsWorld:
 				Console.debug("SpawnEventLoc\n\n")
 				if ConsoleHelper.Globals.game.spawner.spawnEventLoc(float(args[0]), float(args[1]), enemy):
 					Console.error(thread="CONSOLE",
-									message=f"Could not spawn an enemy at ({kwargs['x']}, {kwargs['y']}).")
+								  message=f"Could not spawn an enemy at ({kwargs['x']}, {kwargs['y']}).")
 			except KeyError as err:
 				# TODO: Placeholder
 				print(err)
@@ -65,7 +85,7 @@ class CommandsWorld:
 				ConsoleHelper.Globals.game.spawner.spawnEvent()
 			except ValueError:
 				Console.error(thread="CONSOLE",
-								message=f"Could not convert ({args[0]}, {args[1]}) to a position, please try again.")
+							  message=f"Could not convert ({args[0]}, {args[1]}) to a position, please try again.")
 			except TypeError:
 				en = None if len(args) < 3 else args[2] if 'enemy' not in kwargs else kwargs['enemy']
 				Console.error(thread="CONSOLE", message=f"Could not find enemy {en}.")
@@ -77,33 +97,37 @@ class CommandsWorld:
 	class SetBlock:
 		names = ["setblock", "set"]
 		parameters: list[int, int, list[str]] = [int, int, []]  # TODO: add all blocks to last parameter
+
 		# setblock x y block
 
 		@staticmethod
 		def execute(*args, **kwargs):
 			try:
-				blockstr = kwargs['block'][kwargs['block'].rfind(':')+1].upper()
+				blockstr = kwargs['block'][kwargs['block'].rfind(':') + 1].upper()
 				try:
-					ConsoleHelper.Globals.game.world.setBlock(int(kwargs['x']), int(kwargs['y']), Block(Materials[blockstr].value))
+					ConsoleHelper.Globals.game.world.setBlock(int(kwargs['x']), int(kwargs['y']),
+															  Block(Materials[blockstr].value))
 				except KeyError:
 					Console.error(thread="CONSOLE",
-									message=f"Couldn't find block {args[2]}. Please check your spelling and try again.")
+								  message=f"Couldn't find block {args[2]}. Please check your spelling and try again.")
 			except KeyError:
 				if len(args) < 3:
 					return Console.error(thread="CONSOLE", message=f"Expected 3 arguments, got {len(args)} instead.")
-				loc = args[2].rfind(':')+1
+				loc = args[2].rfind(':') + 1
 				if loc > 0:
 					blockstr = args[2][loc:].upper()
 				else:
 					blockstr = args[2].upper()
 				try:
-					ConsoleHelper.Globals.game.world.setBlock(int(args[0]), int(args[1]), Block(Materials[blockstr].value))
+					ConsoleHelper.Globals.game.world.setBlock(int(args[0]), int(args[1]),
+															  Block(Materials[blockstr].value))
 				except KeyError:
 					Console.error(thread="CONSOLE",
-									message=f"Couldn't find block {args[2]}. Please check your spelling and try again.")
+								  message=f"Couldn't find block {args[2]}. Please check your spelling and try again.")
 
 		@staticmethod
-		def fetchAutocompleteOptions(parameter, *args):  # TODO: Might change *args for argc/completely remove it for eff
+		def fetchAutocompleteOptions(parameter,
+									 *args):  # TODO: Might change *args for argc/completely remove it for eff
 			"""
 			:param parameter: The current parameter we are working with
 			:param args:

@@ -1,6 +1,11 @@
 from core.items.items import Items
 
 
+class SelectedSlot:
+	def __init__(self):
+		self.itemslot = 1
+
+
 class InventoryItem:
 	def __init__(self, it, quant=0):
 		"""

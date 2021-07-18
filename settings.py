@@ -1,7 +1,6 @@
-import os
 import logging
+import os
 from sys import platform
-
 
 DEBUG = True
 
