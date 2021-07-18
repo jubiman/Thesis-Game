@@ -94,7 +94,8 @@ class ConsoleFunctions(Console):
 				pass
 
 			# Console.debug(message=f"inp = {inp}")
-			if inp != "\r":  # If we don't return we don't want to execute the code yet, but add the letter to the query instead
+			# If we don't return we don't want to execute the code yet, but add the letter to the query instead
+			if inp != "\r" and inp != "\n":
 				if inp == "\x08":  # Backspace
 					if len(self.query) > 0:  # If the query is empty we don't want to remove anything
 						self.query = self.query[:self.cursor - 1] + self.query[self.cursor:]

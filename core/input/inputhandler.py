@@ -67,35 +67,35 @@ class InputHandler:
 		if keys[K_i] and self.game.player.debug_print_cooldown == 0:
 			Console.log(thread="PLAYER",
 						message="Inventory:")
-			for it in self.game.player.inventory.inv.ls:
+			for it in self.game.player.inventory.inv.get():
 				Console.log(thread="PLAYER",
 							message=f"{it.item.displayName} {it.quantity} {it.item.max_stack}")
 			self.game.player.debug_print_cooldown = 1
 		if keys[K_o]:
 			Console.debug(thread="DEBUG",
-						  message=f"world.entities: {self.game.world.entities}")
+							message=f"world.entities: {self.game.world.entities}")
 
 		# itembar
 		if keys[K_1]:
-			UI.ITEMBAR.value.setItemSlot(1)
+			self.game.player.inventory.selectedslot = 1
 		if keys[K_2]:
-			UI.ITEMBAR.value.setItemSlot(2)
+			self.game.player.inventory.selectedslot = 2
 		if keys[K_3]:
-			UI.ITEMBAR.value.setItemSlot(3)
+			self.game.player.inventory.selectedslot = 3
 		if keys[K_4]:
-			UI.ITEMBAR.value.setItemSlot(4)
+			self.game.player.inventory.selectedslot = 4
 		if keys[K_5]:
-			UI.ITEMBAR.value.setItemSlot(5)
+			self.game.player.inventory.selectedslot = 5
 		if keys[K_6]:
-			UI.ITEMBAR.value.setItemSlot(6)
+			self.game.player.inventory.selectedslot = 6
 		if keys[K_7]:
-			UI.ITEMBAR.value.setItemSlot(7)
+			self.game.player.inventory.selectedslot = 7
 
 	def __handleMouse(self):
 		mouse = pygame.mouse.get_pressed(5)
 		mouse_pos = pygame.mouse.get_pos()
 		rel_mouse = (floor((mouse_pos[0] + self.game.player.pos.x * TILESIZE - (WIDTH / 2)) / TILESIZE),
-					 floor((mouse_pos[1] + self.game.player.pos.y * TILESIZE - (HEIGHT / 2)) / TILESIZE))
+						floor((mouse_pos[1] + self.game.player.pos.y * TILESIZE - (HEIGHT / 2)) / TILESIZE))
 
 		if mouse[0]:
 			block = self.game.world.getBlockAt(*rel_mouse)
@@ -110,8 +110,11 @@ class InputHandler:
 				return
 
 			# Check if the player has a correct tool
-			if self.game.player.inventory.hands[0].item.texturePath.lower() in block.material.tools or \
-					self.game.player.inventory.hands[1].item.texturePath.lower() in block.material.tools:
+			# TODO: Old way
+			# if self.game.player.inventory.hands[0].item.texturePath.lower() in block.material.tools or \
+			# self.game.player.inventory.hands[1].item.texturePath.lower() in block.material.tools:
+			if self.game.player.inventory.slots.getSlot(self.game.player.inventory.selectedslot).texturePath.lower()\
+				in block.material.tools:
 
 				# Chop down the tree
 				self.game.world.setBlock(*rel_mouse, Block(Materials.GRASS.value))

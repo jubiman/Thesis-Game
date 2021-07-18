@@ -133,4 +133,4 @@ class World:
 		return self.cache.getChunk(x, y)
 
 	def setBlock(self, x: int, y: int, block: Block):
-		self.getChunkAt(int(x // 16), int(y // 16)).setBlock(x, y, block)
+		self.getChunkAt(int(x // 16), int(y // 16)).setBlock(int(x % 16), int(y % 16), block)

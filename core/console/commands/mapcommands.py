@@ -16,7 +16,7 @@ class CommandsMap:
 		@staticmethod
 		def execute(*args, **kwargs):
 			"""
-			:param args: Needs a mapname or path from gamefolder to map
+			:param args: Needs a mapname or path from savesfolder to map
 			:param kwargs: Available kwargs: path
 			:return: None
 			"""
