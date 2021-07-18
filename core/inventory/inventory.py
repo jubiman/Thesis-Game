@@ -1,8 +1,9 @@
+from core.items.item import Item
 from core.items.items import Items
 from core.console.console import Console
 
 
-class InventoryItem:
+class _InventoryItem:
 	def __init__(self, it, quant=0):
 		"""
 		:param Item it: The item object to reference to
@@ -17,7 +18,7 @@ class InventoryList:
 	def __init__(self, size, __ls=None):
 		"""
 		:param int size: Maximum size of the list
-		:param list[InventoryItem] ls: The inventory list
+		:param list[_InventoryItem] ls: The inventory list
 		"""
 		if __ls is None:
 			__ls = []
@@ -27,7 +28,7 @@ class InventoryList:
 
 	def push(self, it):
 		"""
-		:param InventoryItem it: the item to add to the inventory
+		:param _InventoryItem it: the item to add to the inventory
 		:return: None
 		"""
 		if len(self.__ls) == self.max_size:
@@ -61,10 +62,10 @@ class InventoryList:
 # TODO: Create working inventory with items
 class Inventory:
 	def __init__(self):
-		self.inv = InventoryList(27)  # Inventory only has 27 slots
+		self.__inv = InventoryList(27)  # Inventory only has 27 slots
 		# slot 0 is bound to 1, so slot 8 is max(9)
 		self.slots = InventoryList(7)
-		self.slots.set(self.inv.get()[0:6])
+		self.slots.set(self.__inv.get()[0:6])
 
 		self.selectedslot = 1
 
@@ -73,9 +74,13 @@ class Inventory:
 		# self.hands[0] is main hand, hands[1] is offhand
 		# self.hands = [InventorySlot(Items.IRON_AXE.value, 1, 1), InventorySlot(Items.EMPTY.value, 2, 1)]
 
-	# for i in range(9):
-	# self.slots.append(InventorySlot(item.Item('Axe', 1), 1, 1))
-	# self.slots.append(InventorySlot(item.Item('empty', 0), i+1))
+		# for i in range(9):
+		# self.slots.append(InventorySlot(item.Item('Axe', 1), 1, 1))
+		# self.slots.append(InventorySlot(item.Item('empty', 0), i+1))
+
+	# Returns private inventory object
+	def get(self):
+		return self.__inv.get()
 
 	# Method to add items to inventory
 	def add_new_item(self, it, quant=0):
@@ -94,22 +99,4 @@ class Inventory:
 					it2.quantity = it2.item.max_stack
 				return
 		# Make new item
-		self.inv.push(InventoryItem(it, quant))
-
-
-class InventorySlot(InventoryItem):
-	def __init__(self, it, slot, quant=0):
-		"""
-		:param Item it: The item object to reference to
-		:param int slot: Item slot in inventory (1-9)
-		:param int quant: The quantity of the item to pass through to InventoryItem
-		"""
-		InventoryItem.__init__(self, it, quant)
-		self.slot = slot
-
-	def get_item(self):
-		"""
-		:return: Returns it's item object
-		:rtype: Item
-		"""
-		return self.item
+		self.inv.push(_InventoryItem(it, quant))
