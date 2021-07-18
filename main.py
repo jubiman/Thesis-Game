@@ -157,7 +157,7 @@ class Game:
 		self.screen.blit(self.player.entitytype.image, self.camera.apply(self.player.entitytype))
 
 		# Display UI
-		UI.draw(self.screen)
+		UI.draw()
 
 		# Collision debug rects
 		# self.screen.blit(Materials.GRASS.value.image,self.camera.apply(self.player))

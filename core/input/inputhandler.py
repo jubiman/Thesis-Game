@@ -1,14 +1,16 @@
-from math import floor
-
-import pygame
-from pygame.locals import *
-
 from core.console.console import Console
 from core.skills.baseskills import Baseskills
 from core.skills.playerskills import Playerskills
-from settings import TILESIZE, WIDTH, HEIGHT
 from world.block import Block
 from world.material.materials import Materials
+
+from settings import TILESIZE, WIDTH, HEIGHT
+from core.UI.ui import UI
+import pygame
+from pygame.locals import *
+
+from random import randint
+from math import floor
 
 
 class InputHandler:
@@ -66,6 +68,22 @@ class InputHandler:
 		if keys[K_o]:
 			Console.debug(thread="DEBUG",
 						  message=f"world.entities: {self.game.world.entities}")
+
+		# itembar
+		if keys[K_1]:
+			UI.ITEMBAR.value.setItemSlot(1)
+		if keys[K_2]:
+			UI.ITEMBAR.value.setItemSlot(2)
+		if keys[K_3]:
+			UI.ITEMBAR.value.setItemSlot(3)
+		if keys[K_4]:
+			UI.ITEMBAR.value.setItemSlot(4)
+		if keys[K_5]:
+			UI.ITEMBAR.value.setItemSlot(5)
+		if keys[K_6]:
+			UI.ITEMBAR.value.setItemSlot(6)
+		if keys[K_7]:
+			UI.ITEMBAR.value.setItemSlot(7)
 
 	def __handleMouse(self):
 		mouse = pygame.mouse.get_pressed(5)
