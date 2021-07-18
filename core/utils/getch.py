@@ -5,6 +5,8 @@ screen."""
 	def __init__(self):
 		try:
 			self.impl = _GetchWindows()
+		except ModuleNotFoundError:
+			self.impl = _GetchUnix()
 		except ImportError:
 			self.impl = _GetchUnix()
 
