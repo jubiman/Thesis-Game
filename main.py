@@ -1,16 +1,17 @@
-import ctypes
 import getopt
 import sys
 import threading
+import ctypes
 from configparser import ConfigParser
 from os import path
 
 from cfg.cfgparser import CfgParser
 from core.console.consolefunctions import ConsoleFunctions
 from core.controller.camera import Camera
-from core.input.inputhandler import InputHandler
 from core.prefabs.sprites import *
+from core.UI.ui import UI
 from settings import *
+from core.input.inputhandler import InputHandler
 from world.chunk import Chunk
 from world.entity.entities.player import Player
 from world.entity.entitytypes import EntityTypes
@@ -49,10 +50,13 @@ class Game:
 		pygame.key.set_repeat(1, 100)
 		self.graphics = assets.populate_assets()
 		self.load_data()
+		
 		self.world = None
+		self.camera = None
 
 		# Make input handler
 		self.inputHandler = InputHandler(self)
+		
 		# Make console
 		self.console = ConsoleFunctions(self)
 		self.consoleThread = threading.Thread(name="console", target=self.console.run, daemon=True)
@@ -70,20 +74,20 @@ class Game:
 		cfgp.read()
 
 	def new(self):
+		# initialize all variables and do all the setup for a new game
 		# Initialize all variables and do all the setup for a new game
 		self.sprites = pygame.sprite.Group()
 		self.walls = pygame.sprite.Group()
 		self.trees = pygame.sprite.Group()
+
+		# Initialize all variables and do all the setup for a new game
 		self.world = World(path.join(path.dirname(__file__), "saves/world1"), self)
 		self.world.load()
 		self.player = Player(self, 100, 100, 0, 350, 0.5, 0.5, EntityTypes.PLAYER.value, 5)
 		self.spawner = Spawner(self, 64, 1)
 
-		# Initialize camera map specific
-		# TODO: might have to change the camera's settings
+		# Initialize camera
 		self.camera = Camera()
-		# self.camera = Camera(80, 80)  # Same as render distance?
-		# self.items = item.populate_items(self.graphics)
 
 		UI.load(self)
 
@@ -122,7 +126,7 @@ class Game:
 	def draw(self):
 		# Console.debug(self.player.pos)
 		pygame.display.set_caption(TITLE + " - " + "{:.2f}".format(self.clock.get_fps()) +
-								   " - ({:.4f}, {:.4f})".format(*self.player.pos))
+									" - ({:.4f}, {:.4f})".format(*self.player.pos))
 		self.screen.fill(BGCOLOR)
 
 		pcx = self.player.pos.x // 16
@@ -151,7 +155,7 @@ class Game:
 				# Console.debug(f"ent: {ent.pos}, {ent.chunk}")
 				self.screen.blit(ent.entitytype.image, self.camera.applyraw(
 					ent.entitytype.rect.move((ent.chunk[0] * 16 + ent.pos.x) * TILESIZE,
-											 (ent.chunk[1] * 16 + ent.pos.y) * TILESIZE)
+												(ent.chunk[1] * 16 + ent.pos.y) * TILESIZE)
 				))
 
 		self.screen.blit(self.player.entitytype.image, self.camera.apply(self.player.entitytype))

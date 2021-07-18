@@ -14,14 +14,14 @@ class CommandsPlayer:
 		@staticmethod
 		def execute(*args, **kwargs):
 			try:
-				it = Items.getItemFromName(kwargs['item'])
+				it = Items[(kwargs['item']).upper]
 				if it is not None:
 					ConsoleHelper.Globals.game.player.inventory.add_new_item(it,
-																			 1 if 'quantity' not in kwargs else int(
-																				 kwargs['quantity']))
+																			1 if 'quantity' not in kwargs else int(
+																				kwargs['quantity']))
 					return
 				Console.error(thread="CONSOLE",
-							  message=f"Could not add {kwargs['item']} to inventory, please check your spelling and try again.")
+								message=f"Could not add {kwargs['item']} to inventory, please check your spelling and try again.")
 			except KeyError as key:
 				try:
 					if len(args) == 0:
@@ -29,10 +29,10 @@ class CommandsPlayer:
 					it = Items.getItemFromName(args[0])
 					if it is not None:
 						ConsoleHelper.Globals.game.player.inventory.add_new_item(it,
-																				 1 if len(args) < 2 else int(args[1]))
+																				1 if len(args) < 2 else int(args[1]))
 						return
 					Console.error(thread="CONSOLE",
-								  message=f"Could not add {args[0]} to inventory, please check your spelling and try again.")
+									message=f"Could not add {args[0]} to inventory, please check your spelling and try again.")
 				except ValueError:
 					Console.error(thread="CONSOLE",
 								  message="Could not convert int to string, please check if you put a valid number.")
