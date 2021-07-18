@@ -47,3 +47,9 @@ class Itembar:
         pygame.draw.rect(self.game.screen, (50, 50, 50), itembar6)
         itembar7 = pygame.Rect(WIDTH / 2 + 170, HEIGHT - 140, 60, 60)
         pygame.draw.rect(self.game.screen, (50, 50, 50), itembar7)
+
+        if self.game.paused:
+            self.drawInventory()
+
+    def drawInventory(self):
+        pass
