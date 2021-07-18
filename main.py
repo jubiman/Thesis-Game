@@ -3,7 +3,7 @@ import sys
 import threading
 import ctypes
 from configparser import ConfigParser
-from os import path
+from os import path, mkdir
 
 from cfg.cfgparser import CfgParser
 from core.console.consolefunctions import ConsoleFunctions
@@ -37,8 +37,8 @@ if platform == "win32":
 	kernel32 = ctypes.windll.kernel32
 	kernel32.SetConsoleMode(kernel32.GetStdHandle(-11), 7)
 
-if not os.path.isdir("saves"):
-	os.mkdir("saves")
+if not path.isdir("saves"):
+	mkdir("saves")
 
 
 class Game:
