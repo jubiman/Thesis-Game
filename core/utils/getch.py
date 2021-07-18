@@ -1,13 +1,14 @@
+from sys import platform
+
+
 class _Getch:
 	"""Gets a single character from standard input.  Does not echo to the
 screen."""
 
 	def __init__(self):
-		try:
+		if platform == "win32":
 			self.impl = _GetchWindows()
-		except ModuleNotFoundError:
-			self.impl = _GetchUnix()
-		except ImportError:
+		else:
 			self.impl = _GetchUnix()
 
 	def __call__(self):

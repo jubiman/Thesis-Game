@@ -1,11 +1,7 @@
-import logging
-import os
+from os import getcwd
 from sys import platform
 
 DEBUG = True
-
-logging.basicConfig(level=logging.DEBUG,
-					format='[%(levelname)s] (%(threadName)-10s) %(message)s')
 
 if platform == "win32":
 	ANSI_COLORS = {
@@ -39,7 +35,7 @@ TILESIZE = 64
 GRIDWIDTH = WIDTH / TILESIZE
 GRIDHEIGHT = HEIGHT / TILESIZE
 
-GAMEDIR = os.getcwd()
+GAMEDIR = getcwd()
 
 # Player settings
 PLAYERSPEED = 350
