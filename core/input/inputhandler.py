@@ -1,12 +1,6 @@
-from math import floor
-
-import pygame
-from pygame.locals import *
-
 from core.console.console import Console
 from core.skills.baseskills import Baseskills
 from core.skills.playerskills import Playerskills
-from settings import TILESIZE, WIDTH, HEIGHT
 from world.block import Block
 from world.material.materials import Materials
 
