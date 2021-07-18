@@ -77,19 +77,19 @@ class InputHandler:
 
 		# itembar
 		if keys[K_1]:
-			UI.getElementByID(1).value.setItemSlot(1)
+			UI.ITEMBAR.value.setItemSlot(1)
 		if keys[K_2]:
-			UI.getElementByID(1).value.setItemSlot(2)
+			UI.ITEMBAR.value.setItemSlot(2)
 		if keys[K_3]:
-			UI.getElementByID(1).value.setItemSlot(3)
+			UI.ITEMBAR.value.setItemSlot(3)
 		if keys[K_4]:
-			UI.getElementByID(1).value.setItemSlot(4)
+			UI.ITEMBAR.value.setItemSlot(4)
 		if keys[K_5]:
-			UI.getElementByID(1).value.setItemSlot(5)
+			UI.ITEMBAR.value.setItemSlot(5)
 		if keys[K_6]:
-			UI.getElementByID(1).value.setItemSlot(6)
+			UI.ITEMBAR.value.setItemSlot(6)
 		if keys[K_7]:
-			UI.getElementByID(1).value.setItemSlot(7)
+			UI.ITEMBAR.value.setItemSlot(7)
 
 	def __handleMouse(self):
 		mouse = pygame.mouse.get_pressed(5)

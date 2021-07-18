@@ -48,7 +48,6 @@ class Game:
 		self.clock = pygame.time.Clock()
 		pygame.key.set_repeat(1, 100)
 		self.graphics = assets.populate_assets()
-		self.itemslot = 1
 		self.load_data()
 		self.world = None
 
@@ -158,7 +157,7 @@ class Game:
 		self.screen.blit(self.player.entitytype.image, self.camera.apply(self.player.entitytype))
 
 		# Display UI
-		UI.draw(self.screen)
+		UI.draw()
 
 		# Collision debug rects
 		# self.screen.blit(Materials.GRASS.value.image,self.camera.apply(self.player))
