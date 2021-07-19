@@ -159,6 +159,7 @@ class CommandsPlayer:
 					raise ArgumentException
 			except ArgumentException as ae:
 				Console.error(thread="CONSOLE", message=ae)
+				return
 
 			it = Items[args[1].upper()].value
 			# ConsoleHelper.Globals.game.player.inventory.slots.get()[int(args[0])] = it
