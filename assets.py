@@ -528,7 +528,7 @@ def get_name(index):
 		551: "player2",
 		552: "player3",
 		787: "number0",
-		931: "axe"
+		931: "iron_axe"
 	}
 	return switch.get(index, "unkown")
 

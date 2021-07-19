@@ -52,7 +52,50 @@ class InventoryList:
 
 	def getSlot(self, slot):
 		if slot > len(self.__ls):
-			return Items.EMPTY.value
+			return None
+		return self.__ls[slot]
+
+	def swap_item(self):
+		pass
+
+
+class InventorySlotList:
+	def __init__(self):
+		"""
+		:param int size: Maximum size of the list
+		:param list[_InventoryItem] ls: The inventory list
+		"""
+		self.max_size = 7
+		self.__ls = [Items.EMPTY.value, Items.EMPTY.value, Items.EMPTY.value, Items.EMPTY.value, Items.EMPTY.value,
+						Items.EMPTY.value, Items.EMPTY.value]
+
+	def push(self, it):
+		"""
+		:param _InventoryItem it: the item to add to the inventory
+		:return: None
+		"""
+		if len(self.__ls) == self.max_size:
+			Console.log("No space in inventory")
+			# TODO: Do stuff with no inventory space
+			return
+		self.__ls.append(it)
+
+	def set(self, value):
+		"""
+		:param value: New list to set
+		:return: None
+		"""
+		if len(value) > self.max_size:
+			self.__ls = value[0:self.max_size]
+		else:
+			self.__ls = value
+
+	def get(self):
+		return self.__ls
+
+	def getSlot(self, slot):
+		if slot > len(self.__ls):
+			return None
 		return self.__ls[slot]
 
 	def swap_item(self):
@@ -64,10 +107,9 @@ class Inventory:
 	def __init__(self):
 		self.__inv = InventoryList(27)  # Inventory only has 27 slots
 		# slot 0 is bound to 1, so slot 8 is max(9)
-		self.slots = InventoryList(7)
-		self.slots.set(self.__inv.get()[0:6])
+		self.slots = InventorySlotList()
 
-		self.selectedslot = 1
+		self.selectedslot = 0
 
 		# TODO: Old inventory system we discussed... *sigh*
 		# TODO: How one lazy guy can fuck up the entire projects... annoys me
@@ -89,7 +131,7 @@ class Inventory:
 		:param int quant: The quantity to add
 		"""
 		# Search for item in inventory
-		for it2 in self.inv.get():
+		for it2 in self.__inv.get():
 			if it.displayName.lower() == it2.item.displayName.lower():
 				if it2.quantity + quant < it2.item.max_stack:
 					it2.quantity += quant
@@ -99,4 +141,4 @@ class Inventory:
 					it2.quantity = it2.item.max_stack
 				return
 		# Make new item
-		self.inv.push(_InventoryItem(it, quant))
+		self.__inv.push(_InventoryItem(it, quant))
