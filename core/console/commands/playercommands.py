@@ -14,7 +14,7 @@ class CommandsPlayer:
 		@staticmethod
 		def execute(*args, **kwargs):
 			try:
-				it = Items[(kwargs['item']).upper].value
+				it = Items[(kwargs['item']).upper()].value
 				if it is not None:
 					ConsoleHelper.Globals.game.player.inventory.add_new_item(it,
 																			1 if 'quantity' not in kwargs else int(
