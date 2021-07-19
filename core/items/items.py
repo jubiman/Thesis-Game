@@ -56,8 +56,14 @@ class Items(Enum):
 	def load(game):
 		for it in Items:
 			if it.value.texturePath is not None:
+				im = assets.get_asset_from_name(game.graphics, it.value.texturePath)
+				# TODO: Remove im when assets are fully made
+				# it.value.image = pygame.transform.scale(
+				# assets.get_asset_from_name(game.graphics, it.value.texturePath).image, (64, 64))
+				if im is None:
+					continue
 				it.value.image = pygame.transform.scale(
-					assets.get_asset_from_name(game.graphics, it.value.texturePath).image, (64, 64))
+					im.image, (64, 64))
 				it.value.rect = it.value.image.get_rect()
 
 	@staticmethod

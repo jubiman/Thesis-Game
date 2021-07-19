@@ -10,8 +10,9 @@ from core.console.consolefunctions import ConsoleFunctions
 from core.controller.camera import Camera
 from core.prefabs.sprites import *
 from core.UI.ui import UI
-from settings import *
 from core.input.inputhandler import InputHandler
+from core.items.items import Items
+from settings import *
 from world.chunk import Chunk
 from world.entity.entities.player import Player
 from world.entity.entitytypes import EntityTypes
@@ -64,8 +65,11 @@ class Game:
 	def load_data(self):
 		game_folder = path.dirname(__file__)
 		assets_folder = path.join(game_folder, 'assets')
+
+		# Load assets
 		Materials.load(self)
 		EntityTypes.load(self)
+		Items.load(self)
 
 		# Initialize config
 		self.cpc = ConfigParser()  # ConfigParserControls

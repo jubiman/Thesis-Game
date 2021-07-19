@@ -67,7 +67,7 @@ class InputHandler:
 		if keys[K_i] and self.game.player.debug_print_cooldown == 0:
 			Console.log(thread="PLAYER",
 						message="Inventory:")
-			for it in self.game.player.inventory.inv.get():
+			for it in self.game.player.inventory.get():
 				Console.log(thread="PLAYER",
 							message=f"{it.item.displayName} {it.quantity} {it.item.max_stack}")
 			self.game.player.debug_print_cooldown = 1
@@ -77,19 +77,19 @@ class InputHandler:
 
 		# itembar
 		if keys[K_1]:
-			self.game.player.inventory.selectedslot = 1
+			self.game.player.inventory.selectedslot = 0
 		if keys[K_2]:
-			self.game.player.inventory.selectedslot = 2
+			self.game.player.inventory.selectedslot = 1
 		if keys[K_3]:
-			self.game.player.inventory.selectedslot = 3
+			self.game.player.inventory.selectedslot = 2
 		if keys[K_4]:
-			self.game.player.inventory.selectedslot = 4
+			self.game.player.inventory.selectedslot = 3
 		if keys[K_5]:
-			self.game.player.inventory.selectedslot = 5
+			self.game.player.inventory.selectedslot = 4
 		if keys[K_6]:
-			self.game.player.inventory.selectedslot = 6
+			self.game.player.inventory.selectedslot = 5
 		if keys[K_7]:
-			self.game.player.inventory.selectedslot = 7
+			self.game.player.inventory.selectedslot = 6
 
 	def __handleMouse(self):
 		mouse = pygame.mouse.get_pressed(5)
