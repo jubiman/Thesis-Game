@@ -14,7 +14,7 @@ class _InventoryItem:
 
 
 # TODO: Might change this class for some checks inside code
-class InventoryList:
+class _InventoryList:
 	def __init__(self, size, __ls=None):
 		"""
 		:param int size: Maximum size of the list
@@ -59,15 +59,17 @@ class InventoryList:
 		pass
 
 
-class InventorySlotList:
+class _InventorySlotList:
 	def __init__(self):
 		"""
 		:param int size: Maximum size of the list
 		:param list[_InventoryItem] ls: The inventory list
 		"""
 		self.max_size = 7
-		self.__ls = [Items.EMPTY.value, Items.EMPTY.value, Items.EMPTY.value, Items.EMPTY.value, Items.EMPTY.value,
-						Items.EMPTY.value, Items.EMPTY.value]
+		self.__ls = [_InventoryItem(Items.EMPTY.value, 1), _InventoryItem(Items.EMPTY.value, 1),
+					_InventoryItem(Items.EMPTY.value, 1), _InventoryItem(Items.EMPTY.value, 1),
+					_InventoryItem(Items.EMPTY.value, 1), _InventoryItem(Items.EMPTY.value, 1),
+					_InventoryItem(Items.EMPTY.value, 1)]
 
 	def push(self, it):
 		"""
@@ -105,16 +107,17 @@ class InventorySlotList:
 # TODO: Create working inventory with items
 class Inventory:
 	def __init__(self):
-		self.__inv = InventoryList(27)  # Inventory only has 27 slots
-		# slot 0 is bound to 1, so slot 8 is max(9)
-		self.slots = InventorySlotList()
+		self.__inv = _InventoryList(27)  # Inventory only has 27 slots
+		# __slots[0] is bound to 1, so __slots[6] is max (7)
+		self.__slots = _InventorySlotList()
 
+		# The currently selected slot saved as 0-based index for __slots array
 		self.selectedslot = 0
 
 		# TODO: Old inventory system we discussed... *sigh*
 		# TODO: How one lazy guy can fuck up the entire projects... annoys me
 		# self.hands[0] is main hand, hands[1] is offhand
-		# self.hands = [InventorySlot(Items.IRON_AXE.value, 1, 1), InventorySlot(Items.EMPTY.value, 2, 1)]
+		# self.hands = [InventorySlot(Items.IRON_AXE.value, 1, 1), InventorySlot(_InventoryItem(Items.EMPTY.value, 1), 2, 1)]
 
 		# for i in range(9):
 		# self.slots.append(InventorySlot(item.Item('Axe', 1), 1, 1))
@@ -124,14 +127,20 @@ class Inventory:
 	def get(self):
 		return self.__inv.get()
 
+	def getslots(self):
+		return self.__slots.get()
+
+	def getSlotsObject(self):
+		return self.__slots
+
 	# Method to add items to inventory
-	def add_new_item(self, it, quant=0):
+	def add_new_item(self, it, quant=1):
 		"""
 		:param Item it: The item to add
 		:param int quant: The quantity to add
 		"""
-		# Search for item in inventory
-		for it2 in self.__inv.get():
+		# Search for item in slots
+		for it2 in self.getslots():
 			if it.displayName.lower() == it2.item.displayName.lower():
 				if it2.quantity + quant < it2.item.max_stack:
 					it2.quantity += quant
@@ -140,5 +149,22 @@ class Inventory:
 					# TODO: Drop the rest of the item
 					it2.quantity = it2.item.max_stack
 				return
+
+		# Search for item in inventory
+		for it2 in self.get():
+			if it.displayName.lower() == it2.item.displayName.lower():
+				if it2.quantity + quant < it2.item.max_stack:
+					it2.quantity += quant
+				else:
+					# Not enought space in inventory
+					# TODO: Drop the rest of the item
+					it2.quantity = it2.item.max_stack
+				return
+
 		# Make new item
+		for i, it2 in enumerate(self.getslots()):
+			if it2.item.displayName == Items.EMPTY.value.displayName:
+				self.getslots()[i] = _InventoryItem(it, quant)
+				return
+
 		self.__inv.push(_InventoryItem(it, quant))
