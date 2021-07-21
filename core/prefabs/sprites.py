@@ -1,7 +1,7 @@
 import pygame
 from pygame.locals import *
 
-import assets
+from core.assets import asset
 from core.UI.ui import UI
 from core.console.consolefunctions import Console
 from core.inventory import inventory
@@ -21,7 +21,7 @@ class PlayerOld(LivingCreature):
 
 		# Assets
 		# Player image asset
-		self.image = pygame.transform.scale(assets.get_asset_from_name(game.graphics, 'player1').image, (64, 64))
+		self.image = pygame.transform.scale(asset.get_asset_from_name(game.graphics, 'player1').image, (64, 64))
 		self.rect = self.image.get_rect()
 
 		# World interaction
@@ -139,7 +139,7 @@ class EnemyStandard:
 		# Getting specific information from LivingCreature class
 		# super().__init__(game, hp, max_hp, armor, speed)
 		# Assets
-		self.image = pygame.transform.scale(assets.get_asset_from_name(game.graphics, 'mage3').image, (64, 64))
+		self.image = pygame.transform.scale(asset.get_asset_from_name(game.graphics, 'mage3').image, (64, 64))
 		self.rect = self.image.get_rect()
 
 	def updaterect(self):
