@@ -10,5 +10,4 @@ class Asset:
 		self.displayName = displayName
 		self.texturePath = texturePath
 		self.image = None
-		self.rect = None
 		self.id = iden
