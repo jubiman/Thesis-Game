@@ -113,8 +113,8 @@ class InputHandler:
 			# TODO: Old way
 			# if self.game.player.inventory.hands[0].item.texturePath.lower() in block.material.tools or \
 			# self.game.player.inventory.hands[1].item.texturePath.lower() in block.material.tools:
-			if self.game.player.inventory.slots.getSlot(self.game.player.inventory.selectedslot).texturePath.lower()\
-				in block.material.tools:
+			if self.game.player.inventory.getSlot(self.game.player.inventory.selectedslot)\
+				.item.texturePath.lower() in block.material.tools:
 
 				# Chop down the tree
 				self.game.world.setBlock(*rel_mouse, Block(Materials.GRASS.value))

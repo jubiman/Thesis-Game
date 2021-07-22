@@ -2,7 +2,7 @@ from enum import Enum
 
 import pygame
 
-import assets
+from core.assets.assets import Assets
 from core.items.item import Item
 
 
@@ -53,18 +53,18 @@ class Items(Enum):
 		return None
 
 	@staticmethod
-	def load(game):
+	def load():
 		for it in Items:
 			if it.value.texturePath is not None:
-				im = assets.get_asset_from_name(game.graphics, it.value.texturePath)
-				# TODO: Remove im when assets are fully made
-				# it.value.image = pygame.transform.scale(
-				# assets.get_asset_from_name(game.graphics, it.value.texturePath).image, (64, 64))
-				if im is None:
-					continue
-				it.value.image = pygame.transform.scale(
-					im.image, (64, 64))
-				it.value.rect = it.value.image.get_rect()
+				# im = asset.get_asset_from_name(game.graphics, it.value.texturePath)
+				# im = Assets.getFromTexturePath(it.value.texturePath)
+				try:
+					it.value.image = pygame.transform.scale(
+						Assets[it.value.texturePath.upper()].value.image, (64, 64))
+					it.value.rect = it.value.image.get_rect()
+				except KeyError:
+					# TODO: Item does not yet have an image
+					pass
 
 	@staticmethod
 	def getItemFromName(n):

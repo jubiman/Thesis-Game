@@ -6,6 +6,7 @@ from configparser import ConfigParser
 from os import path, mkdir
 
 from cfg.cfgparser import CfgParser
+from core.assets.assets import Assets
 from core.console.consolefunctions import ConsoleFunctions
 from core.controller.camera import Camera
 from core.prefabs.sprites import *
@@ -49,7 +50,6 @@ class Game:
 		pygame.display.set_caption(TITLE)
 		self.clock = pygame.time.Clock()
 		pygame.key.set_repeat(1, 100)
-		self.graphics = assets.populate_assets()
 		self.load_data()
 		
 		self.world = None
@@ -67,9 +67,10 @@ class Game:
 		assets_folder = path.join(game_folder, 'assets')
 
 		# Load assets
-		Materials.load(self)
-		EntityTypes.load(self)
-		Items.load(self)
+		Assets.load()
+		Materials.load()
+		EntityTypes.load()
+		Items.load()
 
 		# Initialize config
 		self.cpc = ConfigParser()  # ConfigParserControls
