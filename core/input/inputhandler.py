@@ -113,7 +113,7 @@ class InputHandler:
 			# TODO: Old way
 			# if self.game.player.inventory.hands[0].item.texturePath.lower() in block.material.tools or \
 			# self.game.player.inventory.hands[1].item.texturePath.lower() in block.material.tools:
-			if self.game.player.inventory.getSlotsObject().getSlot(self.game.player.inventory.selectedslot)\
+			if self.game.player.inventory.getSlot(self.game.player.inventory.selectedslot)\
 				.item.texturePath.lower() in block.material.tools:
 
 				# Chop down the tree

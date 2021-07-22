@@ -133,6 +133,9 @@ class Inventory:
 	def getSlotsObject(self):
 		return self.__slots
 
+	def getSlot(self, slot):
+		return self.__slots.getSlot(slot)
+
 	# Method to add items to inventory
 	def add_new_item(self, it, quant=1):
 		"""
