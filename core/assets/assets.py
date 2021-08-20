@@ -486,6 +486,8 @@ class Assets(Enum):
 	NUMBER0 = Asset("Number0", "number0", 787)
 	IRON_AXE = Asset("Iron axe", "iron_axe", 931)
 
+	OAK_LOG = Asset("Oak log", "items/oak_log", 47685225)
+
 	@staticmethod
 	def getAsset(iden):
 		"""
