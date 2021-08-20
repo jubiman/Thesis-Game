@@ -486,6 +486,7 @@ class Assets(Enum):
 	NUMBER0 = Asset("Number0", "number0", 787)
 	IRON_AXE = Asset("Iron axe", "iron_axe", 931)
 
+	# CUSTOM ASSETS AREA
 	OAK_LOG = Asset("Oak log", "items/oak_log", 47685225)
 
 	@staticmethod
@@ -513,5 +514,21 @@ class Assets(Enum):
 			for y in range(22):
 				# list(Assets)[x * 22 + y].image = sheet.subsurface(pygame.Rect((16 * x, 16 * y), (16, 16)))
 				ass = Assets.getAsset(x * 22 + y)
+				# ass = list(Assets)[x * 22 + y]
 				if ass is not None:
 					ass.image = sheet.subsurface(pygame.Rect((16 * x, 16 * y), (16, 16)))
+
+		# Load the rest
+		""" Can this somehow work?
+		for i, asset in enumerate(Assets, 449):
+			# print(f"{asset.value.image=}")
+			# print(len(list(Assets)))
+			asset.value.image = pygame.image.load(path.join(GAMEDIR, 'assets/visual/items/oak_log.png'))
+		"""
+		# TODO: change this hardcoded number when new assets get added to the tilesheet area
+		for i in range(450, len(Assets)):
+			print(f"{list(Assets)[i].value.image=}")
+			list(Assets)[i].value.image = pygame.image.load(path.join(GAMEDIR, 'assets/visual/items/oak_log.png'))
+			print(f"{list(Assets)[i].value.image=}")
+
+

@@ -29,7 +29,6 @@ MANIFEST
 
 # User-made files
 tox.ini
-assets/visual/**
 
 # PyInstaller
 #  Usually these files are written by a python script from a template
