@@ -487,7 +487,7 @@ class Assets(Enum):
 	IRON_AXE = Asset("Iron axe", "iron_axe", 931)
 
 	# CUSTOM ASSETS AREA
-	OAK_LOG = Asset("Oak log", "items/oak_log", 47685225)
+	LOG = Asset("Log", "items/log", 47685225)
 
 	@staticmethod
 	def getAsset(iden):
@@ -523,12 +523,13 @@ class Assets(Enum):
 		for i, asset in enumerate(Assets, 449):
 			# print(f"{asset.value.image=}")
 			# print(len(list(Assets)))
-			asset.value.image = pygame.image.load(path.join(GAMEDIR, 'assets/visual/items/oak_log.png'))
+			asset.value.image = pygame.image.load(path.join(GAMEDIR, 'assets/visual/items/log.png'))
 		"""
 		# TODO: change this hardcoded number when new assets get added to the tilesheet area
 		for i in range(450, len(Assets)):
 			print(f"{list(Assets)[i].value.image=}")
-			list(Assets)[i].value.image = pygame.image.load(path.join(GAMEDIR, 'assets/visual/items/oak_log.png'))
+			list(Assets)[i].value.image = pygame.image.load(path.join(GAMEDIR, 'assets/visual/',
+																	list(Assets)[i].value.texturePath + ".png"))
 			print(f"{list(Assets)[i].value.image=}")
 
 

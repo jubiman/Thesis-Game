@@ -32,7 +32,7 @@ class Items(Enum):
 	GOLD = Item("Gold", "gold", 58, 999)
 
 	# Ores
-	OAK_LOG = Item("Oak Log", "oak_log", 100, 999)
+	LOG = Item("Log", "log", 100, 999)
 	IRON_ORE = Item("Iron_Ore", "iron_ore", 101, 999)
 	SULFUR_ORE = Item("Sulfur_Ore", "sulfur_ore", 102, 999)
 	COPPER_ORE = Item("Copper_Ore", "copper_ore", 102, 999)
