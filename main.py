@@ -3,15 +3,17 @@ import sys
 import threading
 import ctypes
 from configparser import ConfigParser
-from os import path
+from os import path, mkdir
 
 from cfg.cfgparser import CfgParser
+from core.assets.assets import Assets
 from core.console.consolefunctions import ConsoleFunctions
 from core.controller.camera import Camera
 from core.prefabs.sprites import *
 from core.UI.ui import UI
-from settings import *
 from core.input.inputhandler import InputHandler
+from core.items.items import Items
+from settings import *
 from world.chunk import Chunk
 from world.entity.entities.player import Player
 from world.entity.entitytypes import EntityTypes
@@ -37,8 +39,8 @@ if platform == "win32":
 	kernel32 = ctypes.windll.kernel32
 	kernel32.SetConsoleMode(kernel32.GetStdHandle(-11), 7)
 
-if not os.path.isdir("saves"):
-	os.mkdir("saves")
+if not path.isdir("saves"):
+	mkdir("saves")
 
 
 class Game:
@@ -48,7 +50,6 @@ class Game:
 		pygame.display.set_caption(TITLE)
 		self.clock = pygame.time.Clock()
 		pygame.key.set_repeat(1, 100)
-		self.graphics = assets.populate_assets()
 		self.load_data()
 		
 		self.world = None
@@ -64,8 +65,12 @@ class Game:
 	def load_data(self):
 		game_folder = path.dirname(__file__)
 		assets_folder = path.join(game_folder, 'assets')
-		Materials.load(self)
-		EntityTypes.load(self)
+
+		# Load assets
+		Assets.load()
+		Materials.load()
+		EntityTypes.load()
+		Items.load()
 
 		# Initialize config
 		self.cpc = ConfigParser()  # ConfigParserControls

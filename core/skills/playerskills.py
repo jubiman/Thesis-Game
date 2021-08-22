@@ -2,7 +2,7 @@ from enum import Enum
 
 import pygame
 
-import assets
+from core.assets import asset
 from core.skills.playerskill import Playerskill
 
 
@@ -32,7 +32,7 @@ class Playerskills(Enum):
 		for bs in Playerskills:
 			if bs.value.texturePath is not None:
 				bs.value.image = pygame.transform.scale(
-					assets.get_asset_from_name(game.graphics, bs.value.texturePath).image, (64, 64))
+					asset.get_asset_from_name(game.graphics, bs.value.texturePath).image, (64, 64))
 				bs.value.rect = bs.value.image.get_rect()
 
 	@staticmethod

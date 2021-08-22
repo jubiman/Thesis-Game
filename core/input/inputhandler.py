@@ -20,19 +20,25 @@ class InputHandler:
 	def handleInput(self):
 		self.__handleKeys()
 		self.__handleMouse()
+		self.__handleEvents()
+
+	def __handleEvents(self):
+		for event in pygame.event.get():
+			if event.type == MOUSEWHEEL:
+				pass
 
 	def __handleKeys(self):
 		self.game.player.game.player.vel = pygame.Vector2(0, 0)
 		keys = pygame.key.get_pressed()
 
 		# Movement
-		if keys[ord(self.game.cpc['BINDS']['MOVELEFT'])]:
+		if keys[ord(self.game.cpc['BINDS']['MOVELEFT'])] and not keys[ord(self.game.cpc['BINDS']['MOVERIGHT'])]:
 			self.game.player.vel.x = -self.game.player.speed
-		if keys[ord(self.game.cpc['BINDS']['MOVERIGHT'])]:
+		if keys[ord(self.game.cpc['BINDS']['MOVERIGHT'])] and not keys[ord(self.game.cpc['BINDS']['MOVELEFT'])]:
 			self.game.player.vel.x = self.game.player.speed
-		if keys[ord(self.game.cpc['BINDS']['MOVEUP'])]:
+		if keys[ord(self.game.cpc['BINDS']['MOVEUP'])] and not keys[ord(self.game.cpc['BINDS']['MOVEDOWN'])]:
 			self.game.player.vel.y = -self.game.player.speed
-		if keys[ord(self.game.cpc['BINDS']['MOVEDOWN'])]:
+		if keys[ord(self.game.cpc['BINDS']['MOVEDOWN'])] and not keys[ord(self.game.cpc['BINDS']['MOVEUP'])]:
 			self.game.player.vel.y = self.game.player.speed
 		if self.game.player.vel.x != 0 and self.game.player.vel.y != 0:
 			self.game.player.vel *= 0.7071
@@ -61,40 +67,35 @@ class InputHandler:
 		if keys[K_i] and self.game.player.debug_print_cooldown == 0:
 			Console.log(thread="PLAYER",
 						message="Inventory:")
-			for it in self.game.player.inventory.inv.ls:
+			for it in self.game.player.inventory.get():
 				Console.log(thread="PLAYER",
 							message=f"{it.item.displayName} {it.quantity} {it.item.max_stack}")
 			self.game.player.debug_print_cooldown = 1
 		if keys[K_o]:
 			Console.debug(thread="DEBUG",
-						  message=f"world.entities: {self.game.world.entities}")
+							message=f"world.entities: {self.game.world.entities}")
 
 		# itembar
 		if keys[K_1]:
-			self.game.player.inventory.selectedslot = 1
+			self.game.player.inventory.selectedslot = 0
 		if keys[K_2]:
-			self.game.player.inventory.selectedslot = 2
+			self.game.player.inventory.selectedslot = 1
 		if keys[K_3]:
-			self.game.player.inventory.selectedslot = 3
+			self.game.player.inventory.selectedslot = 2
 		if keys[K_4]:
-			self.game.player.inventory.selectedslot = 4
+			self.game.player.inventory.selectedslot = 3
 		if keys[K_5]:
-			self.game.player.inventory.selectedslot = 5
+			self.game.player.inventory.selectedslot = 4
 		if keys[K_6]:
-			self.game.player.inventory.selectedslot = 6
+			self.game.player.inventory.selectedslot = 5
 		if keys[K_7]:
-			self.game.player.inventory.selectedslot = 7
-		if keys[K_e]:
-			if self.game.paused:
-				self.game.paused = False
-			else:
-				self.game.paused = True
+			self.game.player.inventory.selectedslot = 6
 
 	def __handleMouse(self):
 		mouse = pygame.mouse.get_pressed(5)
 		mouse_pos = pygame.mouse.get_pos()
 		rel_mouse = (floor((mouse_pos[0] + self.game.player.pos.x * TILESIZE - (WIDTH / 2)) / TILESIZE),
-					 floor((mouse_pos[1] + self.game.player.pos.y * TILESIZE - (HEIGHT / 2)) / TILESIZE))
+						floor((mouse_pos[1] + self.game.player.pos.y * TILESIZE - (HEIGHT / 2)) / TILESIZE))
 
 		if mouse[0]:
 			block = self.game.world.getBlockAt(*rel_mouse)
@@ -109,15 +110,16 @@ class InputHandler:
 				return
 
 			# Check if the player has a correct tool
-			if self.game.player.inventory.hands[0].item.texturePath.lower() in block.material.tools or \
-					self.game.player.inventory.hands[1].item.texturePath.lower() in block.material.tools:
+			# TODO: Old way
+			# if self.game.player.inventory.hands[0].item.texturePath.lower() in block.material.tools or \
+			# self.game.player.inventory.hands[1].item.texturePath.lower() in block.material.tools:
+			if self.game.player.inventory.getSlot(self.game.player.inventory.selectedslot)\
+				.item.texturePath.lower() in block.material.tools:
 
 				# Chop down the tree
 				self.game.world.setBlock(*rel_mouse, Block(Materials.GRASS.value))
 
 				# Add items to inventory
-				# TODO: Add woodcutting skill multiplier
-				# amount = randint(1, 5)
 				drops = list(block.material.calculateItemDrops())
 				for drop in drops:
 					self.game.player.inventory.add_new_item(*drop)

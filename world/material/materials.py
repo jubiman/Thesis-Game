@@ -2,7 +2,7 @@ from enum import Enum
 
 import pygame
 
-import assets
+from core.assets.assets import Assets
 from world.material.material import Material
 
 
@@ -26,9 +26,9 @@ class Materials(Enum):
 		return list(Materials)[iden]
 
 	@staticmethod
-	def load(game):
+	def load():
 		for mat in Materials:
 			if mat.value.texturePath is not None:
 				mat.value.image = pygame.transform.scale(
-					assets.get_asset_from_name(game.graphics, mat.value.texturePath).image, (64, 64))
+					Assets[mat.value.texturePath.upper()].value.image, (64, 64))
 				mat.value.rect = mat.value.image.get_rect()
