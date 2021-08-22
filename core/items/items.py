@@ -8,12 +8,13 @@ from core.items.item import Item
 
 class Items(Enum):
 	EMPTY = Item("Empty", "empty", 0, 1)
+	BACKPACK = Item("BackPack", "backpack1", 1, 1)
 
 	# Tools
 	# TODO: Add all materials to tools
-	IRON_AXE = Item("Iron Axe", "iron_axe", 1, 1)
-	IRON_PICKAXE = Item("Iron Pickaxe", "iron_pickaxe", 2, 1)
-	IRON_HAMMER = Item("Iron Hammer", "iron_hammer", 3, 1)
+	IRON_AXE = Item("Iron Axe", "iron_axe", 2, 1)
+	IRON_PICKAXE = Item("Iron Pickaxe", "iron_pickaxe", 3, 1)
+	IRON_HAMMER = Item("Iron Hammer", "iron_hammer", 4, 1)
 
 	# Weapons
 	IRON_SWORD = Item("Iron Sword", "iron_sword", 25, 1)

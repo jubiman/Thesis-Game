@@ -482,9 +482,14 @@ class Assets(Enum):
 	PLAYER1 = Asset("Player1", "player1", 550)
 	PLAYER2 = Asset("Player2", "player2", 551)
 	PLAYER3 = Asset("Player3", "player3", 552)
-	# ?
+	# Column 32
+	IRON_SWORD = Asset("Iron sword", "iron_sword", 711)
+	# Column 35
 	NUMBER0 = Asset("Number0", "number0", 787)
-	IRON_AXE = Asset("Iron axe", "iron_axe", 931)
+	# Column 40
+	IRON_AXE = Asset("Iron axe", "iron_axe", 887)
+	# Column 47
+	BACKPACK1 = Asset("Backpack1", "backpack1", 1038)
 
 	@staticmethod
 	def getAsset(iden):

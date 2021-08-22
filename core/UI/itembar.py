@@ -1,11 +1,15 @@
 import pygame
-
+from core.items.itemimage import ItemImage
+from core.items.items import Items
+import core.inventory.inventory
 from settings import WIDTH, HEIGHT, WHITE
 
 
 class Itembar:
     def __init__(self):
         self.game = None
+        self.inventory = core.inventory.inventory
+        self.backpack = ItemImage(self, Items.BACKPACK.value)
 
     def draw(self):
         backgrounditembar = pygame.Rect(WIDTH / 2 - 320, HEIGHT - 150, 640, 80)
@@ -33,21 +37,34 @@ class Itembar:
             slot7 = pygame.Rect(WIDTH / 2 + 160, HEIGHT - 150, 80, 80)
             pygame.draw.rect(self.game.screen, WHITE, slot7)
 
-        itembar = [pygame.Rect(WIDTH / 2 - 310, HEIGHT - 140, 60, 60),
-                pygame.Rect(WIDTH / 2 - 230, HEIGHT - 140, 60, 60),
-                pygame.Rect(WIDTH / 2 - 150, HEIGHT - 140, 60, 60),
-                pygame.Rect(WIDTH / 2 - 70, HEIGHT - 140, 60, 60),
-                pygame.Rect(WIDTH / 2 + 10, HEIGHT - 140, 60, 60),
-                pygame.Rect(WIDTH / 2 + 90, HEIGHT - 140, 60, 60),
-                pygame.Rect(WIDTH / 2 + 170, HEIGHT - 140, 60, 60)]
+        itembarrects = [pygame.Rect(WIDTH / 2 - 310, HEIGHT - 140, 60, 60),
+                        pygame.Rect(WIDTH / 2 - 230, HEIGHT - 140, 60, 60),
+                        pygame.Rect(WIDTH / 2 - 150, HEIGHT - 140, 60, 60),
+                        pygame.Rect(WIDTH / 2 - 70, HEIGHT - 140, 60, 60),
+                        pygame.Rect(WIDTH / 2 + 10, HEIGHT - 140, 60, 60),
+                        pygame.Rect(WIDTH / 2 + 90, HEIGHT - 140, 60, 60),
+                        pygame.Rect(WIDTH / 2 + 170, HEIGHT - 140, 60, 60)]
 
-        pygame.draw.rect(self.game.screen, (50, 50, 50), itembar[0])
-        pygame.draw.rect(self.game.screen, (50, 50, 50), itembar[1])
-        pygame.draw.rect(self.game.screen, (50, 50, 50), itembar[2])
-        pygame.draw.rect(self.game.screen, (50, 50, 50), itembar[3])
-        pygame.draw.rect(self.game.screen, (50, 50, 50), itembar[4])
-        pygame.draw.rect(self.game.screen, (50, 50, 50), itembar[5])
-        pygame.draw.rect(self.game.screen, (50, 50, 50), itembar[6])
+        itembar = [(WIDTH / 2 - 310, HEIGHT - 140),
+                   (WIDTH / 2 - 230, HEIGHT - 140),
+                   (WIDTH / 2 - 150, HEIGHT - 140),
+                   (WIDTH / 2 - 70, HEIGHT - 140),
+                   (WIDTH / 2 + 10, HEIGHT - 140),
+                   (WIDTH / 2 + 90, HEIGHT - 140),
+                   (WIDTH / 2 + 170, HEIGHT - 140),
+                   (WIDTH / 2 + 250, HEIGHT - 140)]
 
+        pygame.draw.rect(self.game.screen, (50, 50, 50), itembarrects[0])
+        pygame.draw.rect(self.game.screen, (50, 50, 50), itembarrects[1])
+        pygame.draw.rect(self.game.screen, (50, 50, 50), itembarrects[2])
+        pygame.draw.rect(self.game.screen, (50, 50, 50), itembarrects[3])
+        pygame.draw.rect(self.game.screen, (50, 50, 50), itembarrects[4])
+        pygame.draw.rect(self.game.screen, (50, 50, 50), itembarrects[5])
+        pygame.draw.rect(self.game.screen, (50, 50, 50), itembarrects[6])
+        self.game.screen.blit(self.backpack.itemtype.image, itembar[7])
+
+        self.helditem = (WIDTH / 2 - 44, HEIGHT / 2 - 6)
         for i, item in enumerate(self.game.player.inventory.getslots()):
             self.game.screen.blit(pygame.transform.scale(item.item.image, (60, 60)), itembar[i])
+            if i == self.game.player.inventory.selectedslot:
+                self.game.screen.blit(pygame.transform.flip(pygame.transform.scale(item.item.image, (30,30)), True, False), self.helditem)
