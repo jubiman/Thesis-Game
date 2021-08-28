@@ -2,19 +2,18 @@ from enum import Enum
 
 import pygame
 
-from core.assets.assets import Assets
+from core.assets.assets import Assets, CustomAssets
 from core.items.item import Item
 
 
 class Items(Enum):
 	EMPTY = Item("Empty", "empty", 0, 1)
-	BACKPACK = Item("BackPack", "backpack1", 1, 1)
 
 	# Tools
 	# TODO: Add all materials to tools
-	IRON_AXE = Item("Iron Axe", "iron_axe", 2, 1)
-	IRON_PICKAXE = Item("Iron Pickaxe", "iron_pickaxe", 3, 1)
-	IRON_HAMMER = Item("Iron Hammer", "iron_hammer", 4, 1)
+	IRON_AXE = Item("Iron Axe", "iron_axe", 1, 1)
+	IRON_PICKAXE = Item("Iron Pickaxe", "iron_pickaxe", 2, 1)
+	IRON_HAMMER = Item("Iron Hammer", "iron_hammer", 3, 1)
 
 	# Weapons
 	IRON_SWORD = Item("Iron Sword", "iron_sword", 25, 1)
@@ -64,8 +63,12 @@ class Items(Enum):
 						Assets[it.value.texturePath.upper()].value.image, (64, 64))
 					it.value.rect = it.value.image.get_rect()
 				except KeyError:
-					# TODO: Item does not yet have an image
-					pass
+					try:
+						it.value.image = pygame.transform.scale(
+							CustomAssets[it.value.texturePath.upper()].value.image, (64, 64))
+						it.value.rect = it.value.image.get_rect()
+					except KeyError:
+						pass
 
 	@staticmethod
 	def getItemFromName(n):
