@@ -42,7 +42,7 @@ class Healthbar:
 		backgroundmanabar = pygame.Rect(80, 110, 300, 40)
 		pygame.draw.rect(self.game.screen, (0, 0, 0), backgroundmanabar)
 		currentmanabar = pygame.Rect(80, 110, 300, 40)
-		pygame.draw.rect(self.game.screen, (0, 0, 200), currentmanabar)
+		pygame.draw.rect(self.game.screen, (0, 0, 255), currentmanabar)
 		currentmanatext = pygame.font.SysFont('Corbel', 50).render(str('100'), True, (255, 255, 255))
 		self.game.screen.blit(currentmanatext, (400, 95))
 		self.game.screen.blit(Images.MANA.value.image, (30, 100))
