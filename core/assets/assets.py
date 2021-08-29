@@ -527,10 +527,9 @@ class Assets(Enum):
 			# print(f"{mid=}")
 			if assets[mid].value.id == iden:
 				return assets[mid].value
-			elif assets[mid].value.id > iden:
+			if assets[mid].value.id > iden:
 				return Assets.getAsset(iden, s, mid - 1)
-			else:
-				return Assets.getAsset(iden, mid + 1, e)
+			return Assets.getAsset(iden, mid + 1, e)
 		else:
 			return None
 
