@@ -36,7 +36,7 @@ class Healthbar:
 		pygame.draw.rect(self.game.screen, (0, 200, 0), currenthealthbar)
 		currenthealthtext = pygame.font.SysFont('Corbel', 50).render(str(self.game.player.hp), True, (255, 255, 255))
 		self.game.screen.blit(currenthealthtext, (400, 25))
-		self.game.screen.blit(pygame.transform.scale(Assets.getAsset(1057).image, (60, 60)), (30, 30))
+		self.game.screen.blit(pygame.transform.scale(Assets.HEALTH.value.image, (60, 60)), (30, 30))
 
 		# Mana (only temporary, before added its own class)
 		backgroundmanabar = pygame.Rect(80, 110, 300, 40)
@@ -45,7 +45,7 @@ class Healthbar:
 		pygame.draw.rect(self.game.screen, (0, 0, 255), currentmanabar)
 		currentmanatext = pygame.font.SysFont('Corbel', 50).render(str('100'), True, (255, 255, 255))
 		self.game.screen.blit(currentmanatext, (400, 95))
-		self.game.screen.blit(pygame.transform.scale(Assets.getAsset(1067).image, (60, 60)), (30, 100))
+		self.game.screen.blit(pygame.transform.scale(Assets.LEVEL.value.image, (60, 60)), (30, 100))
 
 		# Level (only temporary, before added its own class)
 		backgroundlevelbar = pygame.Rect(80, 180, 300, 40)
@@ -54,7 +54,7 @@ class Healthbar:
 		pygame.draw.rect(self.game.screen, (255, 165, 0), currentlevelbar)
 		currentleveltext = pygame.font.SysFont('Corbel', 50).render(str(100), True, (255, 255, 255))
 		self.game.screen.blit(currentleveltext, (400, 165))
-		self.game.screen.blit(pygame.transform.scale(Assets.getAsset(1077).image, (60, 60)), (30, 170))
+		self.game.screen.blit(pygame.transform.scale(Assets.MANA.value.image, (60, 60)), (30, 170))
 
 	def regen(self):
 		if self.countdown > 0:

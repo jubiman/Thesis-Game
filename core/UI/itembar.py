@@ -59,7 +59,7 @@ class Itembar:
         pygame.draw.rect(self.game.screen, (50, 50, 50), itembarrects[4])
         pygame.draw.rect(self.game.screen, (50, 50, 50), itembarrects[5])
         pygame.draw.rect(self.game.screen, (50, 50, 50), itembarrects[6])
-        self.game.screen.blit(pygame.transform.scale(Assets.getAsset(1038).image, (60, 60)), itembar[7])
+        self.game.screen.blit(pygame.transform.scale(Assets.BACKPACK1.value.image, (60, 60)), itembar[7])
 
         self.helditem = (WIDTH / 2 - 44, HEIGHT / 2 - 6)
         for i, item in enumerate(self.game.player.inventory.getslots()):

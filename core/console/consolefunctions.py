@@ -82,29 +82,34 @@ class ConsoleFunctions(Console):
 				# TODO: Test on on other operating systems than Windows
 				Console.query = "$> " + self.query
 
-				try:
+				inp = ord(getch())  # TODO: Shift arrow keys are a problem (4F 32 44 = O2A for Shift + left arrow)
+				if inp is None:
+					continue
+				"""try:
 					inp = getch()  # Returns a byte string on windows or a string on UNIX/POSIX
 					# inp = sys.stdin.read(1)  # Possible easier subsitute?
 				except KeyboardInterrupt:
 					inp = "ctr c lol"  # TODO: Add copy and pasting
+				# Console.debug(inp.hex())
+				# continue
 				# Decode the input if we are on windows
 				try:
 					inp = inp.decode("utf-8")  # Get a single character at a time
 				except UnicodeDecodeError:
 					inp = inp.decode("unicode_escape")
 				except AttributeError:
-					pass
+					pass"""
 
 				# Console.debug(message=f"inp = {inp}")
 				# If we don't return we don't want to execute the code yet, but add the letter to the query instead
-				if inp != "\r" and inp != "\n":
+				if inp not in [ord("\r"), ord("\n")]:
 					if inp == "\x08":  # Backspace
 						if len(self.query) > 0:  # If the query is empty we don't want to remove anything
 							self.query = self.query[:self.cursor - 1] + self.query[self.cursor:]
 							self.cursor -= 1
 							sys.stdout.write(f"\r\033[K$> {self.query}\033[{self.cursor + 4}G")
 
-					elif inp == "\xe0":  # First of 2 characters for control keys
+					elif inp == ord("\xe0"):  # First of 2 characters for control keys
 						key = getch()
 						try:
 							key = key.decode("utf-8")
@@ -166,7 +171,7 @@ class ConsoleFunctions(Console):
 								sys.stdout.write(f"\r\033[K$> {self.query}\033[{self.cursor + 4}G")
 
 						continue
-					elif inp == "\t":
+					elif inp == ord("\t"):
 						# TODO: Add kwargs algorithms
 						# I want to fucking die
 						if self.completionQuery:
@@ -235,13 +240,25 @@ class ConsoleFunctions(Console):
 									for k in self.autocompleteOptions:
 										msg += k + '    '
 									Console.printAutocomplete(message=msg[:-1])
-					else:
+					elif 32 <= inp <= 126:  # Check if the inputted character is a printable char (https://asciitable.com/)
 						try:
-							self.query = self.query[:self.cursor] + inp + self.query[self.cursor:]
+							self.query = self.query[:self.cursor] + chr(inp) + self.query[self.cursor:]
 							self.cursor += 1
 							self.completionQuery = ""
 						except UnicodeDecodeError:
 							pass
+					elif inp < 31:  # TODO: Control characters
+						# Console.debug(f"{chr(inp).encode()=}", "CONSOLE")
+						if inp == ord("\x18"):  # CAN (ctrl-X) (aka cancel)
+							self.query = ""
+							self.histIndex = -1
+							self.cursor = 0
+							self.autocompleteOptions = None
+							self.autocompleteIndex = -1
+							self.completionQuery = ""
+							Console.query = ""
+					else:
+						Console.debug(f"{hex(inp)=}", "CONSOLE")
 					sys.stdout.write(f"\r\033[K$> {self.query}\033[{self.cursor + 4}G")
 					sys.stdout.flush()
 					continue
