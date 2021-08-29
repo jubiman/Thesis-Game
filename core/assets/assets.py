@@ -530,8 +530,7 @@ class Assets(Enum):
 			if assets[mid].value.id > iden:
 				return Assets.getAsset(iden, s, mid - 1)
 			return Assets.getAsset(iden, mid + 1, e)
-		else:
-			return None
+		return None
 
 	@staticmethod
 	def load():
