@@ -2,7 +2,7 @@ from enum import Enum
 
 import pygame
 
-from core.assets.assets import Assets, CustomAssets
+from core.assets.assets import Assets
 from world.entity.entitytype import EntityType
 
 
@@ -31,9 +31,4 @@ class EntityTypes(Enum):
 						Assets[ent.value.texturePath.upper()].value.image, (64, 64))
 					ent.value.rect = ent.value.image.get_rect()
 				except KeyError:
-					try:
-						ent.value.image = pygame.transform.scale(
-							CustomAssets[ent.value.texturePath.upper()].value.image, (64, 64))
-						ent.value.rect = ent.value.image.get_rect()
-					except KeyError:
-						pass
+					pass

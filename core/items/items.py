@@ -2,7 +2,7 @@ from enum import Enum
 
 import pygame
 
-from core.assets.assets import Assets, CustomAssets
+from core.assets.assets import Assets
 from core.items.item import Item
 
 
@@ -63,12 +63,7 @@ class Items(Enum):
 						Assets[it.value.texturePath.upper()].value.image, (64, 64))
 					it.value.rect = it.value.image.get_rect()
 				except KeyError:
-					try:
-						it.value.image = pygame.transform.scale(
-							CustomAssets[it.value.texturePath.upper()].value.image, (64, 64))
-						it.value.rect = it.value.image.get_rect()
-					except KeyError:
-						pass
+					pass
 
 	@staticmethod
 	def getItemFromName(n):

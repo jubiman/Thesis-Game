@@ -6,7 +6,7 @@ from configparser import ConfigParser
 from os import path, mkdir
 
 from cfg.cfgparser import CfgParser
-from core.assets.assets import Assets, CustomAssets
+from core.assets.assets import Assets
 from core.console.consolefunctions import ConsoleFunctions
 from core.controller.camera import Camera
 from core.prefabs.sprites import *
@@ -68,7 +68,6 @@ class Game:
 
 		# Load assets
 		Assets.load()
-		CustomAssets.load()
 		Materials.load()
 		EntityTypes.load()
 		Items.load()

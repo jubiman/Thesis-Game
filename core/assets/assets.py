@@ -493,6 +493,19 @@ class Assets(Enum):
     # Column 47
     BACKPACK1 = Asset("Backpack1", "backpack1", 1038)
 
+    # Assets made by Kevin
+    # Row 1
+    LOG = Asset("Log", "log", 1056)
+    WOOD = Asset("Wood", "wood", 1066)
+    STONE = Asset("Stone", "stone", 1076)
+    COAL = Asset("Coal", "coal", 1086)
+    IRON_ORE = Asset("Iron Ore", "iron_ore", 1096)
+    IRON = Asset("Iron", "iron", 1106)
+    # Row 2
+    HEALTH = Asset("Health", "health", 1057)
+    LEVEL = Asset("Level", "level", 1067)
+    MANA = Asset("Mana", "mana", 1077)
+
     @staticmethod
     def getAsset(iden):
         """
@@ -511,54 +524,20 @@ class Assets(Enum):
         assets = []
         # Open the tilesheet
         # colored_packed.png is 16x16, currently is hardcoded to this file
-        sheet = pygame.image.load(
+        sheet1 = pygame.image.load(
             path.join(GAMEDIR, 'assets/visual/Tilesheet/colored_transparent_packed.png'))
+        sheet2 = pygame.image.load(
+            path.join(GAMEDIR, 'assets/visual/Tilesheet/custom_textures.png'))
         # index = 0  # is used to know how many iterations we have done (x*22+y = index)
         for x in range(48):
             for y in range(22):
                 # list(Assets)[x * 22 + y].image = sheet.subsurface(pygame.Rect((16 * x, 16 * y), (16, 16)))
                 ass = Assets.getAsset(x * 22 + y)
                 if ass is not None:
-                    ass.image = sheet.subsurface(pygame.Rect((16 * x, 16 * y), (16, 16)))
-
-
-class CustomAssets(Enum):
-    # Row 1
-    LOG = Asset("Log", "log", 0)
-    WOOD = Asset("Wood", "wood", 10)
-    STONE = Asset("Stone", "stone", 20)
-    COAL = Asset("Coal", "coal", 30)
-    IRON_ORE = Asset("Iron Ore", "iron_ore", 40)
-    IRON = Asset("Iron", "iron", 50)
-    # Row 2
-    HEALTH = Asset("Health", "health", 1)
-    LEVEL = Asset("Level", "level", 11)
-    MANA = Asset("Mana", "mana", 21)
-
-    @staticmethod
-    def getAsset(iden):
-        """
-        :param int iden: the identifier of the entity type
-        :return: Returns entity or None
-        :rtype: Item or Image
-        """
-        for ass in CustomAssets:
-            if ass.value.id == iden:
-                return ass.value
-        return None
-
-    @staticmethod
-    def load():
-        # Define list with image chunks
-        assets = []
-        # Open the tilesheet
-        # colored_packed.png is 16x16, currently is hardcoded to this file
-        sheet = pygame.image.load(
-            path.join(GAMEDIR, 'assets/visual/Tilesheet/custom_textures.png'))
-        # index = 0  # is used to know how many iterations we have done (x*22+y = index)
+                    ass.image = sheet1.subsurface(pygame.Rect((16 * x, 16 * y), (16, 16)))
         for x in range(10):
             for y in range(10):
                 # list(Assets)[x * 22 + y].image = sheet.subsurface(pygame.Rect((16 * x, 16 * y), (16, 16)))
-                ass = CustomAssets.getAsset(x * 10 + y)
+                ass = Assets.getAsset(1056 + (x * 10 + y))
                 if ass is not None:
-                    ass.image = sheet.subsurface(pygame.Rect((16 * x, 16 * y), (16, 16)))
+                    ass.image = sheet2.subsurface(pygame.Rect((16 * x, 16 * y), (16, 16)))
