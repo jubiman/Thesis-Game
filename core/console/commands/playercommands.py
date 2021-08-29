@@ -142,7 +142,7 @@ class CommandsPlayer:
 			if len(args) == 1:  # we have an argc value
 				if args[0] == 1 and parameter == "":
 					yield "give"
-				for key in CommandsPlayer.XP.parameters[args[0] - 1]:
+				for key in CommandsPlayer.ShowPos.parameters[args[0] - 1]:
 					if key.startswith(parameter):
 						if key != "":
 							yield key
