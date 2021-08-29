@@ -507,16 +507,32 @@ class Assets(Enum):
     MANA = Asset("Mana", "mana", 1077)
 
     @staticmethod
-    def getAsset(iden):
-        """
+    # def getAsset(iden, s=0, e=len(Assets)-1):
+	def getAsset(iden, s=0, e=461):  # TODO: Why the fuck cant i just use len(Assets) in this default arg. I dont want to put this outside of Assets
+		"""
 		:param int iden: the identifier of the entity type
+		:param int s: the start for the binary search
+		:param int e: the length of the part of array
 		:return: Returns entity or None
 		:rtype: Item
 		"""
-        for ass in Assets:
-            if ass.value.id == iden:
-                return ass.value
-        return None
+		"""for ass in Assets:
+			if ass.value.id == iden:
+				return ass.value
+		"""
+		# print(f"{iden=}\t{s=}\t{e=}\t", end="")
+		if e >= s:
+			mid = s + (e - s) // 2
+			assets = list(Assets)
+			# print(f"{mid=}")
+			if assets[mid].value.id == iden:
+				return assets[mid].value
+			elif assets[mid].value.id > iden:
+				return Assets.getAsset(iden, s, mid - 1)
+			else:
+				return Assets.getAsset(iden, mid + 1, e)
+		else:
+			return None
 
     @staticmethod
     def load():

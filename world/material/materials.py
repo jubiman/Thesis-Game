@@ -11,7 +11,7 @@ class Materials(Enum):
 	AIR = Material("Air", "empty", 0, "game:air")
 	GRASS = Material("Grass", "grass_0", 1, "game:grass")
 	TREE = Material("Tree", "tree_0", 2, "game:tree", tools=['wood_axe', 'iron_axe', 'copper_axe', 'bronze_axe'],
-					it_dr=[("wood", 1, (2, 10)), ("thatch", .05, (10, 50))], sk_mp=["woodcutting"])
+						it_dr=[("log", 1, (2, 10)), ("thatch", .05, (10, 50))], sk_mp=["woodcutting"])
 	WALL = Material("Wall", "wall_part_0_11111111", 3, "game:wall_part_0_11111111")
 
 	@staticmethod
