@@ -63,7 +63,6 @@ class Items(Enum):
 						Assets[it.value.texturePath.upper()].value.image, (64, 64))
 					it.value.rect = it.value.image.get_rect()
 				except KeyError:
-					# TODO: Item does not yet have an image
 					pass
 
 	@staticmethod

@@ -114,8 +114,7 @@ class Inventory:
 		# The currently selected slot saved as 0-based index for __slots array
 		self.selectedslot = 0
 
-		# TODO: Old inventory system we discussed... *sigh*
-		# TODO: How one lazy guy can fuck up the entire projects... annoys me
+		# TODO: No Old Inv. System
 		# self.hands[0] is main hand, hands[1] is offhand
 		# self.hands = [InventorySlot(Items.IRON_AXE.value, 1, 1), InventorySlot(_InventoryItem(Items.EMPTY.value, 1), 2, 1)]
 
@@ -148,7 +147,7 @@ class Inventory:
 				if it2.quantity + quant < it2.item.max_stack:
 					it2.quantity += quant
 				else:
-					# Not enought space in inventory
+					# Not enough space in inventory
 					# TODO: Drop the rest of the item
 					it2.quantity = it2.item.max_stack
 				return
@@ -159,7 +158,7 @@ class Inventory:
 				if it2.quantity + quant < it2.item.max_stack:
 					it2.quantity += quant
 				else:
-					# Not enought space in inventory
+					# Not enough space in inventory
 					# TODO: Drop the rest of the item
 					it2.quantity = it2.item.max_stack
 				return

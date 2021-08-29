@@ -26,6 +26,9 @@ class EntityTypes(Enum):
 	def load():
 		for ent in EntityTypes:
 			if ent.value.texturePath is not None:
-				ent.value.image = pygame.transform.scale(
-					Assets[ent.value.texturePath.upper()].value.image, (64, 64))
-				ent.value.rect = ent.value.image.get_rect()
+				try:
+					ent.value.image = pygame.transform.scale(
+						Assets[ent.value.texturePath.upper()].value.image, (64, 64))
+					ent.value.rect = ent.value.image.get_rect()
+				except KeyError:
+					pass
