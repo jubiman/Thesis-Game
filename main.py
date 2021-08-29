@@ -103,11 +103,16 @@ class Game:
 	def run(self):
 		# game loop - set self.playing = False to end the game
 		self.playing = True
+		self.paused = False
 		while self.playing:
 			try:
+				# while not self.paused:
+					# try:
 				self.dt = self.clock.tick(FPS) / 1000
 				self.events()
 				self.update()
+					# except pygame.error:
+						# Console.error(thread="UnknownThread", message=pygame.get_error())
 				self.draw()
 			except pygame.error:
 				# TODO: Improve error handling to not skip steps on error
