@@ -59,57 +59,15 @@ class _InventoryList:
 		pass
 
 
-class _InventorySlotList:
-	def __init__(self):
-		"""
-		:param int size: Maximum size of the list
-		:param list[_InventoryItem] ls: The inventory list
-		"""
-		self.max_size = 7
-		self.__ls = [_InventoryItem(Items.EMPTY.value, 1), _InventoryItem(Items.EMPTY.value, 1),
-					_InventoryItem(Items.EMPTY.value, 1), _InventoryItem(Items.EMPTY.value, 1),
-					_InventoryItem(Items.EMPTY.value, 1), _InventoryItem(Items.EMPTY.value, 1),
-					_InventoryItem(Items.EMPTY.value, 1)]
-
-	def push(self, it):
-		"""
-		:param _InventoryItem it: the item to add to the inventory
-		:return: None
-		"""
-		if len(self.__ls) == self.max_size:
-			Console.log("No space in inventory")
-			# TODO: Do stuff with no inventory space
-			return
-		self.__ls.append(it)
-
-	def set(self, value):
-		"""
-		:param value: New list to set
-		:return: None
-		"""
-		if len(value) > self.max_size:
-			self.__ls = value[0:self.max_size]
-		else:
-			self.__ls = value
-
-	def get(self):
-		return self.__ls
-
-	def getSlot(self, slot):
-		if slot > len(self.__ls):
-			return None
-		return self.__ls[slot]
-
-	def swap_item(self):
-		pass
-
-
 # TODO: Create working inventory with items
 class Inventory:
 	def __init__(self):
 		self.__inv = _InventoryList(27)  # Inventory only has 27 slots
 		# __slots[0] is bound to 1, so __slots[6] is max (7)
-		self.__slots = _InventorySlotList()
+		self.__slots = _InventoryList(7, [_InventoryItem(Items.EMPTY.value, 1), _InventoryItem(Items.EMPTY.value, 1),
+					_InventoryItem(Items.EMPTY.value, 1), _InventoryItem(Items.EMPTY.value, 1),
+					_InventoryItem(Items.EMPTY.value, 1), _InventoryItem(Items.EMPTY.value, 1),
+					_InventoryItem(Items.EMPTY.value, 1)])
 
 		# The currently selected slot saved as 0-based index for __slots array
 		self.selectedslot = 0
