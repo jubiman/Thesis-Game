@@ -260,5 +260,6 @@ def main():
 			Console.error(message=err)
 		g.show_go_screen()
 
+
 if __name__ == "__main__":
 	main()
