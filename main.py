@@ -247,14 +247,19 @@ class Game:
 		pass
 
 
-# create the game object
-g = Game()
-# g.show_start_screen()
-g.new()
-while True:
-	try:
-		g.run()
-	except pygame.error as err:
-		# TODO: Decide where to do error handling
-		Console.error(message=err)
-	g.show_go_screen()
+def main():
+	# create the game object
+	g = Game()
+	# g.show_start_screen()
+	g.new()
+	while True:
+		try:
+			g.run()
+		except pygame.error as err:
+			# TODO: Decide where to do error handling
+			Console.error(message=err)
+		g.show_go_screen()
+
+
+if __name__ == "__main__":
+	main()
