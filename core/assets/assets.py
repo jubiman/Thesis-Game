@@ -508,13 +508,13 @@ class Assets(Enum):
 
 	@staticmethod
 	# def getAsset(iden, s=0, e=len(Assets)-1):
-	def getAsset(iden, s=0, e=461):  # TODO: Why the fuck cant i just use len(Assets) in this default arg. I dont want to put this outside of Assets
+	def getAssetOld(iden, s=0, e=461):  # TODO: Why the fuck cant i just use len(Assets) in this default arg. I dont want to put this outside of Assets
 		"""
 		:param int iden: the identifier of the entity type
 		:param int s: the start for the binary search
 		:param int e: the length of the part of array
-		:return: Returns entity or None
-		:rtype: Item
+		:return: Returns asset or None
+		:rtype: Asset
 		"""
 		"""for ass in Assets:
 			if ass.value.id == iden:
@@ -531,6 +531,24 @@ class Assets(Enum):
 				return Assets.getAsset(iden, s, mid - 1)
 			return Assets.getAsset(iden, mid + 1, e)
 		return None
+	
+	@staticmethod
+	def getAsset(iden: int, lo=0, hi=None) -> Asset:
+		"""
+		:param int iden: the identifier of the entity type
+		:return: Returns asset or None
+		:rtype: Asset
+		"""
+		hi = hi if hi is not None else len(Assets)
+		assert 0 <= lo <= hi <= len(Assets)
+		assets = list(Assets)
+		while lo < hi:
+			mid = (lo + hi) // 2
+			if assets[mid].value.id < iden:
+				lo = mid + 1
+			else:
+				hi = mid
+		return assets[lo].value
 
 	@staticmethod
 	def load():
