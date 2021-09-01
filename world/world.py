@@ -95,7 +95,11 @@ class World:
 			for cx in range(16):
 				blocks_list.append([])
 				for cy in range(16):
-					blocks_list[cx].append(Block(Materials.getMaterial(blocks_json_list[cx * 16 + cy])))
+					block = blocks_json_list[cx * 16 + cy]
+					if type(block) is list:
+						blocks_list[cx].append(Block(Materials.getMaterial(block[0]), data=block[1]))
+					else:
+						blocks_list[cx].append(Block(Materials.getMaterial(block)))
 			chunk = Chunk(blocks_list)
 			return chunk
 		return self.generator.generateChunk(x, y)
@@ -112,7 +116,10 @@ class World:
 		blockjsonobj = []
 		for row in c.blocks:
 			for block in row:
-				blockjsonobj.append(block.material.id)
+				if block.data == {}:
+					blockjsonobj.append([block.material.id, block.data])
+				else:
+					blockjsonobj.append(block.material.id)
 		open(cfile, "w").write(json.dumps({
 			"b": blockjsonobj
 		}, separators=(',', ':')))
