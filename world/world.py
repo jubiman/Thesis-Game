@@ -32,6 +32,34 @@ class World:
 		self.lastTick = time.time()
 		self.game = game
 
+	def update_config(self):
+		self.config["playerpos"] = [self.game.player.pos.x, self.game.player.pos.y]
+
+	def save_config(self):
+		open(self.configfile, "w").write(json.dumps(self.config))
+
+	def save_all(self):
+		"""
+		Updates the config and saves all loaded chunks.
+		Useful for auto-saves.
+		"""
+		self.update_config()
+		self.save_config()
+		for coords in self.cache.chunks.copy():
+			x, y = coords
+			self.save(x, y)
+
+	def unload_all(self):
+		"""
+		Updates the config and unloads all loaded chunks.
+		Useful for unloading a world.
+		"""
+		self.update_config()
+		self.save_config()
+		for coords in self.cache.chunks.copy():
+			x, y = coords
+			self.unload(x, y)
+
 	def load(self):
 		if not self.isloaded:
 			# Only run this code if the world isn't loaded yet.
@@ -40,18 +68,30 @@ class World:
 			# Create new world if it doesn't exist already
 			if not os.path.isdir(self.filepath):
 				os.mkdir(self.filepath)
-
-			# Load config file if existing
+			# The default world configuration
+			defaultconfig = {
+				"name": self.filepath.split("/")[-1],
+				"seed": random.randint(0, 2 ** 31 - 1),
+				"worldtype": "default",
+				"playerpos": [
+					0.5,
+					0.5
+				]
+			}
+			# Create config file if existing
 			if not os.path.isfile(self.configfile):
 				# Create config if it smh doesn't exist
-				self.config = {
-					"name": self.filepath.split("/")[-1],
-					"seed": random.randint(0, 2 ** 31 - 1),
-					"worldtype": "default"
-				}
+				self.config = defaultconfig
 				open(self.configfile, "w").write(json.dumps(self.config))
 			else:
 				self.config = json.loads(open(self.configfile, "r").read())
+				# Add key with default value if the option is not already defined in the config
+				# Useful for changing the default config. When you add a new option it will be added
+				# to the world config the next time it is loaded.
+				for key in defaultconfig:
+					if self.config.get(key) is None:
+						self.config[key] = defaultconfig[key]
+				self.game.player.pos.x, self.game.player.pos.y = self.config["playerpos"]
 
 			# Make the Chunks folder where the chunks will be saved if it doesn't already exist
 			try:

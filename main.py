@@ -1,7 +1,7 @@
+import ctypes
 import getopt
 import sys
 import threading
-import ctypes
 from configparser import ConfigParser
 from os import path, mkdir
 
@@ -9,10 +9,9 @@ from cfg.cfgparser import CfgParser
 from core.assets.assets import Assets
 from core.console.consolefunctions import ConsoleFunctions
 from core.controller.camera import Camera
-from core.prefabs.sprites import *
-from core.UI.ui import UI
 from core.input.inputhandler import InputHandler
 from core.items.items import Items
+from core.prefabs.sprites import *
 from settings import *
 from world.chunk import Chunk
 from world.entity.entities.player import Player
@@ -51,16 +50,25 @@ class Game:
 		self.clock = pygame.time.Clock()
 		pygame.key.set_repeat(1, 100)
 		self.load_data()
-		
+
 		self.world = None
 		self.camera = None
 
 		# Make input handler
 		self.inputHandler = InputHandler(self)
-		
+
 		# Make console
 		self.console = ConsoleFunctions(self)
 		self.consoleThread = threading.Thread(name="console", target=self.console.run, daemon=True)
+
+	def change_world(self, newworld: World):
+		"""
+		Safely change the world to another world.
+		:param newworld: The world to change to.
+		"""
+		self.world.unload_all()
+		newworld.load()
+		self.world = newworld
 
 	def load_data(self):
 		game_folder = path.dirname(__file__)
@@ -87,8 +95,8 @@ class Game:
 
 		# Initialize all variables and do all the setup for a new game
 		self.world = World(path.join(path.dirname(__file__), "saves/world1"), self)
-		self.world.load()
 		self.player = Player(self, 100, 100, 0, 350, 0.5, 0.5, EntityTypes.PLAYER.value, 5)
+		self.world.load()
 		self.spawner = Spawner(self, 64, 1)
 
 		# Initialize camera
@@ -119,6 +127,8 @@ class Game:
 				Console.error(thread="UnknownThread", message=pygame.get_error())
 
 	def quit(self):
+		self.console.log("Quiting...")
+		self.world.unload_all()
 		self.console.kill()
 		pygame.quit()
 		sys.exit()
