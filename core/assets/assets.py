@@ -1,5 +1,6 @@
 from enum import Enum
 from os import path
+from typing import Optional
 
 import pygame
 
@@ -533,11 +534,14 @@ class Assets(Enum):
 		return None
 	
 	@staticmethod
-	def getAsset(iden: int, lo=0, hi=None) -> Asset:
+	def getAsset(iden: int, lo=0, hi=None) -> Optional[Asset]:
 		"""
-		:param int iden: the identifier of the entity type
-		:return: Returns asset or None
-		:rtype: Asset
+		Get asset by ID using binary search algorithm (please don't use other then at init)
+
+		:param int iden: the identifier of the entity type.
+		:param lo: The lower bound of the binary search (default is 0).
+		:param hi: The higher bound of the binary search (default is len(Assets)).
+		:return: Asset or None
 		"""
 		hi = hi if hi is not None else len(Assets)
 		assert 0 <= lo <= hi <= len(Assets)
@@ -548,7 +552,10 @@ class Assets(Enum):
 				lo = mid + 1
 			else:
 				hi = mid
-		return assets[lo].value
+		try:
+			return assets[lo].value
+		except IndexError:
+			return None
 
 	@staticmethod
 	def load():

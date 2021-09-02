@@ -8,10 +8,11 @@ from os import path, mkdir
 from cfg.cfgparser import CfgParser
 from core.assets.assets import Assets
 from core.console.consolefunctions import ConsoleFunctions
+from core.console.console import Console
 from core.controller.camera import Camera
 from core.input.inputhandler import InputHandler
 from core.items.items import Items
-from core.prefabs.sprites import *
+from core.UI.ui import UI
 from settings import *
 from world.chunk import Chunk
 from world.entity.entities.player import Player
@@ -21,25 +22,8 @@ from world.material.materials import Materials
 from world.spawner import Spawner
 from world.world import World
 
-# TODO: make this better lol
-# Check console-line arguments
-try:
-	opts, args = getopt.getopt(sys.argv[1:], 'f', ["fps="])
-except getopt.GetoptError as err:
-	Console.log(thread="Player",
-				message=err)
-	sys.exit()
-for o, a in opts:
-	if o == '--fps':
-		FPS = a
-
-# If the platform is Windows (win32) we need to load a kernal module and set the mode so we can have colored output
-if platform == "win32":
-	kernel32 = ctypes.windll.kernel32
-	kernel32.SetConsoleMode(kernel32.GetStdHandle(-11), 7)
-
-if not path.isdir("saves"):
-	mkdir("saves")
+import pygame
+from pygame.locals import QUIT, KEYDOWN, K_ESCAPE, MOUSEBUTTONDOWN
 
 
 class Game:
@@ -61,18 +45,24 @@ class Game:
 		self.console = ConsoleFunctions(self)
 		self.consoleThread = threading.Thread(name="console", target=self.console.run, daemon=True)
 
-	def change_world(self, newworld: World):
+	def change_world(self, newworld: World) -> None:
 		"""
 		Safely change the world to another world.
+
 		:param newworld: The world to change to.
+		:return: None
 		"""
 		self.world.unload_all()
 		newworld.load()
 		self.world = newworld
 
-	def load_data(self):
+	def load_data(self) -> None:
+		"""
+		Pre-init for the game.
+
+		:return: None
+		"""
 		game_folder = path.dirname(__file__)
-		assets_folder = path.join(game_folder, 'assets')
 
 		# Load assets
 		Assets.load()
@@ -86,13 +76,12 @@ class Game:
 		cfgp = CfgParser(self, path.join(game_folder, 'cfg/autoexec.cfg'))
 		cfgp.read()
 
-	def new(self):
-		# initialize all variables and do all the setup for a new game
-		# Initialize all variables and do all the setup for a new game
-		self.sprites = pygame.sprite.Group()
-		self.walls = pygame.sprite.Group()
-		self.trees = pygame.sprite.Group()
+	def new(self) -> None:
+		"""
+		Post-init for the game object.
 
+		:return: None.
+		"""
 		# Initialize all variables and do all the setup for a new game
 		self.world = World(path.join(path.dirname(__file__), "saves/world1"), self)
 		self.player = Player(self, 100, 100, 0, 350, 0.5, 0.5, EntityTypes.PLAYER.value, 5)
@@ -109,22 +98,25 @@ class Game:
 		Console.log(thread="MAIN", message="Reading console input.")
 
 	def run(self):
-		# game loop - set self.playing = False to end the game
+		# game loop - set self.playing to False to end the game
 		self.playing = True
 		self.paused = False
-		while self.playing:
+		while self.playing and not self.paused:
 			try:
-				# while not self.paused:
-					# try:
 				self.dt = self.clock.tick(FPS) / 1000
 				self.events()
 				self.update()
-					# except pygame.error:
-						# Console.error(thread="UnknownThread", message=pygame.get_error())
 				self.draw()
 			except pygame.error:
 				# TODO: Improve error handling to not skip steps on error
 				Console.error(thread="UnknownThread", message=pygame.get_error())
+
+		# We are now paused or we stopped playing
+		if self.playing:  # We are still playing, but just paused
+			while self.paused:  # Hold until we stop pausing
+				pass  # Nothing to do
+			if self.playing:  # If we did not pause and quit, run the game again
+				return self.run()
 
 	def quit(self):
 		Console.log("Quiting...")
@@ -133,18 +125,19 @@ class Game:
 		pygame.quit()
 		sys.exit()
 
-	def update(self):
-		# update portion of the game loop
+	def update(self) -> None:
+		"""
+		The update() function is called every frame. This function handles rendering and user input.
+		Also updates player client-side.
+
+		:return: None.
+		"""
 		self.inputHandler.handleInput()
-		self.sprites.update()
-		for ent in self.world.entities:
-			ent.update()
 		self.player.update()
 		self.camera.update(self.player.entitytype)
 		self.world.tick()
 
 	def draw(self):
-		# Console.debug(self.player.pos)
 		pygame.display.set_caption(TITLE + " - " + "{:.2f}".format(self.clock.get_fps()) +
 									" - ({:.4f}, {:.4f})".format(*self.player.pos))
 		self.screen.fill(BGCOLOR)
@@ -200,6 +193,8 @@ class Game:
 				self.quit()
 			if event.type == KEYDOWN:
 				if event.key == K_ESCAPE:
+					self.paused = True
+					# TODO: maybe make a in-game pause menu?
 					self.show_start_screen()
 
 	def show_start_screen(self):
@@ -257,8 +252,29 @@ class Game:
 		pass
 
 
-def main():
-	# create the game object
+def main(argv):
+	# TODO: make this better lol
+	# Check console-line arguments
+	global FPS
+	try:
+		opts, args = getopt.getopt(argv[1:], 'f', ["fps="])
+	except getopt.GetoptError as err:
+		Console.log(thread="Player",
+					message=err)
+		sys.exit()
+	for o, a in opts:
+		if o == '--fps':
+			FPS = a
+
+	# If the platform is Windows (win32) we need to load a kernal module and set the mode so we can have colored output
+	if platform == "win32":
+		kernel32 = ctypes.windll.kernel32
+		kernel32.SetConsoleMode(kernel32.GetStdHandle(-11), 7)
+
+	if not path.isdir("saves"):
+		mkdir("saves")
+
+	# Create the game object
 	g = Game()
 	# g.show_start_screen()
 	g.new()
@@ -272,4 +288,4 @@ def main():
 
 
 if __name__ == "__main__":
-	main()
+	main(sys.argv)

@@ -201,6 +201,10 @@ class World:
 				# Auto Save every 5 minutes
 				self.auto_save()
 
+		# Update entities every tick
+		for ent in self.entities:
+			ent.update()
+
 	def getBlockAt(self, x: int, y: int):
 		return self.getChunkAt(int(x // 16), int(y // 16)).getBlock(int(x % 16), int(y % 16))
 
