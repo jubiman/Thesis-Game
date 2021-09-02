@@ -154,7 +154,7 @@ class World:
 					blocks_list.append([])
 					for cy in range(16):
 						block = blocks_json_list[cx * 16 + cy]
-						if type(block) is list:
+						if isinstance(block, list):
 							blocks_list[cx].append(Block(Materials.getMaterial(block[0]), data=block[1]))
 						else:
 							blocks_list[cx].append(Block(Materials.getMaterial(block)))
