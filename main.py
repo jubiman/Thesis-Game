@@ -127,7 +127,7 @@ class Game:
 				Console.error(thread="UnknownThread", message=pygame.get_error())
 
 	def quit(self):
-		self.console.log("Quiting...")
+		Console.log("Quiting...")
 		self.world.unload_all()
 		self.console.kill()
 		pygame.quit()
