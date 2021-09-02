@@ -32,6 +32,21 @@ class World:
 		self.entities: list[Enemy] = []
 		self.lastTick = time.time()
 		self.game = game
+		self.ticks = 0
+
+	def auto_save(self):
+		chunkcopy = self.cache.chunks.copy()
+		self.update_config()
+		self.save_config()
+
+		def tempfunc():
+			for coords in chunkcopy:
+				x, y = coords
+				cfile = os.path.join(self.filepath, "chunks", f"{int(x)},{int(y)}.json")
+				c = chunkcopy[x, y]
+				open(cfile, "w").write(self.get_raw_save_string(c))
+
+		threading.Thread(target=tempfunc, name="Auto Save").start()
 
 	def update_config(self):
 		self.config["playerpos"] = [self.game.player.pos.x, self.game.player.pos.y]
@@ -129,28 +144,27 @@ class World:
 	def loadChunk(self, x: int, y: int):
 		Console.debug(thread="WORLD",
 					  message=f"Loading {x}, {y}")
-		if os.path.isfile(os.path.join(self.filepath, "chunks", f"{int(x)},{int(y)}.json")):
-			data = json.loads(open(os.path.join(self.filepath, "chunks", f"{int(x)},{int(y)}.json"), "r").read())
-			blocks_json_list = data["b"]
-			blocks_list: list[list[Block]] = []
-			for cx in range(16):
-				blocks_list.append([])
-				for cy in range(16):
-					block = blocks_json_list[cx * 16 + cy]
-					if type(block) is list:
-						blocks_list[cx].append(Block(Materials.getMaterial(block[0]), data=block[1]))
-					else:
-						blocks_list[cx].append(Block(Materials.getMaterial(block)))
-			chunk = Chunk(blocks_list)
-			return chunk
-
-		# Timer.start(f"gen chunk: {x},{y}")
 
 		def tempfunc(self):
-			self.cache.chunks[x, y] = self.generator.generateChunk(x, y)
+			if os.path.isfile(os.path.join(self.filepath, "chunks", f"{int(x)},{int(y)}.json")):
+				data = json.loads(open(os.path.join(self.filepath, "chunks", f"{int(x)},{int(y)}.json"), "r").read())
+				blocks_json_list = data["b"]
+				blocks_list: list[list[Block]] = []
+				for cx in range(16):
+					blocks_list.append([])
+					for cy in range(16):
+						block = blocks_json_list[cx * 16 + cy]
+						if type(block) is list:
+							blocks_list[cx].append(Block(Materials.getMaterial(block[0]), data=block[1]))
+						else:
+							blocks_list[cx].append(Block(Materials.getMaterial(block)))
+				chunk = Chunk(blocks_list)
+			else:
+				chunk = self.generator.generateChunk(x, y)
 
-		# Console.debug("Generated chunk {x},{y} in: " + str(Timer.stop(f"gen chunk: {x},{y}")))
+			self.cache.chunks[x, y] = chunk
 
+		# Load or generate the chunk in a separate thread.
 		thread = threading.Thread(target=tempfunc, name=f"Generate Chunk {x},{y}", args=[self])
 		thread.start()
 		return Chunk([[Block(Materials.AIR.value) for x in range(16)] for y in range(16)])
@@ -164,22 +178,29 @@ class World:
 	def save(self, x: int, y: int):
 		cfile = os.path.join(self.filepath, "chunks", f"{int(x)},{int(y)}.json")
 		c = self.cache.chunks[x, y]
+		open(cfile, "w").write(self.get_raw_save_string(c))
+
+	def get_raw_save_string(self, chunk: Chunk):
 		blockjsonobj = []
-		for row in c.blocks:
+		for row in chunk.blocks:
 			for block in row:
 				if block.data == {}:
 					blockjsonobj.append([block.material.id, block.data])
 				else:
 					blockjsonobj.append(block.material.id)
-		open(cfile, "w").write(json.dumps({
+		return json.dumps({
 			"b": blockjsonobj
-		}, separators=(',', ':')))
+		}, separators=(',', ':'))
 
 	def tick(self):
 		now = time.time()
 		if now - self.lastTick > 1.0 / 20:
 			self.cache.checkForLazyChunks()
 			self.lastTick = now
+			self.ticks += 1
+			if self.ticks % 6000 == 0:
+				# Auto Save every 5 minutes
+				self.auto_save()
 
 	def getBlockAt(self, x: int, y: int):
 		return self.getChunkAt(int(x // 16), int(y // 16)).getBlock(int(x % 16), int(y % 16))
