@@ -2,6 +2,7 @@ import json
 import os.path
 import random
 import shutil
+import threading
 import time
 
 from pygame.math import Vector2
@@ -142,7 +143,17 @@ class World:
 						blocks_list[cx].append(Block(Materials.getMaterial(block)))
 			chunk = Chunk(blocks_list)
 			return chunk
-		return self.generator.generateChunk(x, y)
+
+		# Timer.start(f"gen chunk: {x},{y}")
+
+		def tempfunc(self):
+			self.cache.chunks[x, y] = self.generator.generateChunk(x, y)
+
+		# Console.debug("Generated chunk {x},{y} in: " + str(Timer.stop(f"gen chunk: {x},{y}")))
+
+		thread = threading.Thread(target=tempfunc, name=f"Generate Chunk {x},{y}", args=[self])
+		thread.start()
+		return Chunk([[Block(Materials.AIR.value) for x in range(16)] for y in range(16)])
 
 	def unload(self, x: int, y: int):
 		Console.log(thread="WORLD",

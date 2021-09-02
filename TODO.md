@@ -60,9 +60,9 @@ TODO:
     * Sybren:
         * TODO:
             - Improve world generation
-            - Multi world system
             - Base for dungeons
         * DONE:
+            - Multi world system
             - Base for world generation
             - Saving and loading system for world
     * Kevin:
