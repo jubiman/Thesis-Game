@@ -8,11 +8,13 @@ from os import path, mkdir
 from cfg.cfgparser import CfgParser
 from core.assets.assets import Assets
 from core.console.consolefunctions import ConsoleFunctions
+from core.console.console import Console
 from core.controller.camera import Camera
 from core.input.inputhandler import InputHandler
 from core.items.items import Items
-from core.prefabs.sprites import *
-from settings import *
+from core.UI.ui import UI
+from core.utils.colors import Colors
+from core.utils.settings import Settings
 from world.chunk import Chunk
 from world.entity.entities.player import Player
 from world.entity.entitytypes import EntityTypes
@@ -21,32 +23,15 @@ from world.material.materials import Materials
 from world.spawner import Spawner
 from world.world import World
 
-# TODO: make this better lol
-# Check console-line arguments
-try:
-	opts, args = getopt.getopt(sys.argv[1:], 'f', ["fps="])
-except getopt.GetoptError as err:
-	Console.log(thread="Player",
-				message=err)
-	sys.exit()
-for o, a in opts:
-	if o == '--fps':
-		FPS = a
-
-# If the platform is Windows (win32) we need to load a kernal module and set the mode so we can have colored output
-if platform == "win32":
-	kernel32 = ctypes.windll.kernel32
-	kernel32.SetConsoleMode(kernel32.GetStdHandle(-11), 7)
-
-if not path.isdir("saves"):
-	mkdir("saves")
+import pygame
+from pygame.locals import QUIT, KEYDOWN, K_ESCAPE, MOUSEBUTTONDOWN
 
 
 class Game:
 	def __init__(self):
 		pygame.init()
-		self.screen = pygame.display.set_mode((WIDTH, HEIGHT))
-		pygame.display.set_caption(TITLE)
+		self.screen = pygame.display.set_mode((Settings.Game.WIDTH, Settings.Game.HEIGHT))
+		pygame.display.set_caption(Settings.Game.TITLE)
 		self.clock = pygame.time.Clock()
 		pygame.key.set_repeat(1, 100)
 		self.load_data()
@@ -61,18 +46,24 @@ class Game:
 		self.console = ConsoleFunctions(self)
 		self.consoleThread = threading.Thread(name="console", target=self.console.run, daemon=True)
 
-	def change_world(self, newworld: World):
+	def change_world(self, newworld: World) -> None:
 		"""
 		Safely change the world to another world.
+
 		:param newworld: The world to change to.
+		:return: None
 		"""
 		self.world.unload_all()
 		newworld.load()
 		self.world = newworld
 
-	def load_data(self):
+	def load_data(self) -> None:
+		"""
+		Pre-init for the game.
+
+		:return: None
+		"""
 		game_folder = path.dirname(__file__)
-		assets_folder = path.join(game_folder, 'assets')
 
 		# Load assets
 		Assets.load()
@@ -86,13 +77,12 @@ class Game:
 		cfgp = CfgParser(self, path.join(game_folder, 'cfg/autoexec.cfg'))
 		cfgp.read()
 
-	def new(self):
-		# initialize all variables and do all the setup for a new game
-		# Initialize all variables and do all the setup for a new game
-		self.sprites = pygame.sprite.Group()
-		self.walls = pygame.sprite.Group()
-		self.trees = pygame.sprite.Group()
+	def new(self) -> None:
+		"""
+		Post-init for the game object.
 
+		:return: None.
+		"""
 		# Initialize all variables and do all the setup for a new game
 		self.world = World(path.join(path.dirname(__file__), "saves/world1"), self)
 		self.player = Player(self, 100, 100, 0, 350, 0.5, 0.5, EntityTypes.PLAYER.value, 5)
@@ -109,17 +99,28 @@ class Game:
 		Console.log(thread="MAIN", message="Reading console input.")
 
 	def run(self):
-		# game loop - set self.playing = False to end the game
+		# game loop - set self.playing to False to end the game
 		self.playing = True
 		while self.playing:
 			try:
 				self.dt = self.clock.tick(FPS) / 1000
+		self.paused = False
+		while self.playing and not self.paused:
+			try:
+				self.dt = self.clock.tick(Settings.Game.FPS) / 1000
 				self.events()
 				self.update()
 				self.draw()
 			except pygame.error:
 				# TODO: Improve error handling to not skip steps on error
 				Console.error(thread="UnknownThread", message=pygame.get_error())
+
+		# We are now paused or we stopped playing
+		if self.playing:  # We are still playing, but just paused
+			while self.paused:  # Hold until we stop pausing
+				pass  # Nothing to do
+			if self.playing:  # If we did not pause and quit, run the game again
+				return self.run()
 
 	def quit(self):
 		Console.log("Quiting...")
@@ -128,28 +129,29 @@ class Game:
 		pygame.quit()
 		sys.exit()
 
-	def update(self):
-		# update portion of the game loop
+	def update(self) -> None:
+		"""
+		The update() function is called every frame. This function handles rendering and user input.
+		Also updates player client-side.
+
+		:return: None.
+		"""
 		self.inputHandler.handleInput()
-		self.sprites.update()
-		for ent in self.world.entities:
-			ent.update()
 		self.player.update()
 		self.camera.update(self.player.entitytype)
 		self.world.tick()
 
 	def draw(self):
-		# Console.debug(self.player.pos)
-		pygame.display.set_caption(TITLE + " - " + "{:.2f}".format(self.clock.get_fps()) +
+		pygame.display.set_caption(Settings.Game.TITLE + " - " + "{:.2f}".format(self.clock.get_fps()) +
 									" - ({:.4f}, {:.4f})".format(*self.player.pos))
-		self.screen.fill(BGCOLOR)
+		self.screen.fill(Colors.BGCOLOR)
 
 		pcx = self.player.pos.x // 16
 		pcy = self.player.pos.y // 16
 
-		# Console.debug((self.player.pos.x / TILESIZE, self.player.pos.y / TILESIZE))
+		# Console.debug((self.player.pos.x / Settings.Game.TILESIZE, self.player.pos.y / Settings.Game.TILESIZE))
 
-		# print(f"Player pos: {self.player.pos.x / TILESIZE:.2f}, {self.player.pos.y / TILESIZE:.2f}")
+		# print(f"Player pos: {self.player.pos.x / Settings.Game.TILESIZE:.2f}, {self.player.pos.y / Settings.Game.TILESIZE:.2f}")
 		# TODO: add setting for "render distance"
 		for cy in range(-2, 3):
 			for cx in range(-2, 3):
@@ -161,7 +163,7 @@ class Game:
 						mat: Material = chunk.getBlock(x, y).material
 						if mat is not None and mat.image is not None:
 							self.screen.blit(mat.image, self.camera.applyraw(
-								mat.rect.move(((pcx + cx) * 16 + x) * TILESIZE, ((pcy + cy) * 16 + y) * TILESIZE)))
+								mat.rect.move(((pcx + cx) * 16 + x) * Settings.Game.TILESIZE, ((pcy + cy) * 16 + y) * Settings.Game.TILESIZE)))
 
 		# pygame.draw.rect(self.screen, (255, 255, 255), self.camera.applyraw(self.player.collision_rect), 1)
 
@@ -169,8 +171,8 @@ class Game:
 			if ent is not None and ent.entitytype.image is not None:
 				# Console.debug(f"ent: {ent.pos}, {ent.chunk}")
 				self.screen.blit(ent.entitytype.image, self.camera.applyraw(
-					ent.entitytype.rect.move((ent.chunk[0] * 16 + ent.pos.x) * TILESIZE,
-												(ent.chunk[1] * 16 + ent.pos.y) * TILESIZE)
+					ent.entitytype.rect.move((ent.chunk[0] * 16 + ent.pos.x) * Settings.Game.TILESIZE,
+												(ent.chunk[1] * 16 + ent.pos.y) * Settings.Game.TILESIZE)
 				))
 
 		self.screen.blit(self.player.entitytype.image, self.camera.apply(self.player.entitytype))
@@ -195,6 +197,8 @@ class Game:
 				self.quit()
 			if event.type == KEYDOWN:
 				if event.key == K_ESCAPE:
+					self.paused = True
+					# TODO: maybe make a in-game pause menu?
 					self.show_start_screen()
 
 	def show_start_screen(self):
@@ -204,9 +208,9 @@ class Game:
 		tOptions = pygame.font.SysFont('Corbel', 35).render('OPTIONS', True, (255, 255, 255))
 
 		while True:
-			bQuit = pygame.Rect(WIDTH / 2 - 75, HEIGHT / 2, 140, 40)
-			bPlay = pygame.Rect(WIDTH / 2 - 75, HEIGHT / 2 - 175, 140, 40)
-			bOptions = pygame.Rect(WIDTH / 2 - 75, HEIGHT / 2 - 75, 140, 40)
+			bQuit = pygame.Rect(Settings.Game.WIDTH / 2 - 75, Settings.Game.HEIGHT / 2, 140, 40)
+			bPlay = pygame.Rect(Settings.Game.WIDTH / 2 - 75, Settings.Game.HEIGHT / 2 - 175, 140, 40)
+			bOptions = pygame.Rect(Settings.Game.WIDTH / 2 - 75, Settings.Game.HEIGHT / 2 - 75, 140, 40)
 
 			mouse = pygame.mouse.get_pos()
 			for ev in pygame.event.get():
@@ -252,8 +256,28 @@ class Game:
 		pass
 
 
-def main():
-	# create the game object
+def main(argv):
+	# TODO: make this better lol
+	# Check console-line arguments
+	try:
+		opts, args = getopt.getopt(argv[1:], 'f', ["fps="])
+	except getopt.GetoptError as err:
+		Console.log(thread="Player",
+					message=err)
+		sys.exit()
+	for o, a in opts:
+		if o == '--fps':
+			Settings.FPS = a
+
+	# If the platform is Windows (win32) we need to load a kernal module and set the mode so we can have colored output
+	if sys.platform == "win32":
+		kernel32 = ctypes.windll.kernel32
+		kernel32.SetConsoleMode(kernel32.GetStdHandle(-11), 7)
+
+	if not path.isdir("saves"):
+		mkdir("saves")
+
+	# Create the game object
 	g = Game()
 	# g.show_start_screen()
 	g.new()
@@ -267,4 +291,4 @@ def main():
 
 
 if __name__ == "__main__":
-	main()
+	main(sys.argv)
