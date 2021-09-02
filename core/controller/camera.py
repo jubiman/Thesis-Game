@@ -1,6 +1,6 @@
 import pygame
 
-from settings import HEIGHT, WIDTH
+from core.utils.settings import Settings
 
 
 class Camera(pygame.Rect):
@@ -16,4 +16,4 @@ class Camera(pygame.Rect):
 		return rect.move(self.camera.topleft)
 
 	def update(self, target):
-		self.camera = pygame.Rect(-target.rect.centerx + WIDTH / 2, -target.rect.centery + HEIGHT / 2, 0, 0)
+		self.camera = pygame.Rect(-target.rect.centerx + Settings.Game.WIDTH / 2, -target.rect.centery + Settings.Game.HEIGHT / 2, 0, 0)

@@ -9,7 +9,7 @@ from core.prefabs.livingcreature import LivingCreature
 from core.skills.baseskills import Baseskills
 from core.skills.levelbase import Levelbase
 from core.skills.playerskills import Playerskills
-from settings import TILESIZE
+from core.utils.settings import Settings
 from world.block import Block
 from world.material.materials import Materials
 
@@ -113,11 +113,11 @@ class Player(LivingCreature):
 	# Gets called every frame to update the player's status
 	def update(self):
 		# Move the player
-		self.pos += self.vel * self.game.dt / TILESIZE
+		self.pos += self.vel * self.game.dt / Settings.Game.TILESIZE
 
 		self.entitytype.rect = self.entitytype.image.get_rect()
-		self.entitytype.rect.centerx = self.pos.x * TILESIZE
-		self.entitytype.rect.centery = self.pos.y * TILESIZE
+		self.entitytype.rect.centerx = self.pos.x * Settings.Game.TILESIZE
+		self.entitytype.rect.centery = self.pos.y * Settings.Game.TILESIZE
 		self.collision_rect.center = self.entitytype.rect.center
 
 		self.check_hp_regen()
@@ -134,8 +134,8 @@ class Player(LivingCreature):
 		for dx, dy in adjacents:
 			block: Block = self.game.world.getBlockAt(self.pos.x + dx, self.pos.y + dy)
 			if block.material.id == Materials.WALL.value.id:
-				rect: Rect = block.material.rect.move((floor(self.pos.x) + dx) * TILESIZE,
-													  (floor(self.pos.y) + dy) * TILESIZE)
+				rect: Rect = block.material.rect.move((floor(self.pos.x) + dx) * Settings.Game.TILESIZE,
+													  (floor(self.pos.y) + dy) * Settings.Game.TILESIZE)
 				if rect.colliderect(movedColRect):
 					if self.vel.x > 0 and dx > 0:
 						self.vel.x = 0

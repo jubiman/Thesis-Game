@@ -3,7 +3,7 @@ import random
 from os import path
 
 from core.console.console import Console
-from settings import GAMEDIR
+from core.utils.settings import Settings
 from world.block import Block
 from world.chunk import Chunk
 from world.material.materials import Materials
@@ -15,10 +15,10 @@ class DungeonGenerator:
 		self.game = game
 		self.seed = seed
 		self.rooms = {
-			"room0": path.join(GAMEDIR, "assets/dungeon/prefabs/room0.json"),
-			"room1": path.join(GAMEDIR, "assets/dungeon/prefabs/room1.json"),
-			"room2": path.join(GAMEDIR, "assets/dungeon/prefabs/room2.json"),
-			"room3": path.join(GAMEDIR, "assets/dungeon/prefabs/room3.json")
+			"room0": path.join(Settings.GAMEDIR, "assets/dungeon/prefabs/room0.json"),
+			"room1": path.join(Settings.GAMEDIR, "assets/dungeon/prefabs/room1.json"),
+			"room2": path.join(Settings.GAMEDIR, "assets/dungeon/prefabs/room2.json"),
+			"room3": path.join(Settings.GAMEDIR, "assets/dungeon/prefabs/room3.json")
 		}
 		self.settings = {
 			"randomizers": [  # Fancy random numbers

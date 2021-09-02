@@ -1,56 +1,56 @@
-import pygame
 from core.assets.assets import Assets
-import core.inventory.inventory
-from settings import WIDTH, HEIGHT, WHITE
+from core.utils.colors import Colors
+from core.utils.settings import Settings
+
+import pygame
 
 
 class Itembar:
     def __init__(self):
         self.game = None
-        self.inventory = core.inventory.inventory
 
     def draw(self):
-        backgrounditembar = pygame.Rect(WIDTH / 2 - 320, HEIGHT - 150, 640, 80)
+        backgrounditembar = pygame.Rect(Settings.Game.WIDTH / 2 - 320, Settings.Game.HEIGHT - 150, 640, 80)
         pygame.draw.rect(self.game.screen, (75, 75, 75), backgrounditembar)
 
         if self.game.player.inventory.selectedslot == 0:
-            slot1 = pygame.Rect(WIDTH / 2 - 320, HEIGHT - 150, 80, 80)
-            pygame.draw.rect(self.game.screen, WHITE, slot1)
+            slot1 = pygame.Rect(Settings.Game.WIDTH / 2 - 320, Settings.Game.HEIGHT - 150, 80, 80)
+            pygame.draw.rect(self.game.screen, Colors.WHITE, slot1)
         elif self.game.player.inventory.selectedslot == 1:
-            slot2 = pygame.Rect(WIDTH / 2 - 240, HEIGHT - 150, 80, 80)
-            pygame.draw.rect(self.game.screen, WHITE, slot2)
+            slot2 = pygame.Rect(Settings.Game.WIDTH / 2 - 240, Settings.Game.HEIGHT - 150, 80, 80)
+            pygame.draw.rect(self.game.screen, Colors.WHITE, slot2)
         elif self.game.player.inventory.selectedslot == 2:
-            slot3 = pygame.Rect(WIDTH / 2 - 160, HEIGHT - 150, 80, 80)
-            pygame.draw.rect(self.game.screen, WHITE, slot3)
+            slot3 = pygame.Rect(Settings.Game.WIDTH / 2 - 160, Settings.Game.HEIGHT - 150, 80, 80)
+            pygame.draw.rect(self.game.screen, Colors.WHITE, slot3)
         elif self.game.player.inventory.selectedslot == 3:
-            slot4 = pygame.Rect(WIDTH / 2 - 80, HEIGHT - 150, 80, 80)
-            pygame.draw.rect(self.game.screen, WHITE, slot4)
+            slot4 = pygame.Rect(Settings.Game.WIDTH / 2 - 80, Settings.Game.HEIGHT - 150, 80, 80)
+            pygame.draw.rect(self.game.screen, Colors.WHITE, slot4)
         elif self.game.player.inventory.selectedslot == 4:
-            slot5 = pygame.Rect(WIDTH / 2 - 0, HEIGHT - 150, 80, 80)
-            pygame.draw.rect(self.game.screen, WHITE, slot5)
+            slot5 = pygame.Rect(Settings.Game.WIDTH / 2 - 0, Settings.Game.HEIGHT - 150, 80, 80)
+            pygame.draw.rect(self.game.screen, Colors.WHITE, slot5)
         elif self.game.player.inventory.selectedslot == 5:
-            slot6 = pygame.Rect(WIDTH / 2 + 80, HEIGHT - 150, 80, 80)
-            pygame.draw.rect(self.game.screen, WHITE, slot6)
+            slot6 = pygame.Rect(Settings.Game.WIDTH / 2 + 80, Settings.Game.HEIGHT - 150, 80, 80)
+            pygame.draw.rect(self.game.screen, Colors.WHITE, slot6)
         elif self.game.player.inventory.selectedslot == 6:
-            slot7 = pygame.Rect(WIDTH / 2 + 160, HEIGHT - 150, 80, 80)
-            pygame.draw.rect(self.game.screen, WHITE, slot7)
+            slot7 = pygame.Rect(Settings.Game.WIDTH / 2 + 160, Settings.Game.HEIGHT - 150, 80, 80)
+            pygame.draw.rect(self.game.screen, Colors.WHITE, slot7)
 
-        itembarrects = [pygame.Rect(WIDTH / 2 - 310, HEIGHT - 140, 60, 60),
-                        pygame.Rect(WIDTH / 2 - 230, HEIGHT - 140, 60, 60),
-                        pygame.Rect(WIDTH / 2 - 150, HEIGHT - 140, 60, 60),
-                        pygame.Rect(WIDTH / 2 - 70, HEIGHT - 140, 60, 60),
-                        pygame.Rect(WIDTH / 2 + 10, HEIGHT - 140, 60, 60),
-                        pygame.Rect(WIDTH / 2 + 90, HEIGHT - 140, 60, 60),
-                        pygame.Rect(WIDTH / 2 + 170, HEIGHT - 140, 60, 60)]
+        itembarrects = [pygame.Rect(Settings.Game.WIDTH / 2 - 310, Settings.Game.HEIGHT - 140, 60, 60),
+                        pygame.Rect(Settings.Game.WIDTH / 2 - 230, Settings.Game.HEIGHT - 140, 60, 60),
+                        pygame.Rect(Settings.Game.WIDTH / 2 - 150, Settings.Game.HEIGHT - 140, 60, 60),
+                        pygame.Rect(Settings.Game.WIDTH / 2 - 70, Settings.Game.HEIGHT - 140, 60, 60),
+                        pygame.Rect(Settings.Game.WIDTH / 2 + 10, Settings.Game.HEIGHT - 140, 60, 60),
+                        pygame.Rect(Settings.Game.WIDTH / 2 + 90, Settings.Game.HEIGHT - 140, 60, 60),
+                        pygame.Rect(Settings.Game.WIDTH / 2 + 170, Settings.Game.HEIGHT - 140, 60, 60)]
 
-        itembar = [(WIDTH / 2 - 310, HEIGHT - 140),
-                   (WIDTH / 2 - 230, HEIGHT - 140),
-                   (WIDTH / 2 - 150, HEIGHT - 140),
-                   (WIDTH / 2 - 70, HEIGHT - 140),
-                   (WIDTH / 2 + 10, HEIGHT - 140),
-                   (WIDTH / 2 + 90, HEIGHT - 140),
-                   (WIDTH / 2 + 170, HEIGHT - 140),
-                   (WIDTH / 2 + 250, HEIGHT - 140)]
+        itembar = [(Settings.Game.WIDTH / 2 - 310, Settings.Game.HEIGHT - 140),
+                   (Settings.Game.WIDTH / 2 - 230, Settings.Game.HEIGHT - 140),
+                   (Settings.Game.WIDTH / 2 - 150, Settings.Game.HEIGHT - 140),
+                   (Settings.Game.WIDTH / 2 - 70, Settings.Game.HEIGHT - 140),
+                   (Settings.Game.WIDTH / 2 + 10, Settings.Game.HEIGHT - 140),
+                   (Settings.Game.WIDTH / 2 + 90, Settings.Game.HEIGHT - 140),
+                   (Settings.Game.WIDTH / 2 + 170, Settings.Game.HEIGHT - 140),
+                   (Settings.Game.WIDTH / 2 + 250, Settings.Game.HEIGHT - 140)]
 
         pygame.draw.rect(self.game.screen, (50, 50, 50), itembarrects[0])
         pygame.draw.rect(self.game.screen, (50, 50, 50), itembarrects[1])
@@ -61,7 +61,7 @@ class Itembar:
         pygame.draw.rect(self.game.screen, (50, 50, 50), itembarrects[6])
         self.game.screen.blit(pygame.transform.scale(Assets.BACKPACK1.value.image, (60, 60)), itembar[7])
 
-        self.helditem = (WIDTH / 2 - 44, HEIGHT / 2 - 6)
+        self.helditem = (Settings.Game.WIDTH / 2 - 44, Settings.Game.HEIGHT / 2 - 6)
         for i, item in enumerate(self.game.player.inventory.getslots()):
             self.game.screen.blit(pygame.transform.scale(item.item.image, (60, 60)), itembar[i])
             if i == self.game.player.inventory.selectedslot:
