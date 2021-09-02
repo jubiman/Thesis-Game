@@ -4,12 +4,10 @@ from core.skills.playerskills import Playerskills
 from world.block import Block
 from world.material.materials import Materials
 
-from settings import TILESIZE, WIDTH, HEIGHT
-from core.UI.ui import UI
+from core.utils.settings import Settings
 import pygame
 from pygame.locals import *
 
-from random import randint
 from math import floor
 
 
@@ -94,8 +92,12 @@ class InputHandler:
 	def __handleMouse(self):
 		mouse = pygame.mouse.get_pressed(5)
 		mouse_pos = pygame.mouse.get_pos()
-		rel_mouse = (floor((mouse_pos[0] + self.game.player.pos.x * TILESIZE - (WIDTH / 2)) / TILESIZE),
-						floor((mouse_pos[1] + self.game.player.pos.y * TILESIZE - (HEIGHT / 2)) / TILESIZE))
+		rel_mouse = (
+			floor((mouse_pos[0] + self.game.player.pos.x * Settings.Game.TILESIZE - (Settings.Game.WIDTH / 2))
+					/ Settings.Game.TILESIZE),
+			floor((mouse_pos[1] + self.game.player.pos.y * Settings.Game.TILESIZE - (Settings.Game.HEIGHT / 2))
+					/ Settings.Game.TILESIZE)
+		)
 
 		if mouse[0]:
 			block = self.game.world.getBlockAt(*rel_mouse)

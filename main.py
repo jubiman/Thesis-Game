@@ -13,7 +13,8 @@ from core.controller.camera import Camera
 from core.input.inputhandler import InputHandler
 from core.items.items import Items
 from core.UI.ui import UI
-from settings import *
+from core.utils.colors import Colors
+from core.utils.settings import Settings
 from world.chunk import Chunk
 from world.entity.entities.player import Player
 from world.entity.entitytypes import EntityTypes
@@ -29,8 +30,8 @@ from pygame.locals import QUIT, KEYDOWN, K_ESCAPE, MOUSEBUTTONDOWN
 class Game:
 	def __init__(self):
 		pygame.init()
-		self.screen = pygame.display.set_mode((WIDTH, HEIGHT))
-		pygame.display.set_caption(TITLE)
+		self.screen = pygame.display.set_mode((Settings.Game.WIDTH, Settings.Game.HEIGHT))
+		pygame.display.set_caption(Settings.Game.TITLE)
 		self.clock = pygame.time.Clock()
 		pygame.key.set_repeat(1, 100)
 		self.load_data()
@@ -103,7 +104,7 @@ class Game:
 		self.paused = False
 		while self.playing and not self.paused:
 			try:
-				self.dt = self.clock.tick(FPS) / 1000
+				self.dt = self.clock.tick(Settings.Game.FPS) / 1000
 				self.events()
 				self.update()
 				self.draw()
@@ -138,16 +139,16 @@ class Game:
 		self.world.tick()
 
 	def draw(self):
-		pygame.display.set_caption(TITLE + " - " + "{:.2f}".format(self.clock.get_fps()) +
+		pygame.display.set_caption(Settings.Game.TITLE + " - " + "{:.2f}".format(self.clock.get_fps()) +
 									" - ({:.4f}, {:.4f})".format(*self.player.pos))
-		self.screen.fill(BGCOLOR)
+		self.screen.fill(Colors.BGCOLOR)
 
 		pcx = self.player.pos.x // 16
 		pcy = self.player.pos.y // 16
 
-		# Console.debug((self.player.pos.x / TILESIZE, self.player.pos.y / TILESIZE))
+		# Console.debug((self.player.pos.x / Settings.Game.TILESIZE, self.player.pos.y / Settings.Game.TILESIZE))
 
-		# print(f"Player pos: {self.player.pos.x / TILESIZE:.2f}, {self.player.pos.y / TILESIZE:.2f}")
+		# print(f"Player pos: {self.player.pos.x / Settings.Game.TILESIZE:.2f}, {self.player.pos.y / Settings.Game.TILESIZE:.2f}")
 		# TODO: add setting for "render distance"
 		for cy in range(-2, 3):
 			for cx in range(-2, 3):
@@ -159,7 +160,7 @@ class Game:
 						mat: Material = chunk.getBlock(x, y).material
 						if mat is not None and mat.image is not None:
 							self.screen.blit(mat.image, self.camera.applyraw(
-								mat.rect.move(((pcx + cx) * 16 + x) * TILESIZE, ((pcy + cy) * 16 + y) * TILESIZE)))
+								mat.rect.move(((pcx + cx) * 16 + x) * Settings.Game.TILESIZE, ((pcy + cy) * 16 + y) * Settings.Game.TILESIZE)))
 
 		# pygame.draw.rect(self.screen, (255, 255, 255), self.camera.applyraw(self.player.collision_rect), 1)
 
@@ -167,8 +168,8 @@ class Game:
 			if ent is not None and ent.entitytype.image is not None:
 				# Console.debug(f"ent: {ent.pos}, {ent.chunk}")
 				self.screen.blit(ent.entitytype.image, self.camera.applyraw(
-					ent.entitytype.rect.move((ent.chunk[0] * 16 + ent.pos.x) * TILESIZE,
-												(ent.chunk[1] * 16 + ent.pos.y) * TILESIZE)
+					ent.entitytype.rect.move((ent.chunk[0] * 16 + ent.pos.x) * Settings.Game.TILESIZE,
+												(ent.chunk[1] * 16 + ent.pos.y) * Settings.Game.TILESIZE)
 				))
 
 		self.screen.blit(self.player.entitytype.image, self.camera.apply(self.player.entitytype))
@@ -204,9 +205,9 @@ class Game:
 		tOptions = pygame.font.SysFont('Corbel', 35).render('OPTIONS', True, (255, 255, 255))
 
 		while True:
-			bQuit = pygame.Rect(WIDTH / 2 - 75, HEIGHT / 2, 140, 40)
-			bPlay = pygame.Rect(WIDTH / 2 - 75, HEIGHT / 2 - 175, 140, 40)
-			bOptions = pygame.Rect(WIDTH / 2 - 75, HEIGHT / 2 - 75, 140, 40)
+			bQuit = pygame.Rect(Settings.Game.WIDTH / 2 - 75, Settings.Game.HEIGHT / 2, 140, 40)
+			bPlay = pygame.Rect(Settings.Game.WIDTH / 2 - 75, Settings.Game.HEIGHT / 2 - 175, 140, 40)
+			bOptions = pygame.Rect(Settings.Game.WIDTH / 2 - 75, Settings.Game.HEIGHT / 2 - 75, 140, 40)
 
 			mouse = pygame.mouse.get_pos()
 			for ev in pygame.event.get():
@@ -255,7 +256,6 @@ class Game:
 def main(argv):
 	# TODO: make this better lol
 	# Check console-line arguments
-	global FPS
 	try:
 		opts, args = getopt.getopt(argv[1:], 'f', ["fps="])
 	except getopt.GetoptError as err:
@@ -264,10 +264,10 @@ def main(argv):
 		sys.exit()
 	for o, a in opts:
 		if o == '--fps':
-			FPS = a
+			Settings.FPS = a
 
 	# If the platform is Windows (win32) we need to load a kernal module and set the mode so we can have colored output
-	if platform == "win32":
+	if sys.platform == "win32":
 		kernel32 = ctypes.windll.kernel32
 		kernel32.SetConsoleMode(kernel32.GetStdHandle(-11), 7)
 

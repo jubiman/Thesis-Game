@@ -1,7 +1,8 @@
 from sys import stdout
 from traceback import print_exc
 
-from settings import ANSI_COLORS, DEBUG
+from core.utils.colors import Colors
+from core.utils.settings import Settings
 
 
 class Console:
@@ -19,29 +20,29 @@ class Console:
 
 	@staticmethod
 	def error(message, thread="UNKOWN"):
-		stdout.write(f"\033[2K\r{ANSI_COLORS['red']}[ERROR]\t({thread})\t{message}\033[0m\n{Console.query}")
+		stdout.write(f"\033[2K\r{Colors.ANSI_COLORS['red']}[ERROR]\t({thread})\t{message}\033[0m\n{Console.query}")
 		stdout.flush()
 
 	@staticmethod
 	def traceback(thread="CONSOLE"):
-		stdout.write(f"\033[2K\r{ANSI_COLORS['red']}[ERROR]\t({thread})\t")
+		stdout.write(f"\033[2K\r{Colors.ANSI_COLORS['red']}[ERROR]\t({thread})\t")
 		print_exc(chain=False)
 		stdout.write(f"\033[0m$> ")
 		stdout.flush()
 
 	@staticmethod
 	def warning(message, thread="UNKOWN"):
-		stdout.write(f"\033[2K\r{ANSI_COLORS['red']}[WARNING]\t({thread})\t{message}\033[0m\n{Console.query}")
+		stdout.write(f"\033[2K\r{Colors.ANSI_COLORS['red']}[WARNING]\t({thread})\t{message}\033[0m\n{Console.query}")
 		stdout.flush()
 
 	@staticmethod
 	def debug(message, thread="UNKOWN"):
-		if not DEBUG:
+		if not Settings.DEBUG:
 			return
-		stdout.write(f"\033[2K\r{ANSI_COLORS['green']}[DEBUG]\t({thread})\t{message}\033[0m\n{Console.query}")
+		stdout.write(f"\033[2K\r{Colors.ANSI_COLORS['green']}[DEBUG]\t({thread})\t{message}\033[0m\n{Console.query}")
 		stdout.flush()
 
 	@staticmethod
 	def event(message, thread="UNKOWN"):
-		stdout.write(f"\033[2K\r{ANSI_COLORS['yellow']}[EVENT]\t({thread})\t{message}\033[0m\n{Console.query}")
+		stdout.write(f"\033[2K\r{Colors.ANSI_COLORS['yellow']}[EVENT]\t({thread})\t{message}\033[0m\n{Console.query}")
 		stdout.flush()

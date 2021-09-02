@@ -5,7 +5,7 @@ from typing import Optional
 import pygame
 
 from core.assets.asset import Asset
-from settings import GAMEDIR
+from core.utils.settings import Settings
 
 
 class Assets(Enum):
@@ -564,9 +564,9 @@ class Assets(Enum):
 		# Open the tilesheet
 		# colored_packed.png is 16x16, currently is hardcoded to this file
 		sheet1 = pygame.image.load(
-			path.join(GAMEDIR, 'assets/visual/Tilesheet/colored_transparent_packed.png'))
+			path.join(Settings.GAMEDIR, 'assets/visual/Tilesheet/colored_transparent_packed.png'))
 		sheet2 = pygame.image.load(
-			path.join(GAMEDIR, 'assets/visual/Tilesheet/custom_textures.png'))
+			path.join(Settings.GAMEDIR, 'assets/visual/Tilesheet/custom_textures.png'))
 		# index = 0  # is used to know how many iterations we have done (x*22+y = index)
 		for x in range(48):
 			for y in range(22):
