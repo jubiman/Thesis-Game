@@ -41,9 +41,8 @@ class World:
 
 		def tempfunc():
 			for coords in chunkcopy:
-				x, y = coords
-				cfile = os.path.join(self.filepath, "chunks", f"{int(x)},{int(y)}.json")
-				c = chunkcopy[x, y]
+				cfile = os.path.join(self.filepath, "chunks", f"{int(coords[0])},{int(coords[1])}.json")
+				c = chunkcopy[coords]
 				open(cfile, "w").write(self.get_raw_save_string(c))
 
 		threading.Thread(target=tempfunc, name="Auto Save").start()
