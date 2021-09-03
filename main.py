@@ -102,12 +102,6 @@ class Game:
 		# game loop - set self.playing to False to end the game
 		self.playing = True
 		self.paused = False
-		while self.playing and self.paused:
-			try:
-				self.dt = self.clock.tick(Settings.Game.FPS) / 1000
-			except pygame.error:
-				# TODO: Improve error handling to not skip steps on error
-				Console.error(thread="UnknownThread", message=pygame.get_error())
 		while self.playing and not self.paused:
 			try:
 				self.dt = self.clock.tick(Settings.Game.FPS) / 1000
