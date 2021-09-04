@@ -1,5 +1,4 @@
 from core.assets.assets import Assets
-from core.items.items import Items
 from core.utils.colors import Colors
 from core.utils.settings import Settings
 import pygame
