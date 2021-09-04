@@ -63,7 +63,7 @@ class Itembar:
 
         for i, item in enumerate(self.game.player.inventory.getslots()):
             self.game.screen.blit(pygame.transform.scale(item.item.image, (60, 60)), itembar[i])
-            if item.item != Items.EMPTY.value:
+            if item.item.max_stack > 1:
                 amount = pygame.font.SysFont('Corbel', 25).render(str(item.quantity), True, Colors.WHITE)
                 if 1 <= item.quantity <= 9:
                     self.game.screen.blit(amount, (Settings.Game.WIDTH / 2 - 265 + 80 * i, Settings.Game.HEIGHT - 110))
