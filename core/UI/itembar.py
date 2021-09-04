@@ -1,7 +1,6 @@
 from core.assets.assets import Assets
 from core.utils.colors import Colors
 from core.utils.settings import Settings
-
 import pygame
 
 
@@ -61,8 +60,15 @@ class Itembar:
         pygame.draw.rect(self.game.screen, (50, 50, 50), itembarrects[6])
         self.game.screen.blit(pygame.transform.scale(Assets.BACKPACK1.value.image, (60, 60)), itembar[7])
 
-        self.helditem = (Settings.Game.WIDTH / 2 - 44, Settings.Game.HEIGHT / 2 - 6)
         for i, item in enumerate(self.game.player.inventory.getslots()):
             self.game.screen.blit(pygame.transform.scale(item.item.image, (60, 60)), itembar[i])
+            if item.item.max_stack > 1:
+                amount = pygame.font.SysFont('Corbel', 25).render(str(item.quantity), True, Colors.WHITE)
+                if 1 <= item.quantity <= 9:
+                    self.game.screen.blit(amount, (Settings.Game.WIDTH / 2 - 265 + 80 * i, Settings.Game.HEIGHT - 110))
+                if 10 <= item.quantity <= 99:
+                    self.game.screen.blit(amount, (Settings.Game.WIDTH / 2 - 279 + 80 * i, Settings.Game.HEIGHT - 110))
+                if 100 <= item.quantity <= 999:
+                    self.game.screen.blit(amount, (Settings.Game.WIDTH / 2 - 289 + 80 * i, Settings.Game.HEIGHT - 110))
             if i == self.game.player.inventory.selectedslot:
-                self.game.screen.blit(pygame.transform.flip(pygame.transform.scale(item.item.image, (30,30)), True, False), self.helditem)
+                self.game.screen.blit(pygame.transform.flip(pygame.transform.scale(item.item.image, (30, 30)), True, False), (Settings.Game.WIDTH / 2 - 44, Settings.Game.HEIGHT / 2 - 6))
