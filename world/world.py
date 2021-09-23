@@ -43,7 +43,7 @@ class World:
 			for coords in chunkcopy:
 				cfile = os.path.join(self.filepath, "chunks", f"{int(coords[0])},{int(coords[1])}.json")
 				c = chunkcopy[coords]
-				open(cfile, "w").write(self.get_raw_save_string(c))
+				open(cfile, "w").write(self.get_raw_save_string(c, *coords))
 
 		threading.Thread(target=tempfunc, name="Auto Save").start()
 
@@ -110,7 +110,7 @@ class World:
 
 			# Make the Chunks folder where the chunks will be saved if it doesn't already exist
 			try:
-				os.mkdir(os.path.join(self.filepath, "chunks"))
+				os.mkdir(os.path.join(self.filepath, "region"))
 			except FileExistsError:
 				pass
 
@@ -131,8 +131,9 @@ class World:
 				self.game.player.pos = Vector2(*map(int, self.config["startpos"].split(' ')))
 
 				# Set the first chunk to be the spawn chunk
+				# TODO: This shizzle doesn't work anymore, good luck fixing it future me.
 				shutil.copy(os.path.join(GAMEDIR, "assets/dungeon/prefabs/spawn.json"),
-							os.path.join(self.filepath, "chunks", "0,0.json"))
+							os.path.join(self.filepath, "region", "0,0.json"))
 
 			# Set isloaded True so we don't reload the world
 			self.isloaded = True
@@ -143,10 +144,12 @@ class World:
 	def loadChunk(self, x: int, y: int):
 		Console.debug(thread="WORLD",
 					  message=f"Loading {x}, {y}")
+		tworld = self
 
 		def tempfunc(self):
-			if os.path.isfile(os.path.join(self.filepath, "chunks", f"{int(x)},{int(y)}.json")):
-				data = json.loads(open(os.path.join(self.filepath, "chunks", f"{int(x)},{int(y)}.json"), "r").read())
+			if os.path.isfile(os.path.join(self.filepath, "region", f"{int(x // 16)},{int(y // 16)}.region")) and (
+			a := open(os.path.join(self.filepath, "region", f"{int(x // 16)},{int(y // 16)}.region"), "r").readlines()[int((x % 16) * 16 + y % 16)][:-1]) != "":
+				data = json.loads(a)
 				blocks_json_list = data["b"]
 				blocks_list: list[list[Block]] = []
 				for cx in range(16):
@@ -158,6 +161,10 @@ class World:
 						else:
 							blocks_list[cx].append(Block(Materials.getMaterial(block)))
 				chunk = Chunk(blocks_list)
+				if data.get("e") is not None:
+					ents = data.get("e")
+					for ent in ents:
+						tworld.entities.append(Enemy.deserialize(ent, chunk))
 			else:
 				chunk = self.generator.generateChunk(x, y)
 
@@ -175,21 +182,39 @@ class World:
 		del self.cache.chunks[x, y]
 
 	def save(self, x: int, y: int):
-		cfile = os.path.join(self.filepath, "chunks", f"{int(x)},{int(y)}.json")
+		cfile = os.path.join(self.filepath, "region", f"{int(x // 16)},{int(y // 16)}.region")
 		c = self.cache.chunks[x, y]
-		open(cfile, "w").write(self.get_raw_save_string(c))
+		savestr = self.get_raw_save_string(c, x, y)
+		if savestr is not None:
+			if not os.path.isfile(cfile):
+				open(cfile, "w").close()
+			with open(cfile, "r") as file:
+				lines = file.readlines()
+			with open(cfile, "w") as file:
+				if len(lines) < 256:
+					for i in range(256 - len(lines)):
+						lines.append("\n")
+				lines[int((x % 16) * 16 + y % 16)] = savestr + "\n"
+				file.writelines(lines)
 
-	def get_raw_save_string(self, chunk: Chunk):
+	def get_raw_save_string(self, chunk: Chunk, x: int, y: int):
+		if chunk.is_empty():
+			return None
 		blockjsonobj = []
 		for row in chunk.blocks:
 			for block in row:
-				if block.data == {}:
+				if block.data != {}:
 					blockjsonobj.append([block.material.id, block.data])
 				else:
 					blockjsonobj.append(block.material.id)
-		return json.dumps({
+		filteredents = [ent for ent in self.entities if x == ent.pos.x // 16 and y == ent.pos.y // 16]
+		self.entities = [e for e in self.entities if e not in filteredents]
+		data = {
 			"b": blockjsonobj
-		}, separators=(',', ':'))
+		}
+		if any(filteredents):
+			data["e"] = [ent.serialize() for ent in filteredents]
+		return json.dumps(data, separators=(',', ':'))
 
 	def tick(self):
 		now = time.time()

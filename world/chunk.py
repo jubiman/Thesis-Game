@@ -7,6 +7,9 @@ class Chunk:
 		self.blocks = blocks
 		self.entities = []  # TODO: Maybe delete entities from chunk
 
+	def is_empty(self) -> bool:
+		return any(self.blocks) and sum(sum(y.material.id for y in x) for x in self.blocks) == 0
+
 	def getBlock(self, x: int, y: int):
 		return self.blocks[y][x]
 

@@ -24,15 +24,13 @@ class CommandsMap:
 				p = path.join(GAMEDIR, f"saves/{kwargs['path']}")
 				if not path.isdir(p):
 					raise NotADirectoryError
-				ConsoleHelper.Globals.game.world = World(p, ConsoleHelper.Globals.game)
-				ConsoleHelper.Globals.game.world.load()
+				ConsoleHelper.Globals.game.change_world(World(p, ConsoleHelper.Globals.game))
 			except KeyError as key:
 				try:
 					p = path.join(GAMEDIR, f"saves/{args[0]}")
 					if not path.isdir(p):
 						raise NotADirectoryError
-					ConsoleHelper.Globals.game.world = World(p, ConsoleHelper.Globals.game)
-					ConsoleHelper.Globals.game.world.load()
+					ConsoleHelper.Globals.game.change_world(World(p, ConsoleHelper.Globals.game))
 				except IndexError:
 					Console.error(thread="CONSOLE", message=f"Expected at least 1 argument, got {len(args)} instead.")
 				except NotADirectoryError:
@@ -48,8 +46,7 @@ class CommandsMap:
 															 f"saves/{ConsoleHelper.Globals.game.world.name}/{pa}"))
 						except FileExistsError:
 							p = path.join(GAMEDIR, f"saves/{ConsoleHelper.Globals.game.world.name}/{args[0]}")
-						ConsoleHelper.Globals.game.world = World(p, ConsoleHelper.Globals.game)
-						ConsoleHelper.Globals.game.world.load()
+						ConsoleHelper.Globals.game.change_world(World(p, ConsoleHelper.Globals.game))
 					except NotADirectoryError:
 						Console.error(thread="CONSOLE", message=f"Could not open map: {args[0]}.")
 				else:
@@ -68,8 +65,7 @@ class CommandsMap:
 											path.join(GAMEDIR, f"saves/{ConsoleHelper.Globals.game.world.name}/{pa}"))
 					except FileExistsError:
 						p = path.join(GAMEDIR, f"saves/{ConsoleHelper.Globals.game.world.name}/{kwargs['path']}")
-					ConsoleHelper.Globals.game.world = World(p, ConsoleHelper.Globals.game)
-					ConsoleHelper.Globals.game.world.load()
+					ConsoleHelper.Globals.game.change_world(World(p, ConsoleHelper.Globals.game))
 				except NotADirectoryError:
 					Console.error(thread="CONSOLE", message=f"Could not open map: {kwargs['path']}.")
 
