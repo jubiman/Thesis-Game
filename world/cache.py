@@ -1,6 +1,6 @@
 import time
 
-from settings import CHUNK_UNLOAD_DELAY
+from core.utils.settings import Settings
 from world.chunk import Chunk
 
 
@@ -12,7 +12,7 @@ class Cache:
 
 	def checkForLazyChunks(self):
 		unloadThese = []
-		unloadIfLessThan = int(time.time() * 1000) - CHUNK_UNLOAD_DELAY
+		unloadIfLessThan = int(time.time() * 1000) - Settings.World.CHUNK_UNLOAD_DELAY
 		for xy in self.lastUsedAt:
 			if self.lastUsedAt[xy] < unloadIfLessThan:
 				unloadThese.append(xy)

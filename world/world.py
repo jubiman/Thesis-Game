@@ -8,7 +8,7 @@ import time
 from pygame.math import Vector2
 
 from core.console.console import Console
-from settings import GAMEDIR
+from core.utils.settings import Settings
 from world.block import Block
 from world.cache import Cache
 from world.chunk import Chunk
@@ -132,8 +132,9 @@ class World:
 
 				# Set the first chunk to be the spawn chunk
 				# TODO: This shizzle doesn't work anymore, good luck fixing it future me.
-				shutil.copy(os.path.join(GAMEDIR, "assets/dungeon/prefabs/spawn.json"),
-							os.path.join(self.filepath, "region", "0,0.json"))
+
+				shutil.copy(os.path.join(Settings.GAMEDIR, "assets/dungeon/prefabs/spawn.json"),
+							os.path.join(self.filepath, "chunks", "0,0.json"))
 
 			# Set isloaded True so we don't reload the world
 			self.isloaded = True
@@ -225,6 +226,10 @@ class World:
 			if self.ticks % 6000 == 0:
 				# Auto Save every 5 minutes
 				self.auto_save()
+
+		# Update entities every tick
+		for ent in self.entities:
+			ent.update()
 
 	def getBlockAt(self, x: int, y: int):
 		return self.getChunkAt(int(x // 16), int(y // 16)).getBlock(int(x % 16), int(y % 16))
