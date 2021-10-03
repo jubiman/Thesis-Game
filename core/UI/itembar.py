@@ -5,6 +5,9 @@ import pygame
 
 
 class Itembar:
+    animation = False
+    animationnumber = 0
+
     def __init__(self):
         self.game = None
 
@@ -71,4 +74,17 @@ class Itembar:
                 if 100 <= item.quantity <= 999:
                     self.game.screen.blit(amount, (Settings.Game.WIDTH / 2 - 289 + 80 * i, Settings.Game.HEIGHT - 110))
             if i == self.game.player.inventory.selectedslot:
-                self.game.screen.blit(pygame.transform.flip(pygame.transform.scale(item.item.image, (30, 30)), True, False), (Settings.Game.WIDTH / 2 - 44, Settings.Game.HEIGHT / 2 - 6))
+                if not self.animation:
+                    self.game.screen.blit(
+                        pygame.transform.flip(pygame.transform.scale(item.item.image, (30, 30)), True, False),
+                        (Settings.Game.WIDTH / 2 - 44, Settings.Game.HEIGHT / 2 - 6))
+                if self.animation:
+                    self.game.screen.blit(
+                        pygame.transform.rotate(
+                            pygame.transform.flip(
+                                pygame.transform.scale(
+                                    self.game.player.inventory.getSlot(
+                                        self.game.player.inventory.selectedslot).item.image,
+                                    (30, 30)), True, False),
+                            self.animationnumber),
+                        (Settings.Game.WIDTH / 2 - 44, Settings.Game.HEIGHT / 2 - 6))
