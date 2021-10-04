@@ -88,3 +88,8 @@ class Itembar:
                                     (30, 30)), True, False),
                             self.animationnumber),
                         (Settings.Game.WIDTH / 2 - 44, Settings.Game.HEIGHT / 2 - 6))
+                    animationtimerectbg = pygame.Rect(Settings.Game.WIDTH / 2 - 300, Settings.Game.HEIGHT - 95, 40, 8)
+                    animationtimerect = pygame.Rect(Settings.Game.WIDTH / 2 - 300, Settings.Game.HEIGHT - 95,
+                                                    self.animationnumber / 90 * 40, 8)
+                    pygame.draw.rect(self.game.screen, Colors.WHITE, animationtimerectbg)
+                    pygame.draw.rect(self.game.screen, Colors.RED, animationtimerect)
