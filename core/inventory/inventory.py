@@ -62,18 +62,7 @@ class _InventoryList:
 # TODO: Create working inventory with items
 class Inventory:
     def __init__(self):
-        self.__inv = _InventoryList(24, [_InventoryItem(Items.EMPTY.value, 1), _InventoryItem(Items.EMPTY.value, 1),
-                                         _InventoryItem(Items.EMPTY.value, 1), _InventoryItem(Items.EMPTY.value, 1),
-                                         _InventoryItem(Items.EMPTY.value, 1), _InventoryItem(Items.EMPTY.value, 1),
-                                         _InventoryItem(Items.EMPTY.value, 1), _InventoryItem(Items.EMPTY.value, 1),
-                                         _InventoryItem(Items.EMPTY.value, 1), _InventoryItem(Items.EMPTY.value, 1),
-                                         _InventoryItem(Items.EMPTY.value, 1), _InventoryItem(Items.EMPTY.value, 1),
-                                         _InventoryItem(Items.EMPTY.value, 1), _InventoryItem(Items.EMPTY.value, 1),
-                                         _InventoryItem(Items.EMPTY.value, 1), _InventoryItem(Items.EMPTY.value, 1),
-                                         _InventoryItem(Items.EMPTY.value, 1), _InventoryItem(Items.EMPTY.value, 1),
-                                         _InventoryItem(Items.EMPTY.value, 1), _InventoryItem(Items.EMPTY.value, 1),
-                                         _InventoryItem(Items.EMPTY.value, 1), _InventoryItem(Items.EMPTY.value, 1),
-                                         _InventoryItem(Items.EMPTY.value, 1), _InventoryItem(Items.EMPTY.value, 1)])
+        self.__inv = _InventoryList(24)
 
         self.__slots = _InventoryList(7, [_InventoryItem(Items.EMPTY.value, 1), _InventoryItem(Items.EMPTY.value, 1),
                                           _InventoryItem(Items.EMPTY.value, 1), _InventoryItem(Items.EMPTY.value, 1),

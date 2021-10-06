@@ -135,17 +135,17 @@ class Player(LivingCreature):
 			block: Block = self.game.world.getBlockAt(self.pos.x + dx, self.pos.y + dy)
 			if block.material.id == Materials.WALL.value.id:
 				rect: Rect = block.material.rect.move((floor(self.pos.x) + dx) * Settings.Game.TILESIZE,
-													  (floor(self.pos.y) + dy) * Settings.Game.TILESIZE)
+													(floor(self.pos.y) + dy) * Settings.Game.TILESIZE)
 				if rect.colliderect(movedColRect):
 					if self.vel.x > 0 and dx > 0:
 						self.vel.x = 0
-						UI.HEALTHBAR.value.setHealthbar(self.hp - 5)
+						UI.HEALTHBAR.value.setHealthbar(self.hp - 1)
 					if self.vel.x < 0 and dx < 0:
 						self.vel.x = 0
-						UI.HEALTHBAR.value.setHealthbar(self.hp - 5)
+						UI.HEALTHBAR.value.setHealthbar(self.hp - 1)
 					if self.vel.y > 0 and dy > 0:
 						self.vel.y = 0
-						UI.HEALTHBAR.value.setHealthbar(self.hp - 5)
+						UI.HEALTHBAR.value.setHealthbar(self.hp - 1)
 					if self.vel.y < 0 and dy < 0:
 						self.vel.y = 0
-						UI.HEALTHBAR.value.setHealthbar(self.hp - 5)
+						UI.HEALTHBAR.value.setHealthbar(self.hp - 1)

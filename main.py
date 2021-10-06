@@ -87,7 +87,7 @@ class Game:
 		"""
 		# Initialize all variables and do all the setup for a new game
 		self.world = World(path.join(path.dirname(__file__), "saves/world1"), self)
-		self.player = Player(self, 100, 100, 0, 350, 0.5, 0.5, EntityTypes.PLAYER.value, 5)
+		self.player = Player(self, 100, 100, 0, 350, 0.5, 0.5, EntityTypes.PLAYER.value, 1)
 		self.world.load()
 		self.spawner = Spawner(self, 64, 1)
 
