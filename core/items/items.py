@@ -21,7 +21,7 @@ class Items(Enum):
 	GUN = Item("Gun", "gun", 27, 1)
 
 	# Materials
-	OAK_WOOD = Item("Oak Wood", "oak_wood", 50, 999)
+	WOOD = Item("Wood", "wood", 50, 999)
 	STONE = Item("Stone", "stone", 51, 999)
 	IRON = Item("Iron", "iron", 52, 999)
 	SULFUR = Item("Sulfur", "sulfur", 53, 999)

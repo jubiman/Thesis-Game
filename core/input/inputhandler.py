@@ -2,13 +2,17 @@ from core.console.console import Console
 from core.items.items import Items as Items
 from core.skills.baseskills import Baseskills
 from core.skills.playerskills import Playerskills
+from core.UI.inventory import Inventory
 from core.UI.itembar import Itembar
 from world.block import Block
 from world.material.materials import Materials
 from core.utils.settings import Settings
 import pygame
 from pygame.locals import *
-
+import pyautogui
+import sys
+from PyQt5.QtWidgets import QApplication, QGraphicsView, QGraphicsScene, QGraphicsEllipseItem
+from PyQt5.QtCore import Qt, QPointF
 from math import floor
 
 
@@ -94,7 +98,13 @@ class InputHandler:
 			pass
 
 		if keys[K_e]:
-			pass
+			if Inventory.inventorytimer <= 0:
+				if Inventory.openinventory:
+					Inventory.openinventory = False
+					Inventory.inventorytimer = 1
+				else:
+					Inventory.openinventory = True
+					Inventory.inventorytimer = 1
 
 	def __handleMouse(self):
 		mouse = pygame.mouse.get_pressed(5)

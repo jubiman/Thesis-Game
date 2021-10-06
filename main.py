@@ -12,6 +12,7 @@ from core.console.console import Console
 from core.controller.camera import Camera
 from core.input.inputhandler import InputHandler
 from core.items.items import Items
+from core.UI.inventory import Inventory
 from core.UI.itembar import Itembar
 from core.UI.ui import UI
 from core.utils.colors import Colors
@@ -110,6 +111,9 @@ class Game:
 				self.events()
 				self.update()
 				self.draw()
+
+				if Inventory.inventorytimer > 0:
+					Inventory.inventorytimer = Inventory.inventorytimer - 0.1
 
 				if Itembar.animationnumber > 0:
 					Itembar.animationnumber = Itembar.animationnumber - 1.5

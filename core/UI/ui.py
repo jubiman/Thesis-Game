@@ -1,12 +1,14 @@
 from enum import Enum
 
 from core.UI.healthbar import Healthbar
+from core.UI.inventory import Inventory
 from core.UI.itembar import Itembar
 
 
 class UI(Enum):
 	HEALTHBAR = Healthbar()
 	ITEMBAR = Itembar()
+	INVENTORY = Inventory()
 
 	@staticmethod
 	def load(game):
