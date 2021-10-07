@@ -79,7 +79,7 @@ class Spawner:
 			return 1
 
 		self.game.world.entities.append(
-			Enemy(enemy, chunk, loc, 10, self.game, 10, 2))
+			Enemy(enemy, chunk, loc, 1, self.game, 10, 2))
 		Console.event(f"Enemy spawned at {loc} in chunk {chunk}", thread="SPAWNERLOC")
 		return 0
 

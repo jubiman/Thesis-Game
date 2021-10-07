@@ -1,10 +1,28 @@
 from pygame.math import Vector2
 
 from world.entity.entitytype import EntityType
-from world.entity.pathfinding.pathfinding import Pathfinding
+from world.entity.entitytypes import EntityTypes
 
 
 class Enemy:
+	def serialize(self):
+		return {
+			"type": self.entitytype.id,
+			"pos": [self.pos.x, self.pos.y],
+			"vel": [self.vel.x, self.vel.y],
+			"speed": self.speed,
+			"hp": self.hp,
+			"maxhp": self.max_hp,
+			"armor": self.armor
+		}
+
+	@staticmethod
+	def deserialize(obj, chunk):
+		en = Enemy(EntityTypes.getEntity(obj["type"]), chunk, Vector2(*obj["pos"]), obj["speed"], obj["hp"], obj["armor"])
+		en.vel = Vector2(*obj["vel"])
+		en.max_hp = obj["maxhp"]
+		return en
+
 	def __init__(self, ent: EntityType, chunk: tuple[int, int], pos: Vector2, speed, game, hp, armor):
 		"""
 		:param ent: The EntityType of the enemy
@@ -35,8 +53,8 @@ class Enemy:
 			self.cooldown = 0
 
 		if self.cooldown == 0:
-			path = Pathfinding.findOneStatic(self, self.game.player, self.game.world)
-			# path = None
+			# path = Pathfinding.findOneStatic(self, self.game.player, self.game.world)
+			path = None
 			if path is not None:
 				self.move(*path[0])
 			self.cooldown = 1
