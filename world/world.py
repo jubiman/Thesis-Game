@@ -41,9 +41,20 @@ class World:
 
 		def tempfunc():
 			for coords in chunkcopy:
-				cfile = os.path.join(self.filepath, "chunks", f"{int(coords[0])},{int(coords[1])}.json")
-				c = chunkcopy[coords]
-				open(cfile, "w").write(self.get_raw_save_string(c, *coords))
+				x, y = coords
+				savestr = self.get_raw_save_string(chunkcopy[coords], x, y)
+				cfile = os.path.join(self.filepath, "region", f"{int(x // 16)},{int(y // 16)}.json")
+				if savestr is not None:
+					if not os.path.isfile(cfile):
+						open(cfile, "w").close()
+					with open(cfile, "r") as file:
+						lines = file.readlines()
+					with open(cfile, "w") as file:
+						if len(lines) < 256:
+							for i in range(256 - len(lines)):
+								lines.append("\n")
+						lines[int((x % 16) * 16 + y % 16)] = savestr + "\n"
+						file.writelines(lines)
 
 		threading.Thread(target=tempfunc, name="Auto Save").start()
 
@@ -139,17 +150,15 @@ class World:
 			# Set isloaded True so we don't reload the world
 			self.isloaded = True
 		else:
-			Console.log(thread="WORLD",
-						message=f"{self.name} is already loaded.")
+			Console.log(thread="WORLD", message=f"{self.name} is already loaded.")
 
 	def loadChunk(self, x: int, y: int):
-		Console.debug(thread="WORLD",
-					  message=f"Loading {x}, {y}")
+		Console.debug(thread="WORLD", message=f"Loading {x}, {y}")
 		tworld = self
 
 		def tempfunc(self):
 			if os.path.isfile(os.path.join(self.filepath, "region", f"{int(x // 16)},{int(y // 16)}.region")) and (
-			a := open(os.path.join(self.filepath, "region", f"{int(x // 16)},{int(y // 16)}.region"), "r").readlines()[int((x % 16) * 16 + y % 16)][:-1]) != "":
+					a := open(os.path.join(self.filepath, "region", f"{int(x // 16)},{int(y // 16)}.region"), "r").readlines()[int((x % 16) * 16 + y % 16)][:-1]) != "":
 				data = json.loads(a)
 				blocks_json_list = data["b"]
 				blocks_list: list[list[Block]] = []
