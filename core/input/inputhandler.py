@@ -163,5 +163,5 @@ class InputHandler:
 				else:
 					Console.log(thread="PLAYER", message="You need an axe to break a tree")
 			else:
-				if not Itembar.animationnumber > 0:
+				if Itembar.animationnumber <= 0:
 					Itembar.animationnumber = 90
