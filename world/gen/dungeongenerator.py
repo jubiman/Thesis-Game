@@ -49,5 +49,6 @@ class DungeonGenerator:
 			for cy in range(16):
 				blocks_list[cx].append(Block(Materials.getMaterial(blocks_json_list[cx * 16 + cy])))
 		chunk = Chunk(blocks_list)
-		self.game.spawner.dungeonSpawn(*map(int, cfg["enemies"].split(' ')), chunk, x, y)
+		# disabled cuz bad
+		# self.game.spawner.dungeonSpawn(*map(int, cfg["enemies"].split(' ')), chunk, x, y)
 		return chunk
