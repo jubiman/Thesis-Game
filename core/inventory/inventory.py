@@ -1,16 +1,23 @@
+from core.console.console import Console
 from core.items.item import Item
 from core.items.items import Items
-from core.console.console import Console
 
 
 class _InventoryItem:
-	def __init__(self, it, quant=0):
+	def __init__(self, it: Item, quant=0):
 		"""
 		:param Item it: The item object to reference to
 		:param int quant: The quantity of the item
 		"""
 		self.item = it
 		self.quantity = quant
+
+	def to_json(self):
+		return [self.item.id, self.quantity]
+
+	@staticmethod
+	def from_json(obj):
+		return _InventoryItem(Items.getItem(obj[0]), obj[1])
 
 
 # TODO: Might change this class for some checks inside code
@@ -58,6 +65,13 @@ class _InventoryList:
 	def swap_item(self):
 		pass
 
+	def to_json(self):
+		return [x.to_json() for x in self.__ls]
+
+	@staticmethod
+	def from_json(obj):
+		return _InventoryList(len(obj), [_InventoryItem.from_json(x) for x in obj])
+
 
 # TODO: Create working inventory with items
 class Inventory:
@@ -65,20 +79,31 @@ class Inventory:
 		self.__inv = _InventoryList(27)  # Inventory only has 27 slots
 		# __slots[0] is bound to 1, so __slots[6] is max (7)
 		self.__slots = _InventoryList(7, [_InventoryItem(Items.EMPTY.value, 1), _InventoryItem(Items.EMPTY.value, 1),
-					_InventoryItem(Items.EMPTY.value, 1), _InventoryItem(Items.EMPTY.value, 1),
-					_InventoryItem(Items.EMPTY.value, 1), _InventoryItem(Items.EMPTY.value, 1),
-					_InventoryItem(Items.EMPTY.value, 1)])
+										  _InventoryItem(Items.EMPTY.value, 1), _InventoryItem(Items.EMPTY.value, 1),
+										  _InventoryItem(Items.EMPTY.value, 1), _InventoryItem(Items.EMPTY.value, 1),
+										  _InventoryItem(Items.EMPTY.value, 1)])
 
 		# The currently selected slot saved as 0-based index for __slots array
 		self.selectedslot = 0
 
-		# TODO: No Old Inv. System
-		# self.hands[0] is main hand, hands[1] is offhand
-		# self.hands = [InventorySlot(Items.IRON_AXE.value, 1, 1), InventorySlot(_InventoryItem(Items.EMPTY.value, 1), 2, 1)]
+	# TODO: No Old Inv. System
+	# self.hands[0] is main hand, hands[1] is offhand
+	# self.hands = [InventorySlot(Items.IRON_AXE.value, 1, 1), InventorySlot(_InventoryItem(Items.EMPTY.value, 1), 2, 1)]
 
-		# for i in range(9):
-		# self.slots.append(InventorySlot(item.Item('Axe', 1), 1, 1))
-		# self.slots.append(InventorySlot(item.Item('empty', 0), i+1))
+	# for i in range(9):
+	# self.slots.append(InventorySlot(item.Item('Axe', 1), 1, 1))
+	# self.slots.append(InventorySlot(item.Item('empty', 0), i+1))
+
+	def to_json(self):
+		return [self.__inv.to_json(), self.__slots.to_json(), self.selectedslot]
+
+	@staticmethod
+	def from_json(obj):
+		inv = Inventory()
+		inv.__inv = _InventoryList.from_json(obj[0])
+		inv.__slots = _InventoryList.from_json(obj[1])
+		inv.selectedslot = obj[2]
+		return inv
 
 	# Returns private inventory object
 	def get(self):

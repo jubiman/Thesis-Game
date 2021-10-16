@@ -8,6 +8,7 @@ import time
 from pygame.math import Vector2
 
 from core.console.console import Console
+from core.inventory.inventory import Inventory
 from core.utils.settings import Settings
 from world.block import Block
 from world.cache import Cache
@@ -43,7 +44,7 @@ class World:
 			for coords in chunkcopy:
 				x, y = coords
 				savestr = self.get_raw_save_string(chunkcopy[coords], x, y)
-				cfile = os.path.join(self.filepath, "region", f"{int(x // 16)},{int(y // 16)}.json")
+				cfile = os.path.join(self.filepath, "region", f"{int(x // 16)},{int(y // 16)}.region")
 				if savestr is not None:
 					if not os.path.isfile(cfile):
 						open(cfile, "w").close()
@@ -60,6 +61,7 @@ class World:
 
 	def update_config(self):
 		self.config["playerpos"] = [self.game.player.pos.x, self.game.player.pos.y]
+		self.config["inventory"] = self.game.player.inventory.to_json()
 
 	def save_config(self):
 		open(self.configfile, "w").write(json.dumps(self.config))
@@ -118,6 +120,8 @@ class World:
 					if self.config.get(key) is None:
 						self.config[key] = defaultconfig[key]
 				self.game.player.pos.x, self.game.player.pos.y = self.config["playerpos"]
+				if (invjson := self.config.get("inventory")) is not None:
+					self.game.player.inventory = Inventory.from_json(invjson)
 
 			# Make the Chunks folder where the chunks will be saved if it doesn't already exist
 			try:
