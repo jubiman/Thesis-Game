@@ -86,13 +86,6 @@ class Inventory:
 		# The currently selected slot saved as 0-based index for __slots array
 		self.selectedslot = 0
 
-	# TODO: No Old Inv. System
-	# self.hands[0] is main hand, hands[1] is offhand
-	# self.hands = [InventorySlot(Items.IRON_AXE.value, 1, 1), InventorySlot(_InventoryItem(Items.EMPTY.value, 1), 2, 1)]
-
-	# for i in range(9):
-	# self.slots.append(InventorySlot(item.Item('Axe', 1), 1, 1))
-	# self.slots.append(InventorySlot(item.Item('empty', 0), i+1))
 
 	def to_json(self):
 		return [self.__inv.to_json(), self.__slots.to_json(), self.selectedslot]
