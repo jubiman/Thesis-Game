@@ -1,13 +1,18 @@
 from core.console.console import Console
+from core.items.items import Items as Items
 from core.skills.baseskills import Baseskills
 from core.skills.playerskills import Playerskills
+from core.UI.inventory import Inventory
+from core.UI.itembar import Itembar
 from world.block import Block
 from world.material.materials import Materials
-
 from core.utils.settings import Settings
 import pygame
 from pygame.locals import *
-
+import pyautogui
+import sys
+from PyQt5.QtWidgets import QApplication, QGraphicsView, QGraphicsScene, QGraphicsEllipseItem
+from PyQt5.QtCore import Qt, QPointF
 from math import floor
 
 
@@ -89,6 +94,18 @@ class InputHandler:
 		if keys[K_7]:
 			self.game.player.inventory.selectedslot = 6
 
+		if keys[K_p]:
+			pass
+
+		if keys[K_e]:
+			if Inventory.inventorytimer <= 0:
+				if Inventory.openinventory:
+					Inventory.openinventory = False
+					Inventory.inventorytimer = 1
+				else:
+					Inventory.openinventory = True
+					Inventory.inventorytimer = 1
+
 	def __handleMouse(self):
 		mouse = pygame.mouse.get_pressed(5)
 		mouse_pos = pygame.mouse.get_pos()
@@ -100,46 +117,51 @@ class InputHandler:
 		)
 
 		if mouse[0]:
-			block = self.game.world.getBlockAt(*rel_mouse)
+			if not self.game.player.inventory.getSlot(self.game.player.inventory.selectedslot).item\
+				== Items.IRON_SWORD.value:
+				block = self.game.world.getBlockAt(*rel_mouse)
 
-			# TODO: Place holder
-			if not block.material.displayName == "Tree":
-				# Console.debug(message=(rel_mouse, block.material.displayName))
-				pass
+				# TODO: Place holder
+				if not block.material.displayName == "Tree":
+					# Console.debug(message=(rel_mouse, block.material.displayName))
+					pass
 
-			# The block is unbreakable
-			if not block.material.tools:
-				return
-
-			# Check if the player has a correct tool
-			# TODO: Old way
-			# if self.game.player.inventory.hands[0].item.texturePath.lower() in block.material.tools or \
-			# self.game.player.inventory.hands[1].item.texturePath.lower() in block.material.tools:
-			if self.game.player.inventory.getSlot(self.game.player.inventory.selectedslot)\
-				.item.texturePath.lower() in block.material.tools:
-
-				# Chop down the tree
-				self.game.world.setBlock(*rel_mouse, Block(Materials.GRASS.value))
-
-				# Add items to inventory
-				drops = list(block.material.calculateItemDrops())
-				for drop in drops:
-					self.game.player.inventory.add_new_item(*drop)
-					# Display message for amount of wood
-					Console.log(thread="PLAYER", message=f"You got {drop[1]} {drop[0].displayName}!")
-
-				# TODO: Add wood to inventory
-				# Add exp to woodcutting
-				# TODO: Add multiplier/check tree type?
-				if not block.material.xptypes:
+				# The block is unbreakable
+				if not block.material.tools:
 					return
-				for xptype in block.material.xptypes:
-					Baseskills[xptype].lvl.xp += 10
-					# TODO: Pure debug text, remove later, also always tree's display text
-					Console.log(thread="PLAYER",
-								message="You chopped down a tree and gained 10 Woodcutting xp!")
-					Console.log(thread="PLAYER", message="Your player gained 10 xp")
-					self.game.player.lvl.xp += 10
-					self.game.player.check_levels()
+
+				# Check if the player has a correct tool
+				# TODO: Old way
+				# if self.game.player.inventory.hands[0].item.texturePath.lower() in block.material.tools or \
+				# self.game.player.inventory.hands[1].item.texturePath.lower() in block.material.tools:
+				if self.game.player.inventory.getSlot(self.game.player.inventory.selectedslot)\
+					.item.texturePath.lower() in block.material.tools:
+
+					# Chop down the tree
+					self.game.world.setBlock(*rel_mouse, Block(Materials.GRASS.value))
+
+					# Add items to inventory
+					drops = list(block.material.calculateItemDrops())
+					for drop in drops:
+						self.game.player.inventory.add_new_item(*drop)
+						# Display message for amount of wood
+						Console.log(thread="PLAYER", message=f"You got {drop[1]} {drop[0].displayName}!")
+
+					# TODO: Add wood to inventory
+					# Add exp to woodcutting
+					# TODO: Add multiplier/check tree type?
+					if not block.material.xptypes:
+						return
+					for xptype in block.material.xptypes:
+						Baseskills[xptype].lvl.xp += 10
+						# TODO: Pure debug text, remove later, also always tree's display text
+						Console.log(thread="PLAYER",
+									message="You chopped down a tree and gained 10 Woodcutting xp!")
+						Console.log(thread="PLAYER", message="Your player gained 10 xp")
+						self.game.player.lvl.xp += 10
+						self.game.player.check_levels()
+				else:
+					Console.log(thread="PLAYER", message="You need an axe to break a tree")
 			else:
-				Console.log(thread="PLAYER", message="You need an axe to break a tree")
+				if Itembar.animationnumber <= 0:
+					Itembar.animationnumber = 90

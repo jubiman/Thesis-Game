@@ -55,14 +55,3 @@ class Healthbar:
 		currentleveltext = pygame.font.SysFont('Corbel', 50).render(str(100), True, (255, 255, 255))
 		self.game.screen.blit(currentleveltext, (400, 165))
 		self.game.screen.blit(pygame.transform.scale(Assets.LEVEL.value.image, (60, 60)), (30, 170))
-
-	def regen(self):
-		if self.countdown > 0:
-			self.countdown = self.countdown - 1
-		else:
-			if self.game.player.hp >= 100:
-				return
-			if self.game.player.hp <= 95:
-				self.setHealthbarRegen(self.game.player.hp + 5)
-			else:
-				self.setHealthbarRegen(100)

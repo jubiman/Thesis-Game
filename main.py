@@ -12,6 +12,8 @@ from core.console.console import Console
 from core.controller.camera import Camera
 from core.input.inputhandler import InputHandler
 from core.items.items import Items
+from core.UI.inventory import Inventory
+from core.UI.itembar import Itembar
 from core.UI.ui import UI
 from core.utils.colors import Colors
 from core.utils.settings import Settings
@@ -85,7 +87,7 @@ class Game:
 		"""
 		# Initialize all variables and do all the setup for a new game
 		self.world = World(path.join(path.dirname(__file__), "saves/world1"), self)
-		self.player = Player(self, 100, 100, 0, 350, 0.5, 0.5, EntityTypes.PLAYER.value, 5)
+		self.player = Player(self, 100, 100, 0, 350, 0.5, 0.5, EntityTypes.PLAYER.value, 1)
 		self.world.load()
 		self.spawner = Spawner(self, 64, 1)
 
@@ -93,6 +95,7 @@ class Game:
 		self.camera = Camera()
 
 		UI.load(self)
+
 
 		# Start the console
 		self.consoleThread.start()
@@ -108,6 +111,15 @@ class Game:
 				self.events()
 				self.update()
 				self.draw()
+
+				if Inventory.inventorytimer > 0:
+					Inventory.inventorytimer = Inventory.inventorytimer - 0.1
+
+				if Itembar.animationnumber > 0:
+					Itembar.animationnumber = Itembar.animationnumber - 1.5
+					Itembar.animation = True
+				else:
+					Itembar.animation = False
 			except pygame.error:
 				# TODO: Improve error handling to not skip steps on error
 				Console.error(thread="UnknownThread", message=pygame.get_error())

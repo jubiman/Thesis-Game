@@ -22,48 +22,48 @@ class _InventoryItem:
 
 # TODO: Might change this class for some checks inside code
 class _InventoryList:
-	def __init__(self, size, __ls=None):
-		"""
-		:param int size: Maximum size of the list
-		:param list[_InventoryItem] ls: The inventory list
-		"""
-		if __ls is None:
-			__ls = []
+    def __init__(self, size, __ls=None):
+        """
+        :param int size: Maximum size of the list
+        :param list[_InventoryItem] ls: The inventory list
+        """
+        if __ls is None:
+            __ls = []
 
-		self.max_size = size
-		self.__ls = __ls
+        self.max_size = size
+        self.__ls = __ls
 
-	def push(self, it):
-		"""
-		:param _InventoryItem it: the item to add to the inventory
-		:return: None
-		"""
-		if len(self.__ls) == self.max_size:
-			Console.log("No space in inventory")
-			# TODO: Do stuff with no inventory space
-			return
-		self.__ls.append(it)
+    def push(self, it):
+        """
+        :param _InventoryItem it: the item to add to the inventory
+        :return: None
+        """
+        if len(self.__ls) == self.max_size:
+            Console.log("No space in inventory")
+            # TODO: Do stuff with no inventory space
+            return
+        self.__ls.append(it)
 
-	def set(self, value):
-		"""
-		:param value: New list to set
-		:return: None
-		"""
-		if len(value) > self.max_size:
-			self.__ls = value[0:self.max_size]
-		else:
-			self.__ls = value
+    def set(self, value):
+        """
+        :param value: New list to set
+        :return: None
+        """
+        if len(value) > self.max_size:
+            self.__ls = value[0:self.max_size]
+        else:
+            self.__ls = value
 
-	def get(self):
-		return self.__ls
+    def get(self):
+        return self.__ls
 
-	def getSlot(self, slot):
-		if slot > len(self.__ls):
-			return None
-		return self.__ls[slot]
+    def getSlot(self, slot):
+        if slot > len(self.__ls):
+            return None
+        return self.__ls[slot]
 
-	def swap_item(self):
-		pass
+    def swap_item(self):
+        pass
 
 	def to_json(self):
 		return [x.to_json() for x in self.__ls]
